@@ -1,3 +1,767 @@
+entral
+ 
+entral
+ 
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+module.exports = {  };
+ 
+// Assuming the user is authenticated via middleware
+ 
+// Validate feedback data
+ 
+const Feedback = require('../models/Feedback');
+
+// Controller for submitting feedback for a business unit
+ 
+// Populating user details if needed
+ 
+// Controller to fetch feedback for a specific business unit
+ 
+const { isCustomer } = require('../middleware/isCustomer');
+ 
+re('../middleware/authenticateUser');
+ 
+{ isAdmin } = require('../middleware/isAdmin');  
+ 
+// Feedback Routes
+ 
+// Centralized Data Routes (Admin-only access)
+ 
+// Importing isAdmin middleware
+ 
+// Importing isCustomer middleware
+ 
+// Submit feedback (restricted to customers)
+ 
+// Get feedback by unit location
+ 
+// Fetch all inventory data
+ 
+// Fetch all transactions
+ 
+// Aggregate total sales
+ 
+// Aggregate inventory data
+ 
+const Transaction = mongoose.model('Transaction', TransactionSchema);
+
+module.exports = Transaction;
+ 
+const Feedback = mongoose.model('Feedback', FeedbackSchema);
+
+module.exports = Feedback;
+
+ 
+// Controller to aggregate inventory data across all units
+ 
+// Controller to aggregate total sales across all units
+ 
+// Controller to fetch all transactions across units
+ 
+// Controller to fetch all inventory data across all units
+ 
+const Inventory = require('../models/inventory');
+ 
+const Transaction = require('../models/transaction);
+ 
+// Assuming you're referring to the user model
+ 
+const express = require('express');
+const { recordTransaction, getTransactionsByLocation, getAllTransactions } = require('../controller/tcontroller');
+const { authenticateUser } = require('../middleware/authenticateUser');
+const { filterByUnit } = require('../middleware/filterByUnit'); // Assuming filterByUnit is just a simple middleware, no need to destructure
+
+const router = express.Router();
+
+// Route to record a new transaction
+router.post('/transaction', authenticateUser, recordTransaction);
+
+// Route to get transactions by unitLocation
+router.get('/transactions/:unitLocation', authenticateUser, filterByUnit, getTransactionsByLocation);
+
+// Route to get all transactions (admin view)
+router.get('/transactions', authenticateUser, getAllTransactions);
+
+module.exports = router;
+
+ 
+const express = require('express');
+const { recordTransaction, getTransactionsByLocation, getAllTransactions } = require('../controller/tcontroller');
+const { authenticateUser } = require('../middleware/authenticateUser');
+const {filterByUnit} =require('../middleware/filterByUnit');
+
+const router = express.Router();
+
+
+router.post('/transaction', authenticateUser, recordTransaction);
+
+
+router.get('/transactions/:unitLocation', authenticateUser, filterByUnit, getTransactionsByLocation);
+
+
+router.get('/transactions', authenticateUser, getAllTransactions);
+
+module.exports = router;
+
+ 
+filterByUnit
+ 
+const {filterByUnit} = require('../middleware/filterByUnit);
+ 
+function filterByUnit(req, res, next) {
+    const { unitLocation } = req.params;
+    if (!unitLocation) {
+        return res.status(400).json({ error: 'Unit location is required' });
+    }
+    req.unitLocation = unitLocation;
+    next();
+}
+ 
+// Route to fetch all transactions (admin view)
+ 
+// Route to fetch transactions by unit location
+ 
+// Route to record a new transaction
+ 
+// Set the totalAmount field
+ 
+// Respond with the list of all transactions
+ 
+// Controller function to fetch all transactions
+ 
+// Fetch all transactions
+ 
+ tion
+ 
+// Respond with the transactions for the unit loca
+ 
+ cation
+ 
+// Fetch transactions for the specified unit lo
+ 
+
+siness unit location
+ 
+// Controller function to fetch transactions by bu
+ 
+ // Respond with success
+ 
+ // Save the transaction
+ 
+// Create a new transaction
+ 
+// Controller function to record a new transaction
+ 
+const authenticateUser = require('../middleware/authenticateUser');
+ 
+// Middleware to ensure the user is a customer
+ 
+// If the user is a customer, continue to the next middleware or route handler
+ 
+
+     ceipt data)
+ 
+ // Respond with the populated purchase history (re
+ 
+ // Respond with the populated purchase history (re
+ 
+      // Check if the user has any purchase history
+ 
+      // Fetch the user's dah transactions)
+ 
+ta, including their populated purchase history (wit
+ 
+ // Ensure the user is a customer
+ 
+// Changed 'User' to 'user' to match your model name
+ 
+// This can be dynamically calculated in the controller
+ 
+// Ensures '
+ 
+unitLocation' is used with the correct constraints
+ 
+// Adds createdAt and updatedAt timestamps
+ 
+const mongoose = require('mongoose');
+
+const TransactionSchema = new mongoose.Schema({
+    businessUnit: String,
+    adminId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User', // Reference to the User model (which includes the Admin role)
+        required: true 
+    },
+    items: [
+        {
+            itemName: String,
+            quantity: Number,
+            price: Number
+        }
+    ],
+    totalAmount: Number,  // This can be dynamically calculated in the controller
+    paymentMethod: {
+        type: String,
+        enum: ["Cash", "Credit Card", "Mobile Payment", "Bank Transfer"],
+        default: "Cash"
+    },
+    transactionDate: { type: Date, default: Date.now },
+    status: {
+        type: String,
+        enum: ["Completed", "Pending", "Refunded"],
+        default: "Completed"
+    },
+    unitLocation: { // Changed from location to unitLocation with required constraint
+        type: String,
+        required: true
+    }
+}, { timestamps: true }); // Adds createdAt and updatedAt timestamps
+
+const Transaction = mongoose.model('Transaction', TransactionSchema);
+
+module.exports = Transaction;
+
+ 
+const mongoose = require('mongoose');
+
+const transactionSchema = new mongoose.Schema({
+    transactionId: String,
+    businessUnit: String,
+    adminId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'user', 
+        required: true 
+    },
+    items: [
+        {
+            itemName: String,
+            quantity: Number,
+            price: Number
+        }
+    ],
+    totalAmount: Number,  
+    paymentMethod: {
+        type: String,
+        enum: ["Cash", "Credit Card", "Mobile Payment", "Bank Transfer"],
+        default: "Cash"
+    },
+    transactionDate: { type: Date, default: Date.now },
+    status: {
+        type: String,
+        enum: ["Completed", "Pending", "Refunded"],
+        default: "Completed"
+    },
+    location: String
+});
+
+const Transaction = mongoose.model('Transaction', TransactionSchema);
+
+module.exports = Transaction;
+
+ 
+the controller
+ 
+// This can be dynamically calculated in 
+ 
+e to the User model (which includes the Admin role)
+ 
+oded.username, _id: decoded.userId };
+ 
+|| { role: decoded.role, username: de
+ 
+req.user = user; 
+ 
+authenticateUser,
+ 
+// The authenticated user data
+ 
+/ Verify the token
+ 
+// Fetch the user from DB
+ 
+// Attach user to the request
+ 
+// Create JWT token
+ 
+// Token expires in 1 hour
+ 
+// Create JWT token
+ 
+// Token expires in 1 hour
+ 
+
+
+
+require("dotenv").config();
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+ 
+
+const userRegistrationPost = async (req, res) => {
+  const { username, email, password, role, confirmPassword } = req.body;
+
+
+  let errors = [];
+
+  
+  if (!username || !email || !password || !role || !confirmPassword) {
+    errors.push({ msg: "Please fill in all fields" });
+  }
+
+  if (password !== confirmPassword) {
+    errors.push({ msg: "Passwords do not match" });
+  }
+
+  if (password.length < 8) {
+    errors.push({ msg: "Password should be at least 8 characters" });
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({ errors, username, email, role });
+  }
+
+  try {
+    
+    const existingUser = await User.findOne({ email: email });
+    if (existingUser) {
+      errors.push({ msg: "Email already exists" });
+      return res.status(400).json({ errors, username, email, role });
+    }
+
+    
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    
+    const newUser = new User({
+      username,
+      email,
+      role,
+      password: hashedPassword,
+    });
+
+    
+    await newUser.save();
+
+     return res.status(404).json({ message: "This email does not exist" });
+    }
+
+    const isVerified = await bcrypt.compare(password, user.password);
+    if (!isVerified) {
+      return res.status(401).json({ message: "Invalid Password" });
+    }
+
+    req.session.user_id = user._id;
+    req.session.email = user.email;
+    req.session.username = user.username;
+ 
+
+    res.status(201).json({ msg: "Registration successful. You can now log in." });
+  } catch (error) {
+  
+    console.error("Error during registration:", error);
+    res.status(500).json({ msg: "Server error. Please try again later." });
+  }
+};
+
+const userLoginPost = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+    
+ 
+  res.status(200).json({
+      message: "Login successful",
+      user: {
+        id: user._id,
+        email: user.email,
+        username: user.username,
+      },
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "There was a problem selecting from DB" });
+  }
+};
+ 
+JWT_SECRET=your-secret-key
+ 
+our-database-name
+ 
+// middleware/authMiddleware.js
+
+ 
+ // Check if user role is 'Admin'
+ 
+   purchaseHistory: {
+            transactionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Transaction' },
+            amountSpent: Number,
+            date: Date
+        
+}
+ 
+ to Transaction model
+ 
+});
+ 
+required:true
+ 
+// Function for fetching categories by business uni
+ 
+// Correct query parameter: businessUnit
+ 
+// Correct query parameter: businessUnit
+ 
+    // Find the item by itemName and delete it
+ 
+// Get item name from the route parameter
+ 
+// Find by itemName
+ 
+// Updates to apply
+ 
+// Return the updated document
+ 
+    // Find the item by itemName and update it
+ 
+// Get item name from the route parameter
+ 
+// Get update data from the request body
+ 
+const updateInventoryItem = async (req, res) => {
+    const { itemName } = req.params;
+    const updates = req.body;
+
+    try {
+        const updatedItem = await Inventory.findByIdAndUpdate(itemName, updates, { new: true });
+        if (!updatedItem) {
+            return res.status(404).json({ message: 'Inventory item not found' });
+        }
+        res.status(200).json({ message: 'Inventory item updated successfully', data: updatedItem });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update inventory item', details: error.message });
+    }
+};
+
+const deleteInventoryItem = async (req, res) => {
+    const { itemName } = req.params;
+
+    try {
+        const deletedItem = await Inventory.findByIdAndDelete(itemName);
+        if (!deletedItem) {
+            return res.status(404).json({ message: 'Inventory item not found' });
+        }
+        res.status(200).json({ message: 'Inventory item deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to delete inventory item', details: error.message });
+    }
+};
+ 
+controller
+ 
+icontroller.
+ 
+icontroller.
+ 
+icontroller.
+ 
+ventoryController
+ 
+inventoryController
+ 
+const Inventory = require("../models/inventory");
+
+
+exports.createInventoryItem = async (req, res) => {
+    const { itemName, category, quantity, reorderLevel, supplierInfo, unitLocation, expirationDate } = req.body;
+
+    try {
+        const newItem = new Inventory({
+            itemName,
+            category,
+            quantity,
+            reorderLevel,
+            supplierInfo,
+            unitLocation,
+            expirationDate,
+        });
+
+        await newItem.save();
+        res.status(201).json({ message: 'Inventory item created successfully', data: newItem });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to create inventory item', details: error.message });
+    }
+};
+
+
+exports.getInventoryByUnit = async (req, res) => {
+    const { unitLocation } = req.params;
+
+    try {
+        const items = await Inventory.find({ unitLocation });
+        if (items.length === 0) {
+            return res.status(404).json({ message: `No inventory found for unit: ${unitLocation}` });
+        }
+        res.status(200).json(items);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch inventory', details: error.message });
+    }
+};
+
+
+exports.updateInventoryItem = async (req, res) => {
+    const { id } = req.params;
+    const updates = req.body;
+
+    try {
+        const updatedItem = await Inventory.findByIdAndUpdate(id, updates, { new: true });
+        if (!updatedItem) {
+            return res.status(404).json({ message: 'Inventory item not found' });
+        }
+        res.status(200).json({ message: 'Inventory item updated successfully', data: updatedItem });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update inventory item', details: error.message });
+    }
+};
+
+
+exports.deleteInventoryItem = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const deletedItem = await Inventory.findByIdAndDelete(id);
+        if (!deletedItem) {
+            return res.status(404).json({ message: 'Inventory item not found' });
+        }
+        res.status(200).json({ message: 'Inventory item deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to delete inventory item', details: error.message });
+    }
+};
+
+module.exports = {
+    createInventoryItem,
+    getInventoryByUnit,
+    updateInventoryItem,
+    deleteInventoryItem,
+  };
+  
+
+
+
+ 
+onst inventoryController = require('../controllers/inventoryController');
+
+ 
+// Routes for inventory operations
+ 
+module.exports = {createInventoryItem,}
+ 
+// DELETE /inventory/:id
+ 
+// PUT /inventory/:id
+ 
+// GET /inventory/:unitLocation
+ 
+// POST /inventory
+ 
+module.exports = { userLoginPost };
+ 
+// Send a successful response
+ 
+ // Set session data if login is successful
+ 
+    // Compare provided password with the stored hashed password
+ 
+// Find the user by email
+ 
+
+const bcrypt = require('bcryptjs'); // Make sure bcrypt is imported
+
+ 
+})
+}
+ 
+const userLoginPost = async (req,res) => {
+  const{email,password}= req.body;
+
+  User.findOne({email:email})
+  .then((result) => {
+    if (!result) {
+      req.flash("error_msg", "This email does not exist");
+      res.redirect("/login ");
+    }else{
+      bcrypt.compare(password,result.password,(err,isVerified)=>{
+        if (err) {
+          req.flash("error_msg", "Something Appears Wrong");
+          res.redirect("/login");
+        }
+
+        if(isVerified){
+          req.session.user_id = result._id;
+          req.session.email = result.email;
+          req.session.role = result.role;
+
+          res.redirect("/dashboard")
+        }else{
+          req.flash("error_msg", "Invalid Password");
+          res.redirect("/login");
+        }
+      })
+    }
+  })
+  .catch((err) => {
+    req.flash("error_msg", "There was a problem selecting from DB");
+        res.redirect("/login");
+ 
+then((result)=>{
+
+  }
+ 
+router.post("/test", (req, res) => {
+    res.send("Test route working!");
+  });
+ 
+userRegistration
+ 
+const userRegistration = (req,res)=>{
+  res.json("registration")
+}
+ 
+router.post("/registration", userRegistration);
+ 
+  // Handle any unexpected errors
+ 
+// Save the user to the database
+ 
+ // Respond with a success message
+ 
+// Create a new user instance
+ 
+// Hash the password
+ 
+// Check if the user already exists
+ 
+// Return errors to the client
+ 
+// Basic validation
+ 
+  // Initialize an array to collect errors
+ 
+// Ensure you have a User model
+ 
+require("dotenv").config();
+const mongoose = require("mongoose"),
+bcrypt = require ("bcryptjs"),
+multer = require("multer"),
+fs= require("fs"),
+path= require("path"),
+ nodemailer = require('nodemailer');
+ User = require("../models/user");
+
+
+ //Admin signing up
+
+ const userRegistrationPost = (req,res)=>{
+    const {username,email,password, role,confirmPassword} = req.body;
+
+    let errors =[];
+
+    if(!username  || !email || !password || !role || !confirmPassword){
+        errors.push({msg: "Please fill in all fields"});
+ }
+
+ if(password  !== confirmPassword){
+    errors.push({msg: "Passwords do not match"});
+}
+
+if (password.length < 8){
+    errors.push({msg: "Password should be a least 8 characters"});
+}
+
+if (errors.length  > 0){
+    res.json("registration",{ errors, username, email, role,password, confirmPassword});
+
+}else{
+
+    //We do not want to have 2 users with same email
+
+    User.findOne ({email:email})
+    .then((result)=>{
+        if(result){
+            errors.push({msg: "Email already exists"});
+            res.json("registration",{errors, username, email, password, role,confirmPassword})
+            }else{
+
+                //below we encrypt our password
+
+                bcrypt.hash(password, 10, (error, hash) => {
+                    const newUser = new User({username,email,role,password:hash,
+
+                })
+
+                try{
+                    newUser.save(),
+                    req.flash ('message', "Registration Successful. You can now login");
+                    res.red
+                }
+                })
+    })
+
+}
+
+
+
+
+ }
+
+ 
+})
+ 
+})
+ 
+ createdAt:{
+        type: Date,
+        required: true,   
+        default: Date.now, 
+      }
+ 
+Schema({})
+ 
+// Enforces that the field must be explicitly provided, though it's usually unnecessary
+ 
+// Default to current date/time
+ 
+ type:
+ 
+oluwuyi
+ 
+Oluwuyi Olumide
+ 
+OLuwuyi Olumide Ismail
+ 
 pp.use('/', indexRouter);
  
 const indexRouter = require('./route/index');
