@@ -1,6 +1,8 @@
-import { StrictMode } from "react";
+import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
+import "aos/dist/aos.css";
+import "swiper/swiper-bundle.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
