@@ -59,7 +59,7 @@ export default function LandingHeroCard() {
               <div className="text-3xl font-bold mr-2">Hire </div>
               <div
                 key={currentProfessionIndex} // Force re-render for AOS animation
-                className="text-3xl font-bold text-yellow-500"
+                className="text-3xl font-bold text-primary-500"
                 data-aos="fade-down"
               >
                 {professions[currentProfessionIndex]}

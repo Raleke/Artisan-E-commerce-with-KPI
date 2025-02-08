@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import "./App.css";
-import { Button } from "@heroui/react";
 import LandingPageNav from "./components/navbars/LandingPageNav";
 import Aos from "aos";
-import LandingHeroCard from "./components/cards/LandingHeroCard";
+import { Route, Routes } from "react-router";
+import LandingPage from "./pages/LandingPage";
+import Onboarding from "./pages/Onboarding";
 
 function App() {
   useEffect(() => {
@@ -13,8 +14,10 @@ function App() {
   return (
     <>
       <LandingPageNav />
-      <LandingHeroCard />
-      <p className="text-white"> deomo dkgond </p>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Onboarding />} />
+      </Routes>
     </>
   );
 }
