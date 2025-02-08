@@ -16,7 +16,7 @@ function App() {
       <LandingPageNav />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Onboarding />} />
+        <Route path="/login/*" element={<Onboarding />} />
       </Routes>
     </>
   );

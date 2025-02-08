@@ -47,7 +47,7 @@ const ImageCarousel = ({
               />
               {showTitles && image.title && (
                 <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-4">
-                  <h3 className="text-lg font-semibold text-center md:text-left">
+                  <h3 className="text-lg font-semibold text-center ">
                     {image.title}
                   </h3>
                 </div>

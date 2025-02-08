@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FaUser, FaUserTie } from "react-icons/fa";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router";
 import { Spinner, Tab, Tabs } from "@heroui/react";
-import EmployeeLogin from "./EmployerLoginPage";
+import EmployeeLogin from "./EmployerLoginPage.jsx";
 import ArtisanLoginPage from "./ArtisanLoginPage.jsx";
 
 const Onboarding = () => {
@@ -52,7 +52,7 @@ const Onboarding = () => {
       </Tabs>
       <Routes>
         <Route path="/employer" element={<EmployeeLogin />} />
-        <Route path="/artisan" element={<ArtisanLoginPage />} />
+        <Route path="/artisian" element={<ArtisanLoginPage />} />
       </Routes>
     </div>
   );

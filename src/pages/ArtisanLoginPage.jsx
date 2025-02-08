@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-// import { loginAdmin } from "../../api/api";
-import { toast } from "react-toastify";
-// import { jwtDecode } from "jwt-decode";
 import FormComponent from "../components/forms/FormComponent";
 
 const ArtisanLoginPage = () => {
