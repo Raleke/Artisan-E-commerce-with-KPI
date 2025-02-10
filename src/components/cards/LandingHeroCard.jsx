@@ -51,7 +51,7 @@ export default function LandingHeroCard() {
     return () => clearInterval(interval);
   }, [professions.length]);
   return (
-    <div className="pt-32 bg-zinc-100 pb-8">
+    <div className="pt-32 bg-zinc-100 dark:bg-[#1E2022] pb-8">
       <div className="lg:max-w-7xl md:max-w-5xl max-w-3xl w-full px-4 mx-auto">
         <div className="flex md:flex-row flex-col-reverse items-center justify-between">
           <div className="flex flex-col md:w-7/12 pb-4 mt-4">
