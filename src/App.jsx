@@ -5,6 +5,7 @@ import Aos from "aos";
 import { Route, Routes } from "react-router";
 import LandingPage from "./pages/LandingPage";
 import Onboarding from "./pages/Onboarding";
+import FooterCard from "./components/navbars/FooterCard";
 
 function App() {
   useEffect(() => {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login/*" element={<Onboarding />} />
       </Routes>
+      <FooterCard />
     </>
   );
 }
