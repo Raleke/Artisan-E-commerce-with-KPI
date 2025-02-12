@@ -15,7 +15,7 @@ export default function JobOpeningCard({ details }) {
     <Card>
       <CardHeader className="flex-col">
         <h1 className="text-3xl">{details.tittle}</h1>
-        <p className="text-small text-default-500">
+        <p className="text-small ">
           Company{" "}
           <Tooltip content="You have to been assigned to see the name">
             <span

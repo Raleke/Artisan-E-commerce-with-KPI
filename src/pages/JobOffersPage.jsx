@@ -1,3 +1,8 @@
+import React, { useState, useMemo } from "react";
+import { Select, SelectItem, Input, Button } from "@heroui/react";
+import { FaSearch } from "react-icons/fa";
+import job from "../assets/job.png";
+import JobOpeningCard from "../components/cards/JobOpeningCard";
 const jobDetailsArray = [
   {
     tittle: "Production Manager",
@@ -251,38 +256,47 @@ const jobDetailsArray = [
   },
 ];
 
-import React, { useState } from "react";
-import { Select, SelectItem, Input, Button } from "@heroui/react";
-import { FaSearch } from "react-icons/fa";
-import job from "../assets/job.png";
-import JobOpeningCard from "../components/cards/JobOpeningCard";
-
-const categories = [...new Set(jobDetailsArray.map((job) => job.category))];
-
-// Extract unique skills for each category
-const skills = categories.reduce((acc, category) => {
-  acc[category] = [
-    ...new Set(
-      jobDetailsArray
-        .filter((job) => job.category === category)
-        .flatMap((job) => job.skills),
-    ),
-  ];
-  return acc;
-}, {});
-
 const JobOffersPage = () => {
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedSkill, setSelectedSkill] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(new Set([]));
+  const [selectedSkill, setSelectedSkill] = useState(new Set([]));
+  const [searchLocation, setSearchLocation] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-
   const jobsPerPage = 12;
-  const filteredJobs = jobDetailsArray.filter((job) => {
-    return (
-      (selectedCategory === "" || job.category === selectedCategory) &&
-      (selectedSkill === "" || job.skills.includes(selectedSkill))
-    );
-  });
+
+  // Memoize categories and skills to prevent recalculation on every render
+  const categories = useMemo(
+    () => [...new Set(jobDetailsArray.map((job) => job.category))],
+    [],
+  );
+
+  // Memoize skills based on selected category
+  const availableSkills = useMemo(() => {
+    const categoryValue = Array.from(selectedCategory)[0];
+    if (!categoryValue) return [];
+    return [
+      ...new Set(
+        jobDetailsArray
+          .filter((job) => job.category === categoryValue)
+          .flatMap((job) => job.skills),
+      ),
+    ];
+  }, [selectedCategory]);
+
+  // Memoize filtered jobs based on all filters
+  const filteredJobs = useMemo(() => {
+    const categoryValue = Array.from(selectedCategory)[0];
+    const skillValue = Array.from(selectedSkill)[0];
+
+    return jobDetailsArray.filter((job) => {
+      const categoryMatch = !categoryValue || job.category === categoryValue;
+      const skillMatch = !skillValue || job.skills.includes(skillValue);
+      const locationMatch =
+        !searchLocation ||
+        job.location.toLowerCase().includes(searchLocation.toLowerCase());
+
+      return categoryMatch && skillMatch && locationMatch;
+    });
+  }, [selectedCategory, selectedSkill, searchLocation]);
 
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
   const displayedJobs = filteredJobs.slice(
@@ -291,12 +305,19 @@ const JobOffersPage = () => {
   );
 
   const handleCategoryChange = (value) => {
-    setSelectedCategory(value);
-    setSelectedSkill("");
+    setSelectedCategory(new Set(value));
+    setSelectedSkill(new Set([]));
+    setCurrentPage(1);
   };
 
   const handleSkillChange = (value) => {
-    setSelectedSkill(value);
+    setSelectedSkill(new Set(value));
+    setCurrentPage(1);
+  };
+
+  const handleLocationSearch = (e) => {
+    setSearchLocation(e.target.value);
+    setCurrentPage(1);
   };
 
   const handlePageChange = (page) => {
@@ -311,47 +332,45 @@ const JobOffersPage = () => {
 
       <div className="mb-8 space-y-4">
         <div className="flex flex-col md:flex-row md:justify-between gap-4 md:gap-8 content-center">
-          {/* Category Select */}
-          <div className="md:w-1/3 flex flex-cool md:flex-row gap-4">
+          <div className="md:w-1/3 flex flex-col md:flex-row gap-4">
             <Select
               label="Select Category"
+              placeholder="Select a category"
               variant="bordered"
-              onChange={handleCategoryChange}
+              selectedKeys={selectedCategory}
+              onSelectionChange={handleCategoryChange}
             >
-              <SelectItem value="">All Categories</SelectItem>
-              {categories.map((category, index) => (
-                <SelectItem key={index} value={category}>
-                  {category}
-                </SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category}>{category}</SelectItem>
               ))}
             </Select>
 
-            {/* Skill Select */}
             <Select
               label="Select Skill"
+              placeholder="Select a skill"
               variant="bordered"
-              onChange={handleSkillChange}
-              disabled={!selectedCategory}
+              selectedKeys={selectedSkill}
+              onSelectionChange={handleSkillChange}
+              isDisabled={selectedCategory.size === 0}
             >
-              <SelectItem value="">All Skills</SelectItem>
-              {selectedCategory &&
-                skills[selectedCategory].map((skill, index) => (
-                  <SelectItem key={index} value={skill}>
-                    {skill}
-                  </SelectItem>
-                ))}
+              {availableSkills.map((skill) => (
+                <SelectItem key={skill}>{skill}</SelectItem>
+              ))}
             </Select>
           </div>
-          {/* Search Bar */}
+
           <Input
             placeholder="Search Location..."
-            endContent=<FaSearch size={20} />
+            endContent={<FaSearch size={20} />}
             variant="bordered"
             size="lg"
             className="w-full md:w-1/3"
+            value={searchLocation}
+            onChange={handleLocationSearch}
           />
         </div>
       </div>
+
       {displayedJobs.length > 0 ? (
         <>
           <div className="flex flex-wrap -mt-0 -mx-2">
@@ -360,10 +379,11 @@ const JobOffersPage = () => {
                 className="w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-2 mt-2 mb-4"
                 key={index}
               >
-                <JobOpeningCard key={index} details={details} />
+                <JobOpeningCard details={details} />
               </div>
             ))}
           </div>
+
           <div className="flex justify-center gap-4 mt-8">
             {Array.from({ length: totalPages }, (_, index) => (
               <Button
@@ -380,7 +400,7 @@ const JobOffersPage = () => {
         </>
       ) : (
         <div className="text-center mt-20">
-          <img src={job} alt="job icon" className="w-96 h-96" />
+          <img src={job} alt="job icon" className="w-96 h-96 mx-auto" />
           <h2 className="text-2xl font-bold mb-4">No jobs found</h2>
           <p>
             Try adjusting your filters or check back later for new job postings.
