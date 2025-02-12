@@ -11,6 +11,8 @@ import {
   Button,
 } from "@heroui/react";
 import { LogIn, UserPlus } from "react-feather";
+import { useLocation } from "react-router";
+
 export const AcmeLogo = () => {
   return (
     <svg fill="none" height="36" viewBox="0 0 32 32" width="36">
@@ -25,6 +27,11 @@ export const AcmeLogo = () => {
 };
 
 export default function LandingPageNav() {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  console.log(currentPath);
+
   const menuItems = [
     "Profile",
     "Dashboard",
@@ -53,24 +60,31 @@ export default function LandingPageNav() {
         className="hidden md:flex gap-4 justify-start ml-2"
         justify="center"
       >
-        <NavbarItem isActive>
-          <Link aria-current="page" href="#">
+        <NavbarItem isActive={currentPath === "/"}>
+          <Link
+            aria-current={currentPath === "/" ? "page" : undefined}
+            href="/"
+            color={currentPath === "/" ? "primary" : "foreground"}
+          >
             Home
           </Link>
         </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
+        <NavbarItem isActive={currentPath === "/about"}>
+          <Link
+            aria-current={currentPath === "/about" ? "page" : undefined}
+            href="/about"
+            color={currentPath === "/about" ? "primary" : "foreground"}
+          >
             About Us
           </Link>
         </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
+        <NavbarItem isActive={currentPath === "/jobs"}>
+          <Link
+            aria-current={currentPath === "/jobs" ? "page" : undefined}
+            href="/jobs"
+            color={currentPath === "/jobs" ? "primary" : "foreground"}
+          >
             Jobs
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="#">
-            Contact
           </Link>
         </NavbarItem>
       </NavbarContent>
