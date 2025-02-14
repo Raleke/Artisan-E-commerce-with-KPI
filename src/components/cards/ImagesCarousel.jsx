@@ -26,11 +26,10 @@ const ImageCarousel = ({
   return (
     <div className={containerClasses}>
       <Swiper
-        modules={[Autoplay, Pagination, Navigation]}
+        modules={[Autoplay, Pagination]}
         spaceBetween={30}
         slidesPerView={1}
         pagination={{ clickable: true }}
-        navigation
         autoplay={{
           delay: autoplayDelay,
           disableOnInteraction: false,

@@ -102,7 +102,12 @@ export default function LandingPageNav() {
         >
           Login
         </Button>
-        <Button as={Link} color="primary" href="" startContent={<UserPlus />}>
+        <Button
+          as={Link}
+          color="primary"
+          href="/signup"
+          startContent={<UserPlus />}
+        >
           Sign Up
         </Button>
       </NavbarContent>
