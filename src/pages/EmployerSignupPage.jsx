@@ -214,7 +214,7 @@ const SignupForm = () => {
     <div className="items-center flex flex-col justify-center md:justify-normal md:flex-row">
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center px-8 py-6 sm:mt-12">
         <Card className="w-full max-w-md">
-          <CardHeader>
+          <CardHeader className="flex-col gap-y-2">
             <h3 className="text-center text-2xl font-semibold leading-none tracking-tight'">
               Create Account
             </h3>
@@ -234,7 +234,7 @@ const SignupForm = () => {
                     variant="bordered"
                     onClick={handleBack}
                   >
-                    Back
+                    Previous
                   </Button>
                 )}
                 {step < totalSteps ? (

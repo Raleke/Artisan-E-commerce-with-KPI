@@ -3,6 +3,7 @@ import { FaUser, FaUserTie } from "react-icons/fa";
 import { Route, Routes, useLocation, useNavigate } from "react-router";
 import { Spinner, Tab, Tabs } from "@heroui/react";
 import EmployerSignupPage from "./EmployerSignupPage.jsx";
+import ArtisanSignup from "./ArtisanSignupPage.jsx";
 const SignupOnbaording = () => {
   const navigate = useNavigate();
   const { loading, setLoading } = useState(false);
@@ -44,7 +45,7 @@ const SignupOnbaording = () => {
       </Tabs>
       <Routes>
         <Route path="/employer" element={<EmployerSignupPage />} />
-        <Route path="/artisian" element={<EmployerSignupPage />} />
+        <Route path="/artisian" element={<ArtisanSignup />} />
       </Routes>
     </div>
   );
