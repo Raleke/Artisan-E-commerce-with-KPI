@@ -11,7 +11,13 @@ import {
   Autocomplete,
   AutocompleteItem,
 } from "@heroui/react";
-import { FaCamera, FaEyeSlash, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import {
+  FaCamera,
+  FaEyeSlash,
+  FaRegEye,
+  FaRegEyeSlash,
+  FaUpload,
+} from "react-icons/fa";
 
 const ArtisanSignup = () => {
   const [step, setStep] = useState(1);
@@ -199,7 +205,7 @@ const ArtisanSignup = () => {
                 />
                 {imagePreview && (
                   <div className="absolute bottom-0 right-0 bg-primary text-white rounded-full p-2 shadow-lg">
-                    <Upload className="w-4 h-4" />
+                    <FaUpload className="w-4 h-4" />
                   </div>
                 )}
               </div>
@@ -354,7 +360,12 @@ const ArtisanSignup = () => {
                 label="State"
                 placeholder="Select state"
                 selectedKey={formData.state}
-                onSelectionChange={setFormData.state}
+                onSelectionChange={(value) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    state: value,
+                  }));
+                }}
               >
                 {(item) => (
                   <AutocompleteItem key={item.id} value={item.value}>
