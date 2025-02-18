@@ -10,6 +10,7 @@ import {
   CardBody,
   Autocomplete,
   AutocompleteItem,
+  Textarea,
 } from "@heroui/react";
 import {
   FaCamera,
@@ -146,7 +147,61 @@ const ArtisanSignup = () => {
           newErrors.confirmPassword = "Passwords do not match";
         }
         break;
-      // Add validation for other steps
+      case 2:
+        if (!formData.state) newErrors.state = "State is required";
+        if (!formData.city) newErrors.city = "City is required";
+        if (!formData.streetAddress)
+          newErrors.streetAddress = "Street address is required";
+        break;
+      case 3:
+        if (!formData.jobType) newErrors.jobType = "Job type is required";
+        if (!formData.yearsOfExperience)
+          newErrors.yearsOfExperience = "Years of experience is required";
+        if (!formData.artisanDescription)
+          newErrors.artisanDescription = "Description is required";
+        formData.jobCategories.forEach((category, index) => {
+          if (!category.jobCategory)
+            newErrors[`jobCategory-${index}`] = "Job category is required";
+          category.skills.forEach((skill, skillIndex) => {
+            if (!skill)
+              newErrors[`skill-${index}-${skillIndex}`] = "Skill is required";
+          });
+        });
+        break;
+      case 4:
+        if (!formData.education.level)
+          newErrors["education.level"] = "Education level is required";
+        if (formData.education.level !== "No Education") {
+          if (!formData.education.details.course)
+            newErrors["education.details.course"] = "Course is required";
+          if (!formData.education.details.gradYear)
+            newErrors["education.details.gradYear"] =
+              "Graduation year is required";
+          if (!formData.education.details.certObtained)
+            newErrors["education.details.certObtained"] =
+              "Certificate obtained is required";
+        }
+        break;
+      case 5:
+        if (!formData.workExperience.hasExperience)
+          newErrors["workExperience.hasExperience"] =
+            "Work experience is required";
+        if (formData.workExperience.hasExperience === "Yes") {
+          if (!formData.workExperience.details.companyName)
+            newErrors["workExperience.details.companyName"] =
+              "Company name is required";
+          if (!formData.workExperience.details.role)
+            newErrors["workExperience.details.role"] = "Role is required";
+          if (!formData.workExperience.details.startYear)
+            newErrors["workExperience.details.startYear"] =
+              "Start year is required";
+          if (!formData.workExperience.details.endYear)
+            newErrors["workExperience.details.endYear"] =
+              "End year is required";
+        }
+        break;
+      default:
+        break;
     }
 
     setErrors(newErrors);
@@ -413,7 +468,95 @@ const ArtisanSignup = () => {
         return (
           <div className="space-y-4">
             <h2 className="text-xl font-bold mb-4">Professional Information</h2>
-            {/* Add professional information fields */}
+            <div>
+              <Input
+                label="Job Type"
+                id="jobType"
+                name="jobType"
+                value={formData.jobType}
+                onChange={handleChange}
+                placeholder="Enter job type"
+              />
+              {errors.jobType && (
+                <span className="text-red-500 text-sm">{errors.jobType}</span>
+              )}
+            </div>
+            <div>
+              <Input
+                label="Years of Experience"
+                id="yearsOfExperience"
+                name="yearsOfExperience"
+                value={formData.yearsOfExperience}
+                onChange={handleChange}
+                placeholder="Enter years of experience"
+              />
+              {errors.yearsOfExperience && (
+                <span className="text-red-500 text-sm">
+                  {errors.yearsOfExperience}
+                </span>
+              )}
+            </div>
+            <div>
+              <Textarea
+                label="Artisan Description"
+                id="artisanDescription"
+                name="artisanDescription"
+                value={formData.artisanDescription}
+                onChange={handleChange}
+                placeholder="Enter a brief description"
+              />
+              {errors.artisanDescription && (
+                <span className="text-red-500 text-sm">
+                  {errors.artisanDescription}
+                </span>
+              )}
+            </div>
+            <div>
+              <h3 className="text-lg font-bold mb-2">Job Categories</h3>
+              {formData.jobCategories.map((category, index) => (
+                <div key={index} className="mb-4">
+                  <Input
+                    label={`Job Category ${index + 1}`}
+                    id={`jobCategory-${index}`}
+                    name={`jobCategories[${index}].jobCategory`}
+                    className="mb-2"
+                    value={category.jobCategory}
+                    onChange={handleChange}
+                    placeholder="Enter job category"
+                  />
+                  {category.skills.map((skill, skillIndex) => (
+                    <Input
+                      key={skillIndex}
+                      label={`Skill ${skillIndex + 1}`}
+                      id={`skill-${index}-${skillIndex}`}
+                      name={`jobCategories[${index}].skills[${skillIndex}]`}
+                      value={skill}
+                      className="mb-2"
+                      onChange={handleChange}
+                      placeholder="Enter skill"
+                    />
+                  ))}
+
+                  <Button
+                    type="button"
+                    onClick={() => handleAddSkill(index)}
+                    variant="flat"
+                    color="secondary"
+                  >
+                    Add Skill
+                  </Button>
+                </div>
+              ))}
+              <Button
+                type="button"
+                onClick={handleAddJobCategory}
+                className=""
+                variant="ghost"
+                color="secondary"
+              >
+                Add Job Category
+              </Button>
+            </div>
           </div>
         );
 
@@ -421,7 +564,86 @@ const ArtisanSignup = () => {
         return (
           <div className="space-y-4">
             <h2 className="text-xl font-bold mb-4">Education</h2>
-            {/* Add education fields */}
+            <div>
+              <Select
+                label="Education Level"
+                value={formData.education.level}
+                onChange={(e) =>
+                  handleChange({
+                    target: { name: "education.level", value: e.target.value },
+                  })
+                }
+                placeholder="Select education level"
+              >
+                <SelectItem value="No Education">No Education</SelectItem>
+                <SelectItem value="Primary School">Primary School</SelectItem>
+                <SelectItem value="Secondary School">
+                  Secondary School
+                </SelectItem>
+                <SelectItem value="University">University</SelectItem>
+                <SelectItem value="Technical School">
+                  Technical School
+                </SelectItem>
+                <SelectItem value="College of Education">
+                  College of Education
+                </SelectItem>
+                <SelectItem value="Polytechnic">Polytechnic</SelectItem>
+              </Select>
+              {errors.education?.level && (
+                <span className="text-red-500 text-sm">
+                  {errors.education.level}
+                </span>
+              )}
+            </div>
+            {formData.education.level !== "No Education" && (
+              <>
+                <div>
+                  <Input
+                    label="Course"
+                    id="course"
+                    name="education.details.course"
+                    value={formData.education.details.course}
+                    onChange={handleChange}
+                    placeholder="Enter course"
+                  />
+                  {errors.education?.details?.course && (
+                    <span className="text-red-500 text-sm">
+                      {errors.education.details.course}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <Input
+                    label="Graduation Year"
+                    id="gradYear"
+                    name="education.details.gradYear"
+                    value={formData.education.details.gradYear}
+                    onChange={handleChange}
+                    placeholder="Enter graduation year"
+                  />
+                  {errors.education?.details?.gradYear && (
+                    <span className="text-red-500 text-sm">
+                      {errors.education.details.gradYear}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <Input
+                    label="Certificate Obtained"
+                    id="certObtained"
+                    name="education.details.certObtained"
+                    value={formData.education.details.certObtained}
+                    onChange={handleChange}
+                    placeholder="Enter certificate obtained"
+                  />
+                  {errors.education?.details?.certObtained && (
+                    <span className="text-red-500 text-sm">
+                      {errors.education.details.certObtained}
+                    </span>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         );
 
@@ -429,7 +651,93 @@ const ArtisanSignup = () => {
         return (
           <div className="space-y-4">
             <h2 className="text-xl font-bold mb-4">Work Experience</h2>
-            {/* Add work experience fields */}
+            <div>
+              <Select
+                label="Do you have work experience?"
+                value={formData.workExperience.hasExperience}
+                onChange={(e) =>
+                  handleChange({
+                    target: {
+                      name: "workExperience.hasExperience",
+                      value: e.target.value,
+                    },
+                  })
+                }
+                placeholder="Select an option"
+              >
+                <SelectItem value="Yes">Yes</SelectItem>
+                <SelectItem value="No">No</SelectItem>
+              </Select>
+              {errors.workExperience?.hasExperience && (
+                <span className="text-red-500 text-sm">
+                  {errors.workExperience.hasExperience}
+                </span>
+              )}
+            </div>
+            {formData.workExperience.hasExperience === "Yes" && (
+              <>
+                <div>
+                  <Input
+                    label="Company Name"
+                    id="companyName"
+                    name="workExperience.details.companyName"
+                    value={formData.workExperience.details.companyName}
+                    onChange={handleChange}
+                    placeholder="Enter company name"
+                  />
+                  {errors.workExperience?.details?.companyName && (
+                    <span className="text-red-500 text-sm">
+                      {errors.workExperience.details.companyName}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <Input
+                    label="Role"
+                    id="role"
+                    name="workExperience.details.role"
+                    value={formData.workExperience.details.role}
+                    onChange={handleChange}
+                    placeholder="Enter role"
+                  />
+                  {errors.workExperience?.details?.role && (
+                    <span className="text-red-500 text-sm">
+                      {errors.workExperience.details.role}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <Input
+                    label="Start Year"
+                    id="startYear"
+                    name="workExperience.details.startYear"
+                    value={formData.workExperience.details.startYear}
+                    onChange={handleChange}
+                    placeholder="Enter start year"
+                  />
+                  {errors.workExperience?.details?.startYear && (
+                    <span className="text-red-500 text-sm">
+                      {errors.workExperience.details.startYear}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <Input
+                    label="End Year"
+                    id="endYear"
+                    name="workExperience.details.endYear"
+                    value={formData.workExperience.details.endYear}
+                    onChange={handleChange}
+                    placeholder="Enter end year"
+                  />
+                  {errors.workExperience?.details?.endYear && (
+                    <span className="text-red-500 text-sm">
+                      {errors.workExperience.details.endYear}
+                    </span>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         );
 

@@ -9,6 +9,7 @@ import FooterCard from "./components/navbars/FooterCard";
 import AboutUsPage from "./pages/AboutUsPage";
 import JobOffersPage from "./pages/JobOffersPage";
 import SignupOnbaording from "./pages/SingupOnboarding";
+import ArtisanDashboardPage from "./pages/ArtsianDashboardPage";
 
 function App() {
   useEffect(() => {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/signup/*" element={<SignupOnbaording />} />
         <Route path="/about" element={<AboutUsPage />} />
         <Route path="/jobs" element={<JobOffersPage />} />
+        <Route path="/artisan/*" element={<ArtisanDashboardPage />} />
       </Routes>
       <FooterCard />
     </>
