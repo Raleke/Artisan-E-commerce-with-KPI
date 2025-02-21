@@ -19,6 +19,7 @@ import {
   FaRegEyeSlash,
   FaUpload,
 } from "react-icons/fa";
+import signupImage from "../assets/signup.jpg";
 
 const ArtisanSignup = () => {
   const [step, setStep] = useState(1);
@@ -800,7 +801,7 @@ const ArtisanSignup = () => {
       </div>
       <div className="w-full md:w-1/2 flex items-center justify-center">
         <img
-          src="/Login.png"
+          src={signupImage}
           alt="Employee Login Illustration"
           className="w-full md:block hidden"
         />

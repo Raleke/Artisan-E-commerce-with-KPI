@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import FormComponent from "../components/forms/FormComponent";
+import loginImage from "../assets/login.jpg";
 
 const ArtisanLoginPage = () => {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const ArtisanLoginPage = () => {
       </div>
       <div className="w-full md:w-1/2 flex items-center justify-center">
         <img
-          src="/admin.png"
+          src={loginImage}
           alt="Admin Login Illustration"
           className="w-full md:block hidden"
         />
