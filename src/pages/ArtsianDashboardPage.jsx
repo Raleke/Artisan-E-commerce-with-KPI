@@ -1,8 +1,9 @@
-import { MdDashboard, MdNotifications } from "react-icons/md";
+import { MdDashboard, MdNotifications, MdOutlinePerson } from "react-icons/md";
 import { Route, Routes, useLocation } from "react-router";
 import JobOffersPage from "./JobOffersPage";
 import { Tab, Tabs } from "@heroui/react";
 import Notifications from "./ArtisanApplicationStatusPage";
+import ArtisanProfile from "./ArtisanProfilePage";
 
 const ArtisanDashboardPage = () => {
   const { pathname } = useLocation();
@@ -26,6 +27,16 @@ const ArtisanDashboardPage = () => {
           }
         />
         <Tab
+          key="/artisan/profile"
+          href="/artisan/profile"
+          title={
+            <div className="flex items-center space-x-2">
+              <MdOutlinePerson className="text-2xl" />
+              <span className="font-semibold text-center">Profile</span>
+            </div>
+          }
+        />
+        <Tab
           key="/artisan/notification"
           href="/artisan/notification"
           title={
@@ -39,6 +50,7 @@ const ArtisanDashboardPage = () => {
       <Routes>
         <Route path="/dashboard" element={<JobOffersPage />} />
         <Route path="/notification" element={<Notifications />} />
+        <Route path="/profile" element={<ArtisanProfile />} />
       </Routes>
     </div>
   );
