@@ -8,26 +8,14 @@ import AnimatedSection from "../components/cards/AnimatedSection";
 const AboutUsPage = () => {
   const teamMembers = [
     {
-      name: "Victor Ijirim",
+      name: "Raleke Miracle",
       role: "Chief Executive Officer",
       image: "/api/placeholder/300/300",
       linkedin: "#",
     },
     {
-      name: "Ushobi Samson",
-      role: "Chief Technology Officer",
-      image: "/api/placeholder/300/300",
-      linkedin: "#",
-    },
-    {
-      name: "Temitope Oyetuyi",
-      role: "Head of Recruitment",
-      image: "/api/placeholder/300/300",
-      linkedin: "#",
-    },
-    {
-      name: "Victoria Ibanga",
-      role: "Clients Service Manager",
+      name: "Wayword Benson",
+      role: "Chief Developer",
       image: "/api/placeholder/300/300",
       linkedin: "#",
     },
@@ -39,14 +27,14 @@ const AboutUsPage = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
       {/* Hero Section */}
-      <div className="text-center mb-20">
+      <div className="text-center md:mb-20">
         <h1 className="text-4xl font-bold mb-4">About Us</h1>
       </div>
 
       {/* About Section */}
       <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
         <AnimatedSection direction="left">
-          <div className="relative h-96">
+          <div className="relative h-96 hidden md:block">
             <img
               src="/api/placeholder/600/400"
               alt="Blue collar worker"

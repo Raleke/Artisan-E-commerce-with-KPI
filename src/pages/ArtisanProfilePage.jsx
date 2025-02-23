@@ -8,6 +8,7 @@ import {
   Select,
   SelectItem,
   Textarea,
+  Chip,
 } from "@heroui/react";
 import { FaCamera, FaEdit, FaCheckCircle, FaTimes } from "react-icons/fa";
 
@@ -29,6 +30,24 @@ const ArtisanProfile = ({ isOwnProfile = true }) => {
     skills: ["Furniture Making", "Wood Carving", "Cabinet Installation"],
     completedJobs: 127,
     rating: 4.8,
+    education: [
+      {
+        id: 1,
+        institution: "Lagos Technical Institute",
+        qualification: "Advanced Diploma in Woodworking",
+        year: "2008",
+        description:
+          "Specialized training in furniture making and wood craftsmanship",
+      },
+      {
+        id: 2,
+        institution: "City & Guilds",
+        qualification: "Level 3 Certification in Carpentry",
+        year: "2010",
+        description:
+          "International certification in advanced carpentry techniques",
+      },
+    ],
   });
 
   const [editedData, setEditedData] = useState(profileData);
@@ -52,19 +71,19 @@ const ArtisanProfile = ({ isOwnProfile = true }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-4xl md:h-[80vh] flex justify-center items-center  mx-auto p-4">
       <Card className="w-full">
-        <CardHeader className="relative">
+        <CardHeader className="relative flex flex-col md:flex-row">
           <div className="flex items-center gap-6">
             <div className="relative">
-              <div className="w-32 h-32 rounded-full bg-gray-200 overflow-hidden">
+              <div className="w-32 h-32 rounded-full bg-gray-200 overflow-hidden relative">
                 <img
                   src="/api/placeholder/128/128"
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
                 {isOwnProfile && (
-                  <div className="absolute bottom-0 w-full bg-black/50 py-2 flex justify-center">
+                  <div className="absolute inset-x-0 bottom-0 rounded-b-full bg-black/50 py-2 flex justify-center">
                     <FaCamera className="w-5 h-5 text-white cursor-pointer" />
                   </div>
                 )}
@@ -80,12 +99,11 @@ const ArtisanProfile = ({ isOwnProfile = true }) => {
                     size="sm"
                   >
                     <FaEdit className="w-4 h-4 mr-2" />
-                    Edit Profile
                   </Button>
                 )}
               </div>
               <p className="text-lg text-gray-600">{profileData.profession}</p>
-              <div className="flex items-center gap-4 mt-2">
+              <div className="hidden md:flex items-center gap-4 mt-2">
                 <span className="flex items-center">
                   <FaCheckCircle className="w-4 h-4 text-green-500 mr-1" />
                   {profileData.completedJobs} Jobs Completed
@@ -95,6 +113,15 @@ const ArtisanProfile = ({ isOwnProfile = true }) => {
                 </span>
               </div>
             </div>
+          </div>
+          <div className="flex items-center gap-4 mt-2 md:hidden">
+            <span className="flex items-center">
+              <FaCheckCircle className="w-4 h-4 text-green-500 mr-1" />
+              {profileData.completedJobs} Jobs Completed
+            </span>
+            <span className="flex items-center">
+              ⭐ {profileData.rating}/5.0
+            </span>
           </div>
         </CardHeader>
 
@@ -207,12 +234,28 @@ const ArtisanProfile = ({ isOwnProfile = true }) => {
                 <h3 className="text-sm font-medium text-gray-500">Skills</h3>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {profileData.skills.map((skill, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-gray-100 rounded-full text-sm"
-                    >
+                    <Chip key={index} className="">
                       {skill}
-                    </span>
+                    </Chip>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h3 className="text-sm font-medium text-gray-500 mb-4">
+                  Education
+                </h3>
+                <div className="space-y-4">
+                  {profileData.education.map((edu) => (
+                    <div key={edu.id} className="p-4 bg-gray-50 rounded-lg">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-medium">{edu.qualification}</h4>
+                          <p className="text-gray-600">{edu.institution}</p>
+                        </div>
+                        <span className="text-gray-500">{edu.year}</span>
+                      </div>
+                      <p className="mt-2 text-gray-600">{edu.description}</p>
+                    </div>
                   ))}
                 </div>
               </div>

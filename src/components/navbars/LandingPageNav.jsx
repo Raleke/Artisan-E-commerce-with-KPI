@@ -33,16 +33,9 @@ export default function LandingPageNav() {
   console.log(currentPath);
 
   const menuItems = [
-    "Profile",
-    "Dashboard",
-    "Activity",
-    "Analytics",
-    "System",
-    "Deployments",
-    "My Settings",
-    "Team Settings",
-    "Help & Feedback",
-    "Log Out",
+    { label: "Home", to: "/" },
+    { label: "About Us", to: "/about" },
+    { label: "jobs", to: "/jobs" },
   ];
 
   return (
@@ -117,11 +110,10 @@ export default function LandingPageNav() {
           <Button
             as={Link}
             color="primary"
-            href="#"
-            variant="flat"
-            startContent={<LogIn />}
+            href="/signup"
+            startContent={<UserPlus />}
           >
-            Login
+            Sign Up
           </Button>
         </NavbarItem>
 
@@ -129,23 +121,27 @@ export default function LandingPageNav() {
       </NavbarContent>
       <NavbarMenu>
         {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
+          <NavbarMenuItem key={`${item.label}-${index}`}>
             <Link
               className="w-full"
-              color={
-                index === 2
-                  ? "warning"
-                  : index === menuItems.length - 1
-                    ? "danger"
-                    : "foreground"
-              }
-              href="#"
+              href={item.to}
               size="lg"
+              color={currentPath === item.to ? "primary" : "foreground"}
             >
-              {item}
+              {item.label}
             </Link>
           </NavbarMenuItem>
         ))}
+
+        <Button
+          as={Link}
+          color="primary"
+          href="/login"
+          variant="flat"
+          startContent={<LogIn />}
+        >
+          Login
+        </Button>
       </NavbarMenu>
     </Navbar>
   );
