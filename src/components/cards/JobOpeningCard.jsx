@@ -4,10 +4,11 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Link,
   Tooltip,
 } from "@heroui/react";
 import { FcMoneyTransfer } from "react-icons/fc";
-import { formattedWithCommas } from "../../utils/utiils";
+import { formatCurrency } from "../../utils/utiils";
 import { AiOutlineMenuFold } from "react-icons/ai";
 
 export default function JobOpeningCard({ details }) {
@@ -31,8 +32,7 @@ export default function JobOpeningCard({ details }) {
         <div className="flex justify-center  gap-4">
           <FcMoneyTransfer className="h-8 w-8" />
           <span className="text-xl content-center">
-            ₦{formattedWithCommas(details.priceRange1)} - ₦
-            {formattedWithCommas(details.priceRange2)}
+            {formatCurrency(details.priceRange1)}{" "}
           </span>
         </div>
         <p>{details.location}</p>
@@ -43,6 +43,8 @@ export default function JobOpeningCard({ details }) {
           startContent=<AiOutlineMenuFold />
           color="primary"
           variant="flat"
+          as={Link}
+          href={`/job/${details.id}`}
         >
           View Details
         </Button>

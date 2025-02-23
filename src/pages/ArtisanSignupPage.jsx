@@ -232,7 +232,9 @@ const ArtisanSignup = () => {
       case 1:
         return (
           <div className="space-y-4">
-            <h2 className="text-xl font-bold mb-4">Personal Information</h2>
+            <h2 className="text-xl text-center font-bold mb-4">
+              Personal Information
+            </h2>
             <div className="flex justify-center mb-6">
               <div
                 className="relative w-32 h-32 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors"
@@ -247,6 +249,7 @@ const ArtisanSignup = () => {
                 ) : (
                   <div className="flex flex-col items-center">
                     <FaCamera className="w-8 h-8 text-gray-400" />
+                    rt
                     <span className="text-sm text-gray-500 mt-2">
                       Upload Photo
                     </span>
@@ -266,7 +269,7 @@ const ArtisanSignup = () => {
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Input
                   label="First Name"
@@ -334,7 +337,7 @@ const ArtisanSignup = () => {
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Input
                   label="Password"

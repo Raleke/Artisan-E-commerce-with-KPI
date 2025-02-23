@@ -10,7 +10,13 @@ import {
   Textarea,
   Chip,
 } from "@heroui/react";
-import { FaCamera, FaEdit, FaCheckCircle, FaTimes } from "react-icons/fa";
+import {
+  FaCamera,
+  FaEdit,
+  FaCheckCircle,
+  FaTimes,
+  FaStar,
+} from "react-icons/fa";
 
 const ArtisanProfile = ({ isOwnProfile = true }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -71,7 +77,7 @@ const ArtisanProfile = ({ isOwnProfile = true }) => {
   };
 
   return (
-    <div className="max-w-4xl md:h-[80vh] flex justify-center items-center  mx-auto p-4">
+    <div className="max-w-4xl min-h-[80vh] flex justify-center items-center  mx-auto p-4">
       <Card className="w-full">
         <CardHeader className="relative flex flex-col md:flex-row">
           <div className="flex items-center gap-6">
@@ -105,18 +111,19 @@ const ArtisanProfile = ({ isOwnProfile = true }) => {
               <p className="text-lg text-gray-600">{profileData.profession}</p>
               <div className="hidden md:flex items-center gap-4 mt-2">
                 <span className="flex items-center">
-                  <FaCheckCircle className="w-4 h-4 text-green-500 mr-1" />
+                  <FaCheckCircle className="w-4 h-4 text-success-500 mr-1" />
                   {profileData.completedJobs} Jobs Completed
                 </span>
-                <span className="flex items-center">
-                  ⭐ {profileData.rating}/5.0
+                <span className="flex items-center gap-2">
+                  <FaStar className="text-yellow-400 h-4 w-4 " />
+                  {profileData.rating}/5.0
                 </span>
               </div>
             </div>
           </div>
           <div className="flex items-center gap-4 mt-2 md:hidden">
             <span className="flex items-center">
-              <FaCheckCircle className="w-4 h-4 text-green-500 mr-1" />
+              <FaCheckCircle className="w-4 h-4 text-success-500 mr-1" />
               {profileData.completedJobs} Jobs Completed
             </span>
             <span className="flex items-center">
@@ -246,15 +253,24 @@ const ArtisanProfile = ({ isOwnProfile = true }) => {
                 </h3>
                 <div className="space-y-4">
                   {profileData.education.map((edu) => (
-                    <div key={edu.id} className="p-4 bg-gray-50 rounded-lg">
+                    <div
+                      key={edu.id}
+                      className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                    >
                       <div className="flex justify-between items-start">
                         <div>
                           <h4 className="font-medium">{edu.qualification}</h4>
-                          <p className="text-gray-600">{edu.institution}</p>
+                          <p className="text-gray-600 dark:text-gray-50">
+                            {edu.institution}
+                          </p>
                         </div>
-                        <span className="text-gray-500">{edu.year}</span>
+                        <span className="text-gray-500 dark:text-gray-100">
+                          {edu.year}
+                        </span>
                       </div>
-                      <p className="mt-2 text-gray-600">{edu.description}</p>
+                      <p className="mt-2 text-gray-600 dark:text-gray-50">
+                        {edu.description}
+                      </p>
                     </div>
                   ))}
                 </div>
