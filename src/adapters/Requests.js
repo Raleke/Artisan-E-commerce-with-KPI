@@ -1,37 +1,37 @@
 import { apiClient, queryClient } from "./api";
-import { useQuery, useMutation, keepPreviousData } from "@tanstack/react-query";
-import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { useSearchParams, useNavigate, useLocation } from "react-router";
 import { GetUserId, handleError } from "./utils";
-import useAuth from "@/hooks/useAuth";
+import useAuth from "../hooks/useAuth";
 import { jwtDecode } from "jwt-decode";
-import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import { toast } from "sonner";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
-function useLogin() {
+function useEmployerLogin() {
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/dashboard";
+  const from = location.state?.from?.pathname || "employer/dashboard";
   const { setAuth } = useAuth();
   return useMutation({
     mutationFn: (formData) => {
-      return apiClient.post("users/login", formData, {
+      return apiClient.post("/employer/login", formData, {
         headers: {
           "Content-Type": "application/json",
         },
-        withCredentials: true,
       });
     },
     onSuccess: (res) => {
       const token = res.data.token;
       const decodedToken = jwtDecode(token);
       // Extract user ID from decoded token
-      const userId = decodedToken.userId;
-      setAuth({ userId, token });
+      const employer = res.data.employer;
+      console.log(employer);
+      setAuth({ type: "employer", employer, token });
       queryClient.invalidateQueries("userdata"); // Invalidate the user query
       // Redirect to dashboard after successful login
       navigate(from, { replace: true });
     },
     onError: (error) => {
+      handleError(error);
       console.log(error);
       if (
         error.response &&
@@ -44,60 +44,49 @@ function useLogin() {
   });
 }
 
-function UseSignup() {
+function UseEmployerSignup() {
   const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async (formData) => {
-      const response = await apiClient.post(`users/signup`, formData, {
+      const response = await apiClient.post(`employer/register`, formData, {
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       });
 
       return response.data;
     },
     onSuccess: (data) => {
-      if (!data || !data.email) {
-        console.error("Invalid data received:", data);
-        return;
-      }
-      queryClient.invalidateQueries("userdata");
-      toast.success("You have been successfully registered.");
-      navigate(`/verify/email/${data.email}`);
+      navigate(`/verify/email/`);
     },
   });
 }
 
-function useLogout() {
+function UsePostContactArtisan(employerId, artisanId) {
   const navigate = useNavigate();
-  const { setAuth } = useAuth();
-  const apiClientPrivate = useAxiosPrivate();
+
   return useMutation({
-    mutationFn: async () => {
-      try {
-        const res = await apiClientPrivate.get("/users/logout");
-        return res.data;
-      } catch (error) {
-        handleError(error);
-      }
-    },
-    onSuccess: () => {
-      setAuth({});
-      queryClient.invalidateQueries();
-      navigate("/", { replace: true });
+    mutationFn: async (formData) => {
+      const response = await apiClient.post(
+        `employer/contact-artisan/${employerId}/${artisanId}`,
+        formData,
+      );
+
+      return response.data;
     },
   });
 }
-function UseGetIsUserVerified(email) {
+
+function UseGetEmployerProfile(id) {
   return useQuery({
-    queryKey: ["userdata", email],
+    queryKey: ["userdata", id],
     queryFn: async () => {
-      if (!email) {
+      if (!id) {
         return null;
       }
       try {
-        const res = await apiClient.get(`users/verify/status/${email}`);
+        const res = await apiClient.get(`/employer/profile/${id}`);
         return res.data;
       } catch (error) {
         handleError(error);
@@ -107,582 +96,163 @@ function UseGetIsUserVerified(email) {
   });
 }
 
-function UsePostRefeshToken() {
-  return useMutation({
-    mutationFn: async ({ email }) => {
+function useGetJobApplications(jobId) {
+  const apiClientPrivate = useAxiosPrivate();
+  return useQuery({
+    queryKey: ["applications", jobId],
+    queryFn: async () => {
       try {
-        const response = await apiClient.post(`users/verify/resend/${email}`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        toast.success("Email Successfully Sent.");
-        return response.data;
+        const res = await apiClientPrivate.get(
+          `/employer/${jobId}/applications`,
+        );
+        return res.data;
       } catch (error) {
         handleError(error);
       }
     },
-  });
-}
-function UseHandleVerifyToken() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/dashboard";
-  const { setAuth } = useAuth();
-  return useMutation({
-    mutationFn: async ({ email, token }) => {
-      return apiClient.post(`users/verify/email/${email}/${token}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      });
-    },
-    onSuccess: (res) => {
-      console.log(res.data);
-      const token = res.data.token;
-      const decodedToken = jwtDecode(token);
-      // Extract user ID from decoded token
-      const userId = decodedToken.userId;
-      setAuth({ userId, token });
-      queryClient.invalidateQueries("userdata"); // Invalidate the user query
-      // Redirect to dashboard after successful login
-      navigate(from, { replace: true });
-    },
-    onError: (error) => {
-      toast.error(error.response?.data?.error || "An error occurred");
-      if (error.response?.data?.error === "no token of the such exists") {
-        return navigate(`/sign-up`);
-      }
-      if (error.response?.status == 401) {
-        return navigate(`/verify/email/${error.response.data.email}`, {
-          replace: true,
-        });
-      }
-      return;
-    },
-    retry: 2,
-  });
-}
-function UsePostResetToken() {
-  return useMutation({
-    mutationFn: async ({ email }) => {
-      try {
-        const response = await apiClient.post(`users/reset/email/${email}`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        toast.success("Email Successfully Sent.");
-        return response.data;
-      } catch (error) {
-        handleError(error);
-      }
-    },
-  });
-}
-function UseHandleResetToken() {
-  const navigate = useNavigate();
-  return useMutation({
-    mutationFn: async ({ token, formData }) => {
-      const response = await apiClient.post(
-        `users/reset/password/${token}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
 
-      return response.data;
+    staleTime: 50000,
+  });
+}
+function usePatchApplicationStatus(jobId, artisanId) {
+  return useMutation({
+    mutationFn: async (status) => {
+      try {
+        const res = await apiClient.patch(
+          `/employer/${jobId}/applications/${artisanId}`,
+          status,
+        );
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
     },
     onSuccess: () => {
-      navigate("/log-in", { replace: true });
+      queryClient.invalidateQueries(["applications", jobId]);
     },
   });
 }
 
-function useOpenings() {
-  const apiClientPrivate = useAxiosPrivate();
-  const [search] = useSearchParams();
-  let page = parseInt(search.get("page")) || 1;
-  search.delete("page");
+function useGetEmployerNotifications(id) {
   return useQuery({
-    queryKey: ["openings", search.toString(), page],
-    queryFn: () =>
-      apiClientPrivate
-        .get("vacancies", {
-          params: search,
-        })
-        .then((res) => res.data),
-    placeholderData: keepPreviousData,
+    queryKey: ["notifications", id],
+    queryFn: async () => {
+      if (!id) {
+        return null;
+      }
+      try {
+        const res = await apiClient.get(`/employer/notifications/${id}`);
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+    staleTime: 4000,
+  });
+}
+
+function useGetALLJobs() {
+  const apiClientPrivate = useAxiosPrivate();
+  return useQuery({
+    queryKey: ["jobs", "all"],
+
+    queryFn: async () => {
+      try {
+        const res = await apiClientPrivate.get(`/job/all`);
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+
+    staleTime: 50000,
+  });
+}
+function useGetJobDetails(jobId) {
+  const apiClientPrivate = useAxiosPrivate();
+  return useQuery({
+    queryKey: ["applications", jobId],
+    queryFn: async () => {
+      try {
+        const res = await apiClientPrivate.get(
+          `/employer/${jobId}/applications`,
+        );
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
 
     staleTime: 50000,
   });
 }
 
-function UseUserinfo() {
-  const userId = GetUserId();
-  const apiClientPrivate = useAxiosPrivate();
-  return useQuery({
-    queryKey: ["userdata", userId],
-    queryFn: async () => {
-      if (!userId) {
-        return null;
-      }
-      try {
-        const res = await apiClientPrivate.get(`users/${userId}`);
-        return res.data;
-      } catch (error) {
-        handleError(error);
-      }
-    },
-    staleTime: 100000000,
-  });
-}
-
-function UsePostinfo() {
-  const userId = GetUserId();
-  const apiClientPrivate = useAxiosPrivate();
+function useArtisanLogin() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/artisan/dashboard";
+  const { auth, setAuth } = useAuth();
   return useMutation({
-    mutationFn: async (formData) => {
-      const response = await apiClientPrivate.post(
-        `users/${userId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      return response.data;
+    mutationFn: (formData) => {
+      return apiClient.post("/artisan/login", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries("userdata");
+    onSuccess: (res) => {
+      const token = res.data.token;
+      const decodedToken = jwtDecode(token);
+      // Extract user ID from decoded token
+      const employer = res.data.artisan;
+      console.log(employer);
+      setAuth({ type: "artisan", employer, token });
+      console.log(auth);
+      queryClient.invalidateQueries("userdata"); // Invalidate the user query
+      // Redirect to dashboard after successful login
+      navigate(from, { replace: true });
     },
     onError: (error) => {
       handleError(error);
-    },
-  });
-}
-function UsePostAcademicInformation() {
-  const apiClientPrivate = useAxiosPrivate();
-  return useMutation({
-    mutationFn: async ({ application_id, formData }) => {
-      try {
-        const response = await apiClientPrivate.post(
-          `apply/academic/${application_id}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        return response.data;
-      } catch (error) {
-        handleError(error);
+      console.log(error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.error === "your email has not been verified"
+      ) {
+        navigate(`/verify/email/${error.response.data.email}`);
       }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries("application");
-    },
   });
 }
-function useApplicationInfo(application_id) {
+
+function useGetArtisanFullDetails(artisanId) {
   const apiClientPrivate = useAxiosPrivate();
   return useQuery({
-    queryKey: ["application", application_id],
+    queryKey: ["artisan", artisanId],
     queryFn: async () => {
-      if (!application_id) {
-        return null;
-      }
       try {
-        const res = await apiClientPrivate.get(`application/${application_id}`);
-
+        const res = await apiClientPrivate.get(`/artisan/profile/${artisanId}`);
         return res.data;
       } catch (error) {
         handleError(error);
       }
     },
-    staleTime: 100000,
-  });
-}
-function useApplicationAll() {
-  const apiClientPrivate = useAxiosPrivate();
-  const user_id = GetUserId();
-  return useQuery({
-    queryKey: ["applications", user_id],
-    queryFn: async () => {
-      if (!user_id) {
-        return null;
-      }
-      try {
-        const res = await apiClientPrivate.get(`application/all/${user_id}`);
-        return res.data;
-      } catch (error) {
-        handleError(error);
-      }
-    },
-    staleTime: 100000,
-  });
-}
 
-function UseAcademicInfo(application_id) {
-  const apiClientPrivate = useAxiosPrivate();
-  return useQuery({
-    queryKey: ["application", application_id, "academic"],
-    queryFn: async () => {
-      if (!application_id) {
-        return null;
-      }
-      try {
-        const res = await apiClientPrivate.get(
-          `apply/academic/${application_id}`
-        );
-        return res.data;
-      } catch (error) {
-        handleError(error);
-      }
-    },
-    staleTime: 100000000,
-  });
-}
-function usePostNextofKinInfo({ application_id }) {
-  const apiClientPrivate = useAxiosPrivate();
-  return useMutation({
-    mutationFn: async ({ application_id, formData }) => {
-      try {
-        const response = await apiClientPrivate.post(
-          `apply/nextofkin/${application_id}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        // Handle successful response, e.g., return data or handle redirects
-        return response.data;
-      } catch (error) {
-        // Handle errors more specifically, e.g., display error messages or log details
-        handleError(error);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries("application"); // Assuming 'application' is the query key
-    },
-  });
-}
-function useGetNextofKinInfo(application_id) {
-  const apiClientPrivate = useAxiosPrivate();
-  return useQuery({
-    queryKey: ["application", application_id, "nextofkin"],
-    queryFn: async () => {
-      if (!application_id) {
-        return null;
-      }
-      try {
-        const res = await apiClientPrivate.get(
-          `apply/nextofkin/${application_id}`
-        );
-
-        return res.data;
-      } catch (error) {
-        handleError(error);
-      }
-    },
-    staleTime: 100000000,
-  });
-}
-function useGetDocumentRequired(vacancy_id) {
-  const apiClientPrivate = useAxiosPrivate();
-  return useQuery({
-    queryKey: ["application", vacancy_id, "documents types"],
-    queryFn: async () => {
-      if (!vacancy_id) {
-        return null;
-      }
-      try {
-        const res = await apiClientPrivate.get(
-          `apply/documents/types/${vacancy_id}`
-        );
-
-        return res.data;
-      } catch (error) {
-        handleError(error);
-      }
-    },
-    staleTime: 100000000,
-  });
-}
-function useGetApplicationDocuments(application_id) {
-  const apiClientPrivate = useAxiosPrivate();
-  return useQuery({
-    queryKey: ["application", application_id, "documents"],
-    queryFn: async () => {
-      if (!application_id) {
-        return null;
-      }
-      try {
-        const res = await apiClientPrivate.get(
-          `apply/documents/${application_id}`
-        );
-
-        return res.data;
-      } catch (error) {
-        handleError(error);
-      }
-    },
-    staleTime: 100000000,
-  });
-}
-
-function usePostDocumentUpload() {
-  const apiClientPrivate = useAxiosPrivate();
-  return useMutation({
-    mutationFn: async ({ id, application_id, formData }) => {
-      try {
-        const response = await apiClientPrivate.post(
-          `/apply/documents/create/${id}/${application_id}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        return response.data;
-      } catch (error) {
-        handleError(error);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries("application");
-    },
-  });
-}
-function usePostRefereeInformation() {
-  const apiClientPrivate = useAxiosPrivate();
-  return useMutation({
-    mutationFn: async ({ application_id, formData }) => {
-      try {
-        const response = await apiClientPrivate.post(
-          `/apply/referee/${application_id}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        return response.data;
-      } catch (error) {
-        handleError(error);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries("application");
-    },
-  });
-}
-function useRefereeInformation(application_id) {
-  const apiClientPrivate = useAxiosPrivate();
-  return useQuery({
-    queryKey: ["application", application_id, "referee"],
-    queryFn: async () => {
-      if (!application_id) {
-        return null;
-      }
-      try {
-        const res = await apiClientPrivate.get(
-          `apply/referee/${application_id}`
-        );
-        return res.data;
-      } catch (error) {
-        handleError(error);
-      }
-    },
-    staleTime: 100000000,
-  });
-}
-
-function useCreateApplication() {
-  const apiClientPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
-  const userId = GetUserId();
-  return useMutation({
-    mutationFn: async ({ vacancy_id, application_type }) => {
-      try {
-        const response = await apiClientPrivate.post(
-          `application/${userId}/${vacancy_id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (response.data["message"] == "successful") {
-          toast.success("Your Application has been successfully created.");
-          return navigate(
-            `/apply/${application_type}/${vacancy_id}/${response.data["application_id"]}`
-          );
-        }
-      } catch (error) {
-        handleError(error);
-      }
-    },
-  });
-}
-function useSubmitApplication() {
-  const apiClientPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
-  return useMutation({
-    mutationFn: async ({ vacancy_id, application_type, application_id }) => {
-      try {
-        const response = await apiClientPrivate.post(
-          `application/submit/${application_id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (response.data["message"] == "successful") {
-          toast.success("Your Application has been successfully submitted.");
-          return navigate(
-            `/apply/review/${application_type}/${vacancy_id}/${application_id}`
-          );
-        }
-      } catch (error) {
-        handleError(error);
-      }
-    },
-  });
-}
-function usePostNdeacademicainformation() {
-  const apiClientPrivate = useAxiosPrivate();
-  return useMutation({
-    mutationFn: async ({ application_id, formData }) => {
-      try {
-        const response = await apiClientPrivate.post(
-          `apply/academic/nde/${application_id}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        return response.data;
-
-      } catch (error) {
-        handleError(error);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries("application");
-    },
-  });
-}
-
-function useGetNdeacademicinformation(application_id) {
-  const apiClientPrivate = useAxiosPrivate();
-  return useQuery({
-    queryKey: ["application", application_id, "academic"],
-    queryFn: async () => {
-      if (!application_id) {
-        return null;
-      }
-      try {
-        const res = await apiClientPrivate.get(
-          `apply/academic/nde/${application_id}`
-        );
-        return res.data;
-      } catch (error) {
-        handleError(error);
-      }
-    },
-    // staleTime: 100000000,
-  });
-}
-function useGetSchools() {
-  const apiClientPrivate = useAxiosPrivate();
-  return useQuery({
-    queryKey: ["school"],
-    queryFn: async () => {
-      try {
-        const res = await apiClientPrivate.get(`info/school`);
-        return res.data;
-      } catch (error) {
-        handleError(error);
-      }
-    },
-    staleTime: 100000000,
-  });
-}
-function useGetLocations() {
-  const apiClientPrivate = useAxiosPrivate();
-  return useQuery({
-    queryKey: ["locations"],
-    queryFn: async () => {
-      try {
-        const res = await apiClientPrivate.get("info/location");
-        return res.data;
-      } catch (error) {
-        handleError(error);
-      }
-    },
-    staleTime: 100000000,
-  });
-}
-function useGetCourses() {
-  const apiClientPrivate = useAxiosPrivate();
-  return useQuery({
-    queryKey: ["cousres"],
-    queryFn: async () => {
-      try {
-        const res = await apiClientPrivate.get("info/courses");
-        return res.data;
-      } catch (error) {
-        handleError(error);
-      }
-    },
+    staleTime: 50000,
   });
 }
 
 export {
-  useOpenings,
-  useLogin,
-  UseSignup,
-  useLogout,
-  UseUserinfo,
-  UseGetIsUserVerified,
-  UsePostRefeshToken,
-  UseHandleVerifyToken,
-  UsePostResetToken,
-  UseHandleResetToken,
-  UsePostinfo,
-  useApplicationInfo,
-  useApplicationAll,
-  UsePostAcademicInformation,
-  UseAcademicInfo,
-  useGetDocumentRequired,
-  useGetApplicationDocuments,
-  usePostDocumentUpload,
-  usePostRefereeInformation,
-  useRefereeInformation,
-  useCreateApplication,
-  useSubmitApplication,
-  usePostNextofKinInfo,
-  useGetNextofKinInfo,
-  usePostNdeacademicainformation,
-  useGetNdeacademicinformation,
-  useGetSchools,
-  useGetLocations,
-  useGetCourses,
+  useEmployerLogin,
+  UseEmployerSignup,
+  UsePostContactArtisan,
+  UseGetEmployerProfile,
+  useGetJobApplications,
+  useGetJobDetails,
+  usePatchApplicationStatus,
+  useGetEmployerNotifications,
+  useArtisanLogin,
+  useGetALLJobs,
+  useGetArtisanFullDetails,
 };

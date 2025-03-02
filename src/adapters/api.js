@@ -9,7 +9,6 @@ const apiClient = axios.create({
 const apiClientPrivate = axios.create({
   baseURL: `${baseURL}` || "http://localhost:4000",
   headers: { "Content-Type": "application/json" },
-  withCredentials: true,
 });
 const queryClient = new QueryClient();
 

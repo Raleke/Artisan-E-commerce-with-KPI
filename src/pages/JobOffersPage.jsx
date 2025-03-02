@@ -3,6 +3,7 @@ import { Select, SelectItem, Input, Button } from "@heroui/react";
 import { FaSearch } from "react-icons/fa";
 import job from "../assets/job.png";
 import JobOpeningCard from "../components/cards/JobOpeningCard";
+import { useGetALLJobs } from "../adapters/Requests";
 const jobDetailsArray = [
   {
     tittle: "Production Manager",
@@ -257,6 +258,8 @@ const jobDetailsArray = [
 ];
 
 const JobOffersPage = () => {
+  const getOpenings = useGetALLJobs();
+  const jobDetailsArray = getOpenings.data?.jobs ?? [];
   const [selectedCategory, setSelectedCategory] = useState(new Set([]));
   const [selectedSkill, setSelectedSkill] = useState(new Set([]));
   const [searchLocation, setSearchLocation] = useState("");

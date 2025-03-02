@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-// import { toast } from "react-toastify"; // Import react-toastify
+import { toast } from "sonner"; // Import react-toastify
 import { useNavigate } from "react-router"; // Import useNavigate from react-router-dom
 import { FaEye, FaRegEyeSlash } from "react-icons/fa6";
 import { Button, Card, Input } from "@heroui/react";
@@ -43,13 +43,7 @@ const FormComponent = ({
     }
 
     // Proceed with the form submission if all required fields are filled
-    onSubmit(formData)
-      .then(() => {
-        toast.success("Form submitted successfully!"); // Success toast
-      })
-      .catch((error) => {
-        toast.error(`Error: ${error.message || "Something went wrong!"}`); // Error toast
-      });
+    onSubmit(formData);
   };
 
   // Navigate back to the onboarding screen

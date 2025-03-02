@@ -17,9 +17,15 @@ import {
   FaTimes,
   FaStar,
 } from "react-icons/fa";
+import { useGetArtisanFullDetails } from "../adapters/Requests";
+import useAuth from "../hooks/useAuth";
 
 const ArtisanProfile = ({ isOwnProfile = true }) => {
+  const { auth } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
+  console.log(auth);
+  const { isLoading, data } = useGetArtisanFullDetails();
+  console.log(data);
   const [profileData, setProfileData] = useState({
     fullName: "John Doe",
     profession: "Carpenter",

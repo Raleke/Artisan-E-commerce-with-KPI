@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import useRefreshToken from "./useRefreshToken";
 import useAuth from "./useAuth";
-import { apiClientPrivate } from "@/adapters/api";
+import { apiClientPrivate } from "../adapters/api";
 
 const useAxiosPrivate = () => {
   const refresh = useRefreshToken();
@@ -15,14 +15,14 @@ const useAxiosPrivate = () => {
         }
         return config;
       },
-      (error) => Promise.reject(error)
+      (error) => Promise.reject(error),
     );
 
     const responseIntercept = apiClientPrivate.interceptors.response.use(
       (response) => response,
       async (error) => {
         const prevRequest = error?.config;
-        if (error?.response?.status === 403 && !prevRequest?.sent) {
+        if (error?.response && !prevRequest?.sent) {
           prevRequest.sent = true;
           try {
             const newAccessToken = await refresh();
@@ -40,7 +40,7 @@ const useAxiosPrivate = () => {
           }
         }
         return Promise.reject(error);
-      }
+      },
     );
     return () => {
       apiClientPrivate.interceptors.request.eject(requestIntercept);

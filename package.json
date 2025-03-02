@@ -16,12 +16,15 @@
     "aos": "^2.3.4",
     "axios": "^1.7.9",
     "framer-motion": "^12.0.6",
+    "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-feather": "^2.0.10",
+    "react-hook-form": "^7.54.2",
     "react-icons": "^5.4.0",
     "react-intersection-observer": "^9.15.1",
     "react-router": "^7.1.5",
+    "sonner": "^2.0.1",
     "swiper": "^11.2.2"
   },
   "devDependencies": {

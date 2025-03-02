@@ -2,31 +2,18 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import loginImage from "../assets/login.jpg";
 import FormComponent from "../components/forms/FormComponent";
+import { useEmployerLogin } from "../adapters/Requests";
 
 const EmployerLoginPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const loginEmploye = useEmployerLogin();
 
   const handleLogin = async (formData) => {
     try {
       setLoading(true);
-      // const response = await loginEmployee({
-      //   email: formData.email,
-      //   password: formData.password,
-      // });
-
-      const username = formData.email.split("@")[0];
-
-      // localStorage.setItem("token", response.data.access_token); // Save JWT token
-      // localStorage.setItem("email", formData.email); // Save employee email
-      // localStorage.setItem("username", username); // Save employee email
-      // localStorage.setItem("role", "employee"); // Save role as employee
-      //
-      // // toast.success("Login Successful!");
-      //
-      // setLoading(false);
-      // // Wait for 2 seconds before redirecting to the dashboard
-      // navigate("/dashboard");
+      await loginEmploye.mutateAsync(formData);
+      setLoading(false);
     } catch (error) {
       setLoading(false);
     }
@@ -36,7 +23,7 @@ const EmployerLoginPage = () => {
     {
       label: "Email",
       name: "email",
-      type: "text",
+      type: "email",
       placeholder: "Enter your email",
       isRequired: true,
     },

@@ -2,28 +2,16 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import FormComponent from "../components/forms/FormComponent";
 import loginImage from "../assets/login.jpg";
+import { useArtisanLogin } from "../adapters/Requests";
 
 const ArtisanLoginPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const loginArtisan = useArtisanLogin();
   const handleLogin = async (formData) => {
     try {
       setLoading(true);
-      // const response = await loginAdmin({
-      //   username: formData.username,
-      //   password: formData.password,
-      // });
-
-      // localStorage.setItem("token", response.data.access_token); // Save JWT token
-      // const decodedToken = jwtDecode(response.data.access_token); // Decode the token
-      //
-      // // Extract the email (sub) from the token
-      // const email = decodedToken.sub;
-      // localStorage.setItem("email", email); // Save email
-      // localStorage.setItem("username", formData.username); // Save username
-      // localStorage.setItem("role", "admin"); // Save role as admin
-      //
-      // toast.success("Login Successful!");
+      await loginArtisan.mutateAsync(formData);
       setLoading(false);
       // Wait for 2 seconds before navigating to the dashboard
       // navigate("/dashboard");
@@ -36,10 +24,10 @@ const ArtisanLoginPage = () => {
 
   const fields = [
     {
-      label: "Username",
-      name: "username",
-      type: "text",
-      placeholder: "Enter your username",
+      label: "Email",
+      name: "email",
+      type: "email",
+      placeholder: "Enter your email",
       isRequired: true,
     },
     {

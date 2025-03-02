@@ -1,5 +1,5 @@
-import useAuth from "@/hooks/useAuth";
 import { toast } from "sonner";
+import useAuth from "../hooks/useAuth";
 function GetUserId() {
   const { auth } = useAuth();
 
@@ -13,7 +13,8 @@ function GetUserId() {
 }
 function handleError(error) {
   console.error("Error submitting data:", error);
-  toast.error(error.response?.data?.error || "An error occurred");
+  console.log(error.response.data);
+  toast.error(error.response?.data?.msg || "An error occurred");
   throw new Error("an error occurred");
 }
 export { GetUserId, handleError };

@@ -1,13 +1,11 @@
-import { apiClient } from "@/adapters/api";
+import { apiClient } from "../adapters/api";
 import useAuth from "./useAuth";
 
 const useRefreshToken = () => {
   const { setAuth } = useAuth();
 
   const refresh = async () => {
-    const response = await apiClient.get("users/refresh", {
-      withCredentials: true,
-    });
+    const response = await apiClient.get("users/refresh", {});
     setAuth((prev) => {
       return { ...prev, token: response.data.accessToken };
     });
