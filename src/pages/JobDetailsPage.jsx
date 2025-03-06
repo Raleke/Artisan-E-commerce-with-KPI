@@ -1,31 +1,27 @@
+import { useParams } from "react-router";
+import { useGetJobDetails } from "../adapters/Requests";
 import JobDetailsCard from "../components/cards/JobDetailsCard";
+import { Spinner } from "@heroui/react";
+import { FaChevronLeft } from "react-icons/fa";
+import GoBack from "../components/GoBack";
 
 const jobDetailsPage = () => {
-  const jobDetails = {
-    title: "Software Engineer",
-    employer: "Tech Company",
-    pay: {
-      amount: 500000,
-      frequency: "Monthly",
-    },
-    workType: "Full-time",
-    commuteType: "Remote",
-    location: "Lagos, Nigeria",
-    datePosted: "2023-10-01T00:00:00Z",
-    requiredSkill: "JavaScript, React",
-    qualification: "Bachelor's Degree in Computer Science",
-    slots: 3,
-    applicationDeadline: "2023-12-01T00:00:00Z",
-  };
+  const params = useParams();
+  const { isLoading, data } = useGetJobDetails(params.id);
+  const jobDetails = data?.job || {};
 
   const userRole = "employer"; // or "employer"
   const isOwner = true; // or false
   const onDelete = () => {
     console.log("Job deleted");
   };
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
-    <div className="Max-w-7xl mx-auto px-4 py-16 min-h-[80vh] flex justify-center items-center">
+    <div className="Max-w-7xl mx-auto px-4 py-16 min-h-[80vh] flex flex-col justify-center items-center">
+      <GoBack />
       <JobDetailsCard
         userRole={userRole}
         isOwner={isOwner}

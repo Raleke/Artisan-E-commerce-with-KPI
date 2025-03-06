@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
     }
   });
   const setAuth = useCallback((auth) => {
+    console.log("Setting auth", auth);
     setAuthState(auth);
   }, []);
 

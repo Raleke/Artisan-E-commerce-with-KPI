@@ -32,7 +32,7 @@ export default function JobDetailsCard({
         <div className="space-y-2">
           <div className="flex items-center w-full justify-between">
             <h1 className="text-3xl font-bold tracking-tight">
-              {details.title}
+              {details.jobTitle}
             </h1>
           </div>
 
@@ -40,7 +40,7 @@ export default function JobDetailsCard({
             <FaRegBuilding className="h-6 w-6" />
             <Tooltip content="You have to be assigned to see the name">
               <span className="blur-sm  transition-all duration-200">
-                {details.employer}
+                {details.companyName}
               </span>
             </Tooltip>
           </div>

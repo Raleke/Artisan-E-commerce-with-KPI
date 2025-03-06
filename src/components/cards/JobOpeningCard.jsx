@@ -8,14 +8,14 @@ import {
   Tooltip,
 } from "@heroui/react";
 import { FcMoneyTransfer } from "react-icons/fc";
-import { formatCurrency } from "../../utils/utiils";
+import { formatCurrency, formatDate } from "../../utils/utiils";
 import { AiOutlineMenuFold } from "react-icons/ai";
 
 export default function JobOpeningCard({ details }) {
   return (
     <Card>
       <CardHeader className="flex-col">
-        <h1 className="text-3xl">{details.tittle}</h1>
+        <h1 className="text-3xl">{details.title}</h1>
         <p className="text-small ">
           Company{" "}
           <Tooltip content="You have to been assigned to see the name">
@@ -32,11 +32,11 @@ export default function JobOpeningCard({ details }) {
         <div className="flex justify-center  gap-4">
           <FcMoneyTransfer className="h-8 w-8" />
           <span className="text-xl content-center">
-            {formatCurrency(details.priceRange1)}{" "}
+            {formatCurrency(details.pay)} ({details.frequency})
           </span>
         </div>
         <p>{details.location}</p>
-        <p>{details.date}</p>
+        <p>{formatDate(details.date)}</p>
       </CardBody>
       <CardFooter>
         <Button
@@ -44,7 +44,7 @@ export default function JobOpeningCard({ details }) {
           color="primary"
           variant="flat"
           as={Link}
-          href={`/job/${details.id}`}
+          href={`/job/${details.jobId}`}
         >
           View Details
         </Button>

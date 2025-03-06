@@ -10,6 +10,7 @@ import {
 
 import { FaSearch } from "react-icons/fa";
 import ArtisanSummaryCard from "../components/cards/ArtisanSummaryCard";
+import GoBack from "../components/GoBack";
 
 const EmployerJobApplicantsPage = ({ jobDetails }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -70,6 +71,7 @@ const EmployerJobApplicantsPage = ({ jobDetails }) => {
 
   return (
     <div className="container mx-auto p-6">
+      <GoBack />
       <Card>
         <CardHeader>
           <h2 className="text-2xl font-bold">

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Select, SelectItem, Input, Button } from "@heroui/react";
+import { Select, SelectItem, Input, Button, Spinner } from "@heroui/react";
 import { FaSearch } from "react-icons/fa";
 import job from "../assets/job.png";
 import JobOpeningCard from "../components/cards/JobOpeningCard";
@@ -257,9 +257,10 @@ const jobDetailsArray = [
   },
 ];
 
-const JobOffersPage = () => {
-  const getOpenings = useGetALLJobs();
+const JobOffersPage = (mode) => {
+  const getOpenings = useGetALLJobs(mode);
   const jobDetailsArray = getOpenings.data?.jobs ?? [];
+  console.log(jobDetailsArray);
   const [selectedCategory, setSelectedCategory] = useState(new Set([]));
   const [selectedSkill, setSelectedSkill] = useState(new Set([]));
   const [searchLocation, setSearchLocation] = useState("");
@@ -269,7 +270,7 @@ const JobOffersPage = () => {
   // Memoize categories and skills to prevent recalculation on every render
   const categories = useMemo(
     () => [...new Set(jobDetailsArray.map((job) => job.category))],
-    [],
+    [jobDetailsArray],
   );
 
   // Memoize skills based on selected category
@@ -283,7 +284,7 @@ const JobOffersPage = () => {
           .flatMap((job) => job.skills),
       ),
     ];
-  }, [selectedCategory]);
+  }, [selectedCategory, jobDetailsArray]);
 
   // Memoize filtered jobs based on all filters
   const filteredJobs = useMemo(() => {
@@ -299,7 +300,7 @@ const JobOffersPage = () => {
 
       return categoryMatch && skillMatch && locationMatch;
     });
-  }, [selectedCategory, selectedSkill, searchLocation]);
+  }, [selectedCategory, selectedSkill, searchLocation, jobDetailsArray]);
 
   const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
   const displayedJobs = filteredJobs.slice(
@@ -326,7 +327,9 @@ const JobOffersPage = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
-
+  if (getOpenings.isLoading) {
+    return <Spinner />;
+  }
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
       <div className="text-center mb-20">

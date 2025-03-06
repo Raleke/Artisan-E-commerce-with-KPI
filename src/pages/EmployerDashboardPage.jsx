@@ -1,12 +1,18 @@
-import { MdDashboard, MdNotifications, MdOutlinePerson } from "react-icons/md";
+import {
+  MdDashboard,
+  MdNotifications,
+  MdOutlineCreate,
+  MdOutlinePerson,
+} from "react-icons/md";
 import { Route, Routes, useLocation } from "react-router";
 import JobOffersPage from "./JobOffersPage";
 import { Tab, Tabs } from "@heroui/react";
-import Notifications from "./ArtisanApplicationStatusPage";
-import ArtisanProfile from "./ArtisanProfilePage";
 import GoBack from "../components/GoBack";
+import EmployerCreateJobPage from "./EmployerCreateJobPage";
+import EmployerJobApplicantsPage from "./EmployerJobApplicantsPage";
+import EmployerProfile from "./EmployerProfilePage";
 
-const ArtisanDashboardPage = () => {
+const EmployerDashboardPage = () => {
   const { pathname } = useLocation();
 
   return (
@@ -19,8 +25,8 @@ const ArtisanDashboardPage = () => {
         variant="bordered"
       >
         <Tab
-          key="/artisan/dashboard"
-          href="/artisan/dashboard"
+          key="/employer/dashboard"
+          href="/employer/dashboard"
           title={
             <div className="flex items-center space-x-2">
               <MdDashboard className="text-2xl" />
@@ -29,8 +35,8 @@ const ArtisanDashboardPage = () => {
           }
         />
         <Tab
-          key="/artisan/profile"
-          href="/artisan/profile"
+          key="/employer/profile"
+          href="/employer/profile"
           title={
             <div className="flex items-center space-x-2">
               <MdOutlinePerson className="text-2xl" />
@@ -39,22 +45,24 @@ const ArtisanDashboardPage = () => {
           }
         />
         <Tab
-          key="/artisan/notification"
-          href="/artisan/notification"
+          key="/employer/create-job"
+          href="/employer/create-job"
           title={
             <div className="flex items-center space-x-2">
-              <MdNotifications className="text-2xl" />
-              <span className="font-semibold text-center">Notification</span>
+              <MdOutlineCreate className="text-2xl" />
+              <span className="font-semibold text-center">Create Job</span>
             </div>
           }
         />
       </Tabs>
       <Routes>
         <Route path="/dashboard" element={<JobOffersPage mode="special" />} />
-        <Route path="/notification" element={<Notifications />} />
-        <Route path="/profile" element={<ArtisanProfile />} />
+
+        <Route path="/profile" element={<EmployerProfile />} />
+
+        <Route path="/create-job" element={<EmployerCreateJobPage />} />
       </Routes>
     </div>
   );
 };
-export default ArtisanDashboardPage;
+export default EmployerDashboardPage;

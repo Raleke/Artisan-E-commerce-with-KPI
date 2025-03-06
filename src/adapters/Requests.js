@@ -151,8 +151,25 @@ function useGetEmployerNotifications(id) {
   });
 }
 
-function useGetALLJobs() {
+function useGetALLJobs(mode = "all") {
+  const { type } = useAuth();
   const apiClientPrivate = useAxiosPrivate();
+  if (type == "artisan" && mode == "special") {
+    return useQuery({
+      queryKey: ["jobs", mode],
+
+      queryFn: async () => {
+        try {
+          const res = await apiClientPrivate.get(`/artisan/jobs`);
+          return res.data;
+        } catch (error) {
+          handleError(error);
+        }
+      },
+
+      staleTime: 50000,
+    });
+  }
   return useQuery({
     queryKey: ["jobs", "all"],
 
@@ -171,12 +188,10 @@ function useGetALLJobs() {
 function useGetJobDetails(jobId) {
   const apiClientPrivate = useAxiosPrivate();
   return useQuery({
-    queryKey: ["applications", jobId],
+    queryKey: ["job", jobId],
     queryFn: async () => {
       try {
-        const res = await apiClientPrivate.get(
-          `/employer/${jobId}/applications`,
-        );
+        const res = await apiClientPrivate.get(`/job/get/${jobId}`);
         return res.data;
       } catch (error) {
         handleError(error);
@@ -243,6 +258,23 @@ function useGetArtisanFullDetails(artisanId) {
   });
 }
 
+function useGetArtisanApplications() {
+  const apiClientPrivate = useAxiosPrivate();
+  return useQuery({
+    queryKey: ["applications", "profile"],
+    queryFn: async () => {
+      try {
+        const res = await apiClientPrivate.get(`/artisan/artisan/applied-jobs`);
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+
+    staleTime: 50000,
+  });
+}
+
 export {
   useEmployerLogin,
   UseEmployerSignup,
@@ -255,4 +287,5 @@ export {
   useArtisanLogin,
   useGetALLJobs,
   useGetArtisanFullDetails,
+  useGetArtisanApplications,
 };
