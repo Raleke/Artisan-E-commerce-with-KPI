@@ -12,43 +12,6 @@ const ArtisanDashboardPage = () => {
   return (
     <div className="flex w-full flex-col p-4 px-8 mt-8">
       <GoBack />
-      <Tabs
-        aria-label="Options"
-        selectedKey={pathname}
-        color="primary"
-        variant="bordered"
-      >
-        <Tab
-          key="/artisan/dashboard"
-          href="/artisan/dashboard"
-          title={
-            <div className="flex items-center space-x-2">
-              <MdDashboard className="text-2xl" />
-              <span className="font-semibold text-center">Dashboard</span>
-            </div>
-          }
-        />
-        <Tab
-          key="/artisan/profile"
-          href="/artisan/profile"
-          title={
-            <div className="flex items-center space-x-2">
-              <MdOutlinePerson className="text-2xl" />
-              <span className="font-semibold text-center">Profile</span>
-            </div>
-          }
-        />
-        <Tab
-          key="/artisan/notification"
-          href="/artisan/notification"
-          title={
-            <div className="flex items-center space-x-2">
-              <MdNotifications className="text-2xl" />
-              <span className="font-semibold text-center">Notification</span>
-            </div>
-          }
-        />
-      </Tabs>
       <Routes>
         <Route path="/dashboard" element={<JobOffersPage mode="special" />} />
         <Route path="/notification" element={<Notifications />} />

@@ -1,13 +1,11 @@
 import { useState, useRef } from "react";
-import signupImage from "../assets/signup.jpg";
+import signupImage from "../../assets/signup.png";
+import { UseArtisanSignup } from "../../hooks/useAuth";
 import ProfessionalInfoStep from "../components/forms/ArtisnProfessionalInfoFormStep";
 import EducationStep from "../components/forms/ArtisanEducationFormStep";
 import WorkExperienceStep from "../components/forms/ArtisanWorkExperienceFormStep";
 import useArtisanForm from "../hooks/useArtisanForm";
 import { Button, Card, CardBody, CardHeader, Progress } from "@heroui/react";
-import PersonalInfoStep from "../components/forms/ArtisanPersonalInfoFormStep";
-import { UseArtisanSignup } from "../adapters/Requests";
-import AddressStep from "../components/forms/ArtsianStreetInfoFormStep";
 
 const ArtisanSignup = () => {
   const {
@@ -72,69 +70,18 @@ const ArtisanSignup = () => {
   // Fixed handleChange with correct regex order
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Handle nested arrays (e.g., jobCategories[0].skills[1])
     const nestedArrayMatch = name.match(/(\w+)\[(\d+)\]\.(\w+)\[(\d+)\]/);
-    if (nestedArrayMatch) {
-      const [_, arrayName, arrayIndex, nestedArrayName, nestedIndex] =
-        nestedArrayMatch;
-      setFormData((prev) => ({
-        ...prev,
-        [arrayName]: prev[arrayName].map((item, index) =>
-          index === parseInt(arrayIndex)
-            ? {
-                ...item,
-                [nestedArrayName]: item[nestedArrayName].map(
-                  (skill, skillIndex) =>
-                    skillIndex === parseInt(nestedIndex) ? value : skill,
-                ),
-              }
-            : item,
-        ),
-      }));
-      return;
-    }
 
-    // Handle regular array properties (e.g., jobCategories[0].jobCategory)
-    const arrayMatch = name.match(/(\w+)\[(\d+)\]\.(\w+)/);
-    if (arrayMatch) {
-      const [_, arrayName, arrayIndex, property] = arrayMatch;
-      setFormData((prev) => ({
-        ...prev,
-        [arrayName]: prev[arrayName].map((item, index) =>
-          index === parseInt(arrayIndex)
-            ? {
-                ...item,
-                [property]: value,
-              }
-            : item,
-        ),
-      }));
-      return;
+    if (nestedArrayMatch) {
+      // Handle nested arrays (skills)
+    } else {
+      const arrayMatch = name.match(/(\w+)\[(\d+)\]\.(\w+)/);
+      if (arrayMatch) {
+        // Handle regular array properties
+      } else {
+        // Handle simple properties
+      }
     }
-    // Handle nested object properties with any depth (e.g., education.details.gradYear)
-    if (name.includes(".")) {
-      const path = name.split(".");
-      setFormData((prev) => ({
-        ...prev,
-        [path[0]]: {
-          ...prev[path[0]],
-          [path[1]]:
-            path.length > 2
-              ? {
-                  ...prev[path[0]][path[1]],
-                  [path[2]]: value,
-                }
-              : value,
-        },
-      }));
-      return;
-    }
-    // Handle simple properties (e.g., firstName, email)
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
   };
 
   const handleAddSkill = (categoryIndex) => {
@@ -145,62 +92,16 @@ const ArtisanSignup = () => {
     });
   };
 
-  const handleBack = () => {
-    setStep((prev) => Math.max(prev - 1, 1));
-  };
   const renderStep = () => {
     return (
       <>
-        {step === 1 && (
-          <PersonalInfoStep // Changed to PersonalInfoStep for step 1
-            formData={formData}
-            errors={errors}
-            handleChange={handleChange}
-            imagePreview={imagePreview}
-            triggerImageUpload={triggerImageUpload}
-            profileInputRef={profileInputRef}
-            isVisible={isVisible}
-            toggleVisibility={toggleVisibility}
-            isVisible1={isVisible1}
-            toggleVisibility1={toggleVisibility1}
-            handleImageUpload={handleImageUpload}
-          />
-        )}
-        {step === 2 && (
-          <AddressStep
-            formData={formData}
-            errors={errors}
-            handleChange={handleChange}
-            setFormData={setFormData}
-          />
-        )}
-        {step === 3 && (
-          <ProfessionalInfoStep
-            formData={formData}
-            errors={errors}
-            handleChange={handleChange}
-            handleAddSkill={handleAddSkill}
-            handleAddJobCategory={handleAddJobCategory}
-          />
-        )}
-        {step === 4 && (
-          <EducationStep
-            formData={formData}
-            errors={errors}
-            handleChange={handleChange}
-          />
-        )}
-        {step === 5 && (
-          <WorkExperienceStep
-            formData={formData}
-            errors={errors}
-            handleChange={handleChange}
-            cvFileName={cvFileName}
-            triggerCvUpload={triggerCvUpload}
-            cvInputRef={cvInputRef}
-            handleCvUpload={handleCvUpload}
-          />
-        )}
+        {/* Progress and form rendering */}
+        {step === 1 && <ProfessionalInfoStep {...formData,errors,handleChange,imagePreview,triggerImageUpload,profileInputRef,isVisible,toggleVisibility,isVisible1,toggleVisibility1,handleImageUpload} />}
+        {step === 2 && <AddressStep {...formData,errors,handleChange,setFormData} />}
+        {step === 3 && <ProfessionalInfoStep {...formData,errors,handleChange,handleAddSkill,handleAddJobCategory} />}
+        {step === 4 && <EducationStep {...formData,errors,handleChange} />}
+        {step === 5 && <WorkExperienceStep {...formData,errors,handleChange,cvFileName,triggerCvUpload,cvInputRef,handleCvUpload} />}
+        {/* Navigation buttons */}
       </>
     );
   };
@@ -306,7 +207,12 @@ const ArtisanSignup = () => {
                     Next
                   </Button>
                 ) : (
-                  <Button type="submit" color="primary" className="ml-auto">
+                  <Button
+                    type="submit"
+                    color="primary"
+                    className="ml-auto"
+                    disabled={!formData.termsAccepted}
+                  >
                     Create Account
                   </Button>
                 )}

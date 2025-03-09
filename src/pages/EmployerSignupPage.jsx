@@ -11,9 +11,11 @@ import {
   Progress,
 } from "@heroui/react";
 import signupImage from "../assets/signup.jpg";
+import { useEmployerSignup } from "../adapters/Requests";
 
 const SignupForm = () => {
   const [step, setStep] = useState(1);
+  const signupMutation = useEmployerSignup();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -23,7 +25,7 @@ const SignupForm = () => {
     country: "",
     state: "",
     city: "",
-    termsAccepted: false,
+    termsAndConditions: false,
   });
 
   const totalSteps = 4;
@@ -47,8 +49,21 @@ const SignupForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
     console.log("Form submitted:", formData);
+    try {
+      const submissionData = new FormData();
+      for (const [key, value] of Object.entries(formData)) {
+        if (key !== "image") {
+          submissionData.append(key, value);
+        }
+      }
+
+      signupMutation.mutate(submissionData);
+    } catch (err) {
+      console.log(err);
+    }
+    console.log("sik");
+    // Handle form submission
   };
 
   const renderStep = () => {
@@ -131,13 +146,16 @@ const SignupForm = () => {
                 label="Country"
                 placeholder="Select country"
                 name="country"
-                onValueChange={(value) =>
-                  handleInputChange({ target: { name: "country", value } })
+                selectedKeys={[formData.country]}
+                onChange={(e) =>
+                  handleInputChange({
+                    target: { name: "country", value: e.target.value },
+                  })
                 }
               >
-                <SelectItem value="nigeria">Nigeria</SelectItem>
-                <SelectItem value="ghana">Ghana</SelectItem>
-                <SelectItem value="kenya">Kenya</SelectItem>
+                <SelectItem key="nigeria">Nigeria</SelectItem>
+                <SelectItem key="ghana">Ghana</SelectItem>
+                <SelectItem key="kenya">Kenya</SelectItem>
               </Select>
             </div>
             <div>
@@ -145,27 +163,33 @@ const SignupForm = () => {
                 label="State"
                 placeholder="Select state"
                 name="state"
-                onValueChange={(value) =>
-                  handleInputChange({ target: { name: "state", value } })
+                selectedKeys={[formData.state]}
+                onChange={(e) =>
+                  handleInputChange({
+                    target: { name: "state", value: e.target.value },
+                  })
                 }
               >
-                <SelectItem value="lagos">Lagos</SelectItem>
-                <SelectItem value="abuja">Abuja</SelectItem>
-                <SelectItem value="kano">Kano</SelectItem>
+                <SelectItem key="lagos">Lagos</SelectItem>
+                <SelectItem key="abuja">Abuja</SelectItem>
+                <SelectItem key="kano">Kano</SelectItem>
               </Select>
             </div>
             <div>
               <Select
                 label="City"
                 name="city"
-                onValueChange={(value) =>
-                  handleInputChange({ target: { name: "city", value } })
+                selectedKeys={[formData.city]}
+                onChange={(e) =>
+                  handleInputChange({
+                    target: { name: "city", value: e.target.value },
+                  })
                 }
                 placeholder="Select city"
               >
-                <SelectItem value="ikeja">Ikeja</SelectItem>
-                <SelectItem value="victoria-island">Victoria Island</SelectItem>
-                <SelectItem value="lekki">Lekki</SelectItem>
+                <SelectItem key="ikeja">Ikeja</SelectItem>
+                <SelectItem key="victoria-island">Victoria Island</SelectItem>
+                <SelectItem key="lekki">Lekki</SelectItem>
               </Select>
             </div>
           </div>
@@ -196,9 +220,12 @@ const SignupForm = () => {
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="terms"
-                checked={formData.termsAccepted}
-                onCheckedChange={(checked) =>
-                  setFormData((prev) => ({ ...prev, termsAccepted: checked }))
+                isSelected={formData.termsAndConditions}
+                onValueChange={(checked) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    termsAndConditions: checked,
+                  }))
                 }
                 label="I accept the terms and conditions"
               />
@@ -252,7 +279,7 @@ const SignupForm = () => {
                     type="submit"
                     color="primary"
                     className="ml-auto"
-                    disabled={!formData.termsAccepted}
+                    disabled={!formData.termsAndConditions}
                   >
                     Create Account
                   </Button>

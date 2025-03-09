@@ -10,8 +10,9 @@ import {
   Link,
   Button,
 } from "@heroui/react";
-import { LogIn, UserPlus } from "react-feather";
+import { LogIn, UserPlus, LogOut } from "react-feather";
 import { useLocation } from "react-router";
+import useAuth from "../../hooks/useAuth";
 
 export const AcmeLogo = () => {
   return (
@@ -29,14 +30,30 @@ export const AcmeLogo = () => {
 export default function LandingPageNav() {
   const location = useLocation();
   const currentPath = location.pathname;
+  const { isLoggedIn, user_type, setAuth } = useAuth(); // Use the useAuth hook
 
-  console.log(currentPath);
+  const handleLogout = () => {
+    setAuth(null); // Clear the authentication state
+  };
 
   const menuItems = [
     { label: "Home", to: "/" },
     { label: "About Us", to: "/about" },
-    { label: "jobs", to: "/jobs" },
+    { label: "Jobs", to: "/jobs" },
   ];
+
+  const userLinks = {
+    employer: [
+      { label: "Dashboard", to: "/employer/dashboard" },
+      { label: "Profile", to: "/employer/profile" },
+      { label: "Create Job", to: "/employer/create-job" },
+    ],
+    artisan: [
+      { label: "Dashboard", to: "/artisan/dashboard" },
+      { label: "Profile", to: "/artisan/profile" },
+      { label: "Notification", to: "/artisan/notification" },
+    ],
+  };
 
   return (
     <Navbar isBordered maxWidth="xl" position="sticky">
@@ -53,95 +70,130 @@ export default function LandingPageNav() {
         className="hidden md:flex gap-4 justify-start ml-2"
         justify="center"
       >
-        <NavbarItem isActive={currentPath === "/"}>
-          <Link
-            aria-current={currentPath === "/" ? "page" : undefined}
-            href="/"
-            color={currentPath === "/" ? "primary" : "foreground"}
-          >
-            Home
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive={currentPath === "/about"}>
-          <Link
-            aria-current={currentPath === "/about" ? "page" : undefined}
-            href="/about"
-            color={currentPath === "/about" ? "primary" : "foreground"}
-          >
-            About Us
-          </Link>
-        </NavbarItem>
-        <NavbarItem isActive={currentPath === "/jobs"}>
-          <Link
-            aria-current={currentPath === "/jobs" ? "page" : undefined}
-            href="/jobs"
-            color={currentPath === "/jobs" ? "primary" : "foreground"}
-          >
-            Jobs
-          </Link>
-        </NavbarItem>
+        {!isLoggedIn &&
+          menuItems.map((item, index) => (
+            <NavbarItem key={index} isActive={currentPath === item.to}>
+              <Link
+                aria-current={currentPath === item.to ? "page" : undefined}
+                href={item.to}
+                color={currentPath === item.to ? "primary" : "foreground"}
+              >
+                {item.label}
+              </Link>
+            </NavbarItem>
+          ))}
+        {isLoggedIn &&
+          userLinks[user_type]?.map((item, index) => (
+            <NavbarItem key={index} isActive={currentPath === item.to}>
+              <Link
+                aria-current={currentPath === item.to ? "page" : undefined}
+                href={item.to}
+                color={currentPath === item.to ? "primary" : "foreground"}
+              >
+                {item.label}
+              </Link>
+            </NavbarItem>
+          ))}
       </NavbarContent>
 
       <NavbarContent
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
-        <Button
-          as={Link}
-          color="primary"
-          href="/login"
-          variant="flat"
-          startContent={<LogIn />}
-        >
-          Login
-        </Button>
-        <Button
-          as={Link}
-          color="primary"
-          href="/signup"
-          startContent={<UserPlus />}
-        >
-          Sign Up
-        </Button>
+        {isLoggedIn ? (
+          <Button
+            color="danger"
+            variant="flat"
+            startContent={<LogOut />}
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
+        ) : (
+          <>
+            <Button
+              as={Link}
+              color="primary"
+              href="/login"
+              variant="flat"
+              startContent={<LogIn />}
+            >
+              Login
+            </Button>
+            <Button
+              as={Link}
+              color="primary"
+              href="/signup"
+              startContent={<UserPlus />}
+            >
+              Sign Up
+            </Button>
+          </>
+        )}
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <NavbarItem className="">
+        {isLoggedIn ? (
+          <Button
+            color="danger"
+            variant="flat"
+            startContent={<LogOut />}
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
+        ) : (
+          <>
+            <Button
+              as={Link}
+              color="primary"
+              href="/signup"
+              startContent={<UserPlus />}
+            >
+              Sign Up
+            </Button>
+            <NavbarMenuToggle />
+          </>
+        )}
+      </NavbarContent>
+      <NavbarMenu>
+        {!isLoggedIn &&
+          menuItems.map((item, index) => (
+            <NavbarMenuItem key={`${item.label}-${index}`}>
+              <Link
+                className="w-full"
+                href={item.to}
+                size="lg"
+                color={currentPath === item.to ? "primary" : "foreground"}
+              >
+                {item.label}
+              </Link>
+            </NavbarMenuItem>
+          ))}
+        {isLoggedIn &&
+          userLinks[user_type]?.map((item, index) => (
+            <NavbarMenuItem key={`${item.label}-${index}`}>
+              <Link
+                className="w-full"
+                href={item.to}
+                size="lg"
+                color={currentPath === item.to ? "primary" : "foreground"}
+              >
+                {item.label}
+              </Link>
+            </NavbarMenuItem>
+          ))}
+        {!isLoggedIn && (
           <Button
             as={Link}
             color="primary"
-            href="/signup"
-            startContent={<UserPlus />}
+            href="/login"
+            variant="flat"
+            startContent={<LogIn />}
           >
-            Sign Up
+            Login
           </Button>
-        </NavbarItem>
-
-        <NavbarMenuToggle />
-      </NavbarContent>
-      <NavbarMenu>
-        {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item.label}-${index}`}>
-            <Link
-              className="w-full"
-              href={item.to}
-              size="lg"
-              color={currentPath === item.to ? "primary" : "foreground"}
-            >
-              {item.label}
-            </Link>
-          </NavbarMenuItem>
-        ))}
-
-        <Button
-          as={Link}
-          color="primary"
-          href="/login"
-          variant="flat"
-          startContent={<LogIn />}
-        >
-          Login
-        </Button>
+        )}
       </NavbarMenu>
     </Navbar>
   );

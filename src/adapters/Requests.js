@@ -44,7 +44,7 @@ function useEmployerLogin() {
   });
 }
 
-function UseEmployerSignup() {
+function useEmployerSignup() {
   const navigate = useNavigate();
 
   return useMutation({
@@ -202,6 +202,25 @@ function useGetJobDetails(jobId) {
   });
 }
 
+function UseArtisanSignup() {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: async (formData) => {
+      const response = await apiClient.post(`artisan/register`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      return response.data;
+    },
+    onSuccess: (data) => {
+      navigate(`/verify/email/`);
+    },
+  });
+}
+
 function useArtisanLogin() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -277,7 +296,7 @@ function useGetArtisanApplications() {
 
 export {
   useEmployerLogin,
-  UseEmployerSignup,
+  useEmployerSignup,
   UsePostContactArtisan,
   UseGetEmployerProfile,
   useGetJobApplications,
@@ -285,6 +304,7 @@ export {
   usePatchApplicationStatus,
   useGetEmployerNotifications,
   useArtisanLogin,
+  UseArtisanSignup,
   useGetALLJobs,
   useGetArtisanFullDetails,
   useGetArtisanApplications,

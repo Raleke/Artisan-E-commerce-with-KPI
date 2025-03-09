@@ -18,43 +18,6 @@ const EmployerDashboardPage = () => {
   return (
     <div className="flex w-full flex-col p-4 px-8 mt-8">
       <GoBack />
-      <Tabs
-        aria-label="Options"
-        selectedKey={pathname}
-        color="primary"
-        variant="bordered"
-      >
-        <Tab
-          key="/employer/dashboard"
-          href="/employer/dashboard"
-          title={
-            <div className="flex items-center space-x-2">
-              <MdDashboard className="text-2xl" />
-              <span className="font-semibold text-center">Dashboard</span>
-            </div>
-          }
-        />
-        <Tab
-          key="/employer/profile"
-          href="/employer/profile"
-          title={
-            <div className="flex items-center space-x-2">
-              <MdOutlinePerson className="text-2xl" />
-              <span className="font-semibold text-center">Profile</span>
-            </div>
-          }
-        />
-        <Tab
-          key="/employer/create-job"
-          href="/employer/create-job"
-          title={
-            <div className="flex items-center space-x-2">
-              <MdOutlineCreate className="text-2xl" />
-              <span className="font-semibold text-center">Create Job</span>
-            </div>
-          }
-        />
-      </Tabs>
       <Routes>
         <Route path="/dashboard" element={<JobOffersPage mode="special" />} />
 
