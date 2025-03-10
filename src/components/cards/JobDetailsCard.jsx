@@ -19,6 +19,10 @@ import {
   FaRegClock,
   FaUser,
 } from "react-icons/fa";
+import useAuth from "../../hooks/useAuth";
+import { usePostArtisanApply } from "../../adapters/Requests";
+import { tr } from "framer-motion/m";
+import { useNavigate } from "react-router";
 
 export default function JobDetailsCard({
   details,
@@ -26,6 +30,17 @@ export default function JobDetailsCard({
   isOwner,
   onDelete,
 }) {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const applyMutation = usePostArtisanApply();
+  const applyNow = async () => {
+    if (!user || !user.email) return;
+    await applyMutation.mutateAsync({
+      jobId: details._id,
+      applicantEmail: user.email,
+    });
+    navigate("/artisan/dashboard");
+  };
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className="space-y-4 grid grid-cols-2 gap-4">
@@ -113,7 +128,11 @@ export default function JobDetailsCard({
 
       <CardFooter className="flex justify-end space-x-2 pt-4">
         {userRole === "artisan" && (
-          <Button color="primary" endContent=<FaArrowRight />>
+          <Button
+            color="primary"
+            onClick={() => applyNow()}
+            endContent=<FaArrowRight />
+          >
             Apply Now
           </Button>
         )}

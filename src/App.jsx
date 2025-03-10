@@ -23,20 +23,22 @@ function App() {
   return (
     <>
       <LandingPageNav />
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login/*" element={<Onboarding />} />
-        <Route path="/signup/*" element={<SignupOnbaording />} />
-        <Route path="/about" element={<AboutUsPage />} />
-        <Route path="/jobs" element={<JobOffersPage />} />
-        <Route path="/artisan/*" element={<ArtisanDashboardPage />} />
-        <Route path="job/:id" element={<JobDetailsPage />} />
-        <Route path="/employer/*" element={<EmployerDashboard />} />
-        <Route
-          path="/employer/job/:id/applicants"
-          element={<EmployerJobApplicantsPage />}
-        />
-      </Routes>
+      <div className="min-h-screen">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login/*" element={<Onboarding />} />
+          <Route path="/signup/*" element={<SignupOnbaording />} />
+          <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/jobs" element={<JobOffersPage />} />
+          <Route path="/artisan/*" element={<ArtisanDashboardPage />} />
+          <Route path="job/:id" element={<JobDetailsPage />} />
+          <Route path="/employer/*" element={<EmployerDashboard />} />
+          <Route
+            path="/employer/job/:id/applicants"
+            element={<EmployerJobApplicantsPage />}
+          />
+        </Routes>
+      </div>
       <FooterCard />
     </>
   );

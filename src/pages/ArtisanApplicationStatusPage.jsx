@@ -14,6 +14,8 @@ import { AiOutlineMenuFold } from "react-icons/ai";
 import { useMemo } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useGetArtisanApplications } from "../adapters/Requests";
+import { Link } from "react-router";
+import { formatDate } from "../utils/utiils";
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat("en-NG", {
     style: "currency",
@@ -71,12 +73,12 @@ export default function Notifications() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16">
+    <div className="max-w-7xl container mx-auto px-4 py-16">
       <div className="text-center mb-20">
         <h2 className="text-4xl font-bold mb-4">Application Notifications</h2>
       </div>
 
-      <div className="mb-8 space-y-4">
+      <div className="mb-8 space-y-4 min-w-full">
         <div className="flex flex-col md:flex-row md:justify-between gap-4 md:gap-8 content-center">
           <div className="md:w-1/3 flex flex-col md:flex-row gap-4">
             <Select
@@ -136,16 +138,17 @@ export default function Notifications() {
                   </CardHeader>
                   <CardBody>
                     <p className="">
-                      Salary: {formatCurrency(app.priceRange1)} -{" "}
-                      {formatCurrency(app.priceRange2)}
+                      Salary: {formatCurrency(app.pay)} ({app.frequency})
                     </p>
                     <p className="">Location: {app.location}</p>
-                    <p className="">Applied on: {app.date}</p>
+                    <p className="">Applied on: {formatDate(app.date)}</p>
                     <Button
                       startContent=<AiOutlineMenuFold />
                       color="primary"
                       variant="flat"
                       className="mt-4"
+                      as={Link}
+                      href={`/job/${app.jobId}`}
                     >
                       View Details
                     </Button>

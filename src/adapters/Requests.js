@@ -9,7 +9,7 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 function useEmployerLogin() {
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "employer/dashboard";
+  const from = location.state?.from?.pathname || "/employer/dashboard";
   const { setAuth } = useAuth();
   return useMutation({
     mutationFn: (formData) => {
@@ -114,6 +114,26 @@ function useGetJobApplications(jobId) {
     staleTime: 50000,
   });
 }
+function useGetAllEmployerApplications() {
+  const apiClientPrivate = useAxiosPrivate();
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["jobs", "all"],
+    queryFn: async () => {
+      try {
+        const res = await apiClientPrivate.get(
+          `/employer/employer/applications/${user.id}`,
+        );
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+
+    staleTime: 50000,
+  });
+}
+
 function usePatchApplicationStatus(jobId, artisanId) {
   return useMutation({
     mutationFn: async (status) => {
@@ -279,11 +299,14 @@ function useGetArtisanFullDetails(artisanId) {
 
 function useGetArtisanApplications() {
   const apiClientPrivate = useAxiosPrivate();
+  const { user } = useAuth();
   return useQuery({
     queryKey: ["applications", "profile"],
     queryFn: async () => {
       try {
-        const res = await apiClientPrivate.get(`/artisan/artisan/applied-jobs`);
+        const res = await apiClientPrivate.get(
+          `/artisan/artisan/applied-jobs/${user.id}`,
+        );
         return res.data;
       } catch (error) {
         handleError(error);
@@ -293,12 +316,27 @@ function useGetArtisanApplications() {
     staleTime: 50000,
   });
 }
+function usePostArtisanApply() {
+  const apiClientPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+  return useMutation({
+    mutationFn: async (formData) => {
+      try {
+        const res = await apiClientPrivate.post("/job/apply-job", formData);
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+  });
+}
 
 export {
   useEmployerLogin,
   useEmployerSignup,
   UsePostContactArtisan,
   UseGetEmployerProfile,
+  useGetAllEmployerApplications,
   useGetJobApplications,
   useGetJobDetails,
   usePatchApplicationStatus,
@@ -308,4 +346,5 @@ export {
   useGetALLJobs,
   useGetArtisanFullDetails,
   useGetArtisanApplications,
+  usePostArtisanApply,
 };

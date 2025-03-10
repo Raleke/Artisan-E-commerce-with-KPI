@@ -13,6 +13,8 @@ import {
 import { LogIn, UserPlus, LogOut } from "react-feather";
 import { useLocation } from "react-router";
 import useAuth from "../../hooks/useAuth";
+import { queryClient } from "../../adapters/api";
+import { useNavigate } from "react-router";
 
 export const AcmeLogo = () => {
   return (
@@ -31,9 +33,12 @@ export default function LandingPageNav() {
   const location = useLocation();
   const currentPath = location.pathname;
   const { isLoggedIn, user_type, setAuth } = useAuth(); // Use the useAuth hook
+  const naviage = useNavigate();
 
   const handleLogout = () => {
-    setAuth(null); // Clear the authentication state
+    setAuth({}); // Clear the authentication state
+    queryClient.invalidateQueries();
+    naviage("/"); // Redirect to the home page
   };
 
   const menuItems = [
@@ -67,7 +72,7 @@ export default function LandingPageNav() {
       </NavbarContent>
 
       <NavbarContent
-        className="hidden md:flex gap-4 justify-start ml-2"
+        className="hidden sm:flex gap-4 justify-start ml-2"
         justify="center"
       >
         {!isLoggedIn &&
@@ -114,7 +119,7 @@ export default function LandingPageNav() {
             <Button
               as={Link}
               color="primary"
-              href="/login"
+              href="/login/artisian"
               variant="flat"
               startContent={<LogIn />}
             >
@@ -123,7 +128,7 @@ export default function LandingPageNav() {
             <Button
               as={Link}
               color="primary"
-              href="/signup"
+              href="/signup/artisian"
               startContent={<UserPlus />}
             >
               Sign Up
@@ -147,14 +152,14 @@ export default function LandingPageNav() {
             <Button
               as={Link}
               color="primary"
-              href="/signup"
+              href="/signup/artisian"
               startContent={<UserPlus />}
             >
               Sign Up
             </Button>
-            <NavbarMenuToggle />
           </>
         )}
+        <NavbarMenuToggle />
       </NavbarContent>
       <NavbarMenu>
         {!isLoggedIn &&
@@ -187,7 +192,7 @@ export default function LandingPageNav() {
           <Button
             as={Link}
             color="primary"
-            href="/login"
+            href="/login/artisian"
             variant="flat"
             startContent={<LogIn />}
           >

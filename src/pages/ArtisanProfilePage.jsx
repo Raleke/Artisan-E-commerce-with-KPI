@@ -81,7 +81,7 @@ const ArtisanProfile = ({ isOwnProfile = true }) => {
     );
 
   return (
-    <div className="max-w-4xl min-h-[80vh] flex justify-center items-center mx-auto p-4">
+    <div className="container min-h-[80vh] flex justify-center items-center mx-auto p-4">
       <Card className="w-full">
         <CardHeader className="relative flex flex-col md:flex-row">
           <div className="flex items-center gap-6">

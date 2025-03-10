@@ -16,9 +16,8 @@ import {
 const CreateJobForm = ({ onSubmit }) => {
   const form = useForm({
     defaultValues: {
-      companyName: "",
-      employerEmail: "",
       applicationDeadline: new Date(),
+      jobTitle: "",
       workType: "",
       commuteType: "",
       location: "",
@@ -28,16 +27,14 @@ const CreateJobForm = ({ onSubmit }) => {
         frequency: "",
       },
       requiredSkill: "",
+      category: "",
       slots: 1,
       accommodation: "No",
     },
   });
 
   const handleSubmit = (data) => {
-    onSubmit({
-      ...data,
-      datePosted: new Date(),
-    });
+    console.log(data);
   };
 
   return (
@@ -49,26 +46,12 @@ const CreateJobForm = ({ onSubmit }) => {
 
       <CardBody>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              label="Company Name"
-              isDisabled
-              {...form.register("companyName", {
-                required: "Company name is required",
-              })}
-            />
-            <Input
-              type="email"
-              label="Employer Email"
-              {...form.register("employerEmail", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "Invalid email address",
-                },
-              })}
-            />
-          </div>
+          <Input
+            label="Job Title"
+            {...form.register("jobTitle", {
+              required: "Job title is required",
+            })}
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
@@ -98,9 +81,9 @@ const CreateJobForm = ({ onSubmit }) => {
               required: "Work type is required",
             })}
           >
-            <SelectItem value="Full-time">Full-time</SelectItem>
-            <SelectItem value="Part-time">Part-time</SelectItem>
-            <SelectItem value="Contract">Contract</SelectItem>
+            <SelectItem key="Full-time">Full-time</SelectItem>
+            <SelectItem key="Part-time">Part-time</SelectItem>
+            <SelectItem key="Contract">Contract</SelectItem>
           </Select>
 
           <Select
@@ -109,22 +92,28 @@ const CreateJobForm = ({ onSubmit }) => {
               required: "Commute type is required",
             })}
           >
-            <SelectItem value="Onsite">Onsite</SelectItem>
-            <SelectItem value="Remote">Remote</SelectItem>
+            <SelectItem key="Onsite">Onsite</SelectItem>
+            <SelectItem key="Remote">Remote</SelectItem>
           </Select>
 
           <Input
             label="Location"
             {...form.register("location", { required: "Location is required" })}
           />
-
-          <Input
-            label="Required Skills"
-            {...form.register("requiredSkill", {
-              required: "Required skills are required",
-            })}
-          />
-
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Job Category"
+              {...form.register("category", {
+                required: "Job category is required",
+              })}
+            />
+            <Input
+              label="Required Skill"
+              {...form.register("requiredSkill", {
+                required: "Required skill is required",
+              })}
+            />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
               type="number"

@@ -331,7 +331,7 @@ const JobOffersPage = (mode) => {
     return <Spinner />;
   }
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16">
+    <div className="container mx-auto px-4 py-16">
       <div className="text-center mb-20">
         <h1 className="text-4xl font-bold mb-4">Find New and Relevant Jobs</h1>
       </div>

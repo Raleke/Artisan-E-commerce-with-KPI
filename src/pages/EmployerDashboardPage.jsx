@@ -11,6 +11,7 @@ import GoBack from "../components/GoBack";
 import EmployerCreateJobPage from "./EmployerCreateJobPage";
 import EmployerJobApplicantsPage from "./EmployerJobApplicantsPage";
 import EmployerProfile from "./EmployerProfilePage";
+import EmployerDashboard from "./EmployerDashboardExtraPage";
 
 const EmployerDashboardPage = () => {
   const { pathname } = useLocation();
@@ -19,7 +20,7 @@ const EmployerDashboardPage = () => {
     <div className="flex w-full flex-col p-4 px-8 mt-8">
       <GoBack />
       <Routes>
-        <Route path="/dashboard" element={<JobOffersPage mode="special" />} />
+        <Route path="/dashboard" element={<EmployerDashboard />} />
 
         <Route path="/profile" element={<EmployerProfile />} />
 

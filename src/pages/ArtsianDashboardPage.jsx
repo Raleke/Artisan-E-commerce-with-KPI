@@ -5,10 +5,12 @@ import { Tab, Tabs } from "@heroui/react";
 import Notifications from "./ArtisanApplicationStatusPage";
 import ArtisanProfile from "./ArtisanProfilePage";
 import GoBack from "../components/GoBack";
+import useAuth from "../hooks/useAuth";
 
 const ArtisanDashboardPage = () => {
   const { pathname } = useLocation();
-
+  const { auth, user } = useAuth();
+  console.log(auth, user);
   return (
     <div className="flex w-full flex-col p-4 px-8 mt-8">
       <GoBack />
