@@ -78,6 +78,24 @@ function UsePostContactArtisan(employerId, artisanId) {
   });
 }
 
+function usePostEmployerJob() {
+  const apiClientPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+  return useMutation({
+    mutationFn: async (formData) => {
+      try {
+        const res = await apiClientPrivate.post("/job/add-job", formData);
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      navigate(`/job/${data.job._id}`);
+    },
+  });
+}
 function UseGetEmployerProfile(id) {
   return useQuery({
     queryKey: ["userdata", id],
@@ -338,6 +356,7 @@ export {
   UseGetEmployerProfile,
   useGetAllEmployerApplications,
   useGetJobApplications,
+  usePostEmployerJob,
   useGetJobDetails,
   usePatchApplicationStatus,
   useGetEmployerNotifications,
