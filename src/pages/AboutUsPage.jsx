@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
-import { Card, CardHeader, CardBody } from "@heroui/react";
+import { Card, CardHeader, CardBody, Link } from "@heroui/react";
 import { Button } from "@heroui/react";
+import roloimage from "../assets/rolo.jpg";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import AnimatedSection from "../components/cards/AnimatedSection";
@@ -10,8 +11,8 @@ const AboutUsPage = () => {
     {
       name: "Raleke Miracle",
       role: "Chief Executive Officer",
-      image: "/api/placeholder/300/300",
-      linkedin: "#",
+      image: roloimage,
+      linkedin: "https://www.linkedin.com/in/miracle-raleke-9b2b98343/",
     },
     {
       name: "Wayword Benson",
@@ -36,7 +37,7 @@ const AboutUsPage = () => {
         <AnimatedSection direction="left">
           <div className="relative h-96 hidden md:block">
             <img
-              src="/api/placeholder/600/400"
+              src="https://artisanoga.com/artisans/6.png"
               alt="Blue collar worker"
               className="rounded-lg object-cover w-full h-full"
             />
@@ -127,6 +128,8 @@ const AboutUsPage = () => {
                   color="default"
                   variant="flat"
                   className="w-full text-primary-foreground"
+                  as={Link}
+                  href={member.linkedin}
                 >
                   LinkedIn
                 </Button>

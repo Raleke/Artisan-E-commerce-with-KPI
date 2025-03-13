@@ -4,9 +4,10 @@ import { FaCamera, FaCheckCircle, FaStar } from "react-icons/fa";
 import { useGetArtisanFullDetails } from "../adapters/Requests";
 import useAuth from "../hooks/useAuth";
 
-const ArtisanProfile = ({ isOwnProfile = true }) => {
+const ArtisanProfile = ({ artisanId, isOwnProfile = true }) => {
+  console.log(artisanId);
   const { user } = useAuth();
-  const { isLoading, data } = useGetArtisanFullDetails(user.id);
+  const { isLoading, data } = useGetArtisanFullDetails(artisanId || user.id);
 
   const [profileData, setProfileData] = useState({
     fullName: "",

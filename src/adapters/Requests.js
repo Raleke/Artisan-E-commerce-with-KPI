@@ -63,7 +63,7 @@ function useEmployerSignup() {
   });
 }
 
-function UsePostContactArtisan(employerId, artisanId) {
+function usePostContactArtisan(employerId, artisanId) {
   const navigate = useNavigate();
 
   return useMutation({
@@ -96,9 +96,9 @@ function usePostEmployerJob() {
     },
   });
 }
-function UseGetEmployerProfile(id) {
+function useGetEmployerProfile(id) {
   return useQuery({
-    queryKey: ["userdata", id],
+    queryKey: ["employer", id],
     queryFn: async () => {
       if (!id) {
         return null;
@@ -352,8 +352,8 @@ function usePostArtisanApply() {
 export {
   useEmployerLogin,
   useEmployerSignup,
-  UsePostContactArtisan,
-  UseGetEmployerProfile,
+  usePostContactArtisan,
+  useGetEmployerProfile,
   useGetAllEmployerApplications,
   useGetJobApplications,
   usePostEmployerJob,

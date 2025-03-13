@@ -7,8 +7,14 @@ import {
   Button,
   Modal,
   Spinner,
+  Link,
 } from "@heroui/react";
-import { AiOutlineEye, AiOutlineCheck, AiOutlinePlus } from "react-icons/ai";
+import {
+  AiOutlineEye,
+  AiOutlineCheck,
+  AiOutlinePlus,
+  AiOutlineMenuFold,
+} from "react-icons/ai";
 import { useNavigate } from "react-router";
 import { useGetAllEmployerApplications } from "../adapters/Requests"; // Adjust the import path as needed
 
@@ -23,14 +29,14 @@ export default function EmployerDashboard() {
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
 
+  console.log(data);
   const jobApplications = data?.jobApplications || [];
   const handleShowMore = (jobId) => {
     navigate(`/job/${jobId}/applications`);
   };
 
   const handleEmploy = (jobId, artisanId) => {
-    setSelectedApplication({ jobId, artisanId });
-    setModalOpen(true);
+    navigate(`/job/${jobId}/${artisanId}`);
   };
 
   const confirmEmploy = async () => {
@@ -95,10 +101,11 @@ export default function EmployerDashboard() {
                         </div>
                         <Button
                           color="primary"
-                          onClick={() => handleEmploy(job.jobId, app.artisanId)}
-                          startContent={<AiOutlineCheck />}
+                          as={Link}
+                          href={`/employer/job/${job.jobId}/${app.artisanId}`}
+                          startContent={<AiOutlineMenuFold />}
                         >
-                          Employ
+                          View details
                         </Button>
                       </li>
                     ))}

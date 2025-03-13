@@ -12,6 +12,7 @@ import EmployerCreateJobPage from "./EmployerCreateJobPage";
 import EmployerJobApplicantsPage from "./EmployerJobApplicantsPage";
 import EmployerProfile from "./EmployerProfilePage";
 import EmployerDashboard from "./EmployerDashboardExtraPage";
+import UpdatedArtisanProfile from "./EmployerArtisanEmployPage";
 
 const EmployerDashboardPage = () => {
   const { pathname } = useLocation();
@@ -25,6 +26,17 @@ const EmployerDashboardPage = () => {
         <Route path="/profile" element={<EmployerProfile />} />
 
         <Route path="/create-job" element={<EmployerCreateJobPage />} />
+
+        {/* <Route path="/job/:id/applicants" element={<EmployerJobApplicantsPage />} /> */}
+        <Route
+          path="/job/:jobId/:artisanId"
+          element={<UpdatedArtisanProfile />}
+        />
+
+        {/* <Route */}
+        {/*   path="/job/:id/applicants" */}
+        {/*   element={<EmployerJobApplicantsPage />} */}
+        {/* /> */}
       </Routes>
     </div>
   );

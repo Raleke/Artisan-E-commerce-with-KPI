@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardHeader, CardBody, Spinner } from "@heroui/react";
 import { FaCamera, FaCheckCircle, FaStar } from "react-icons/fa";
-// import { useGetEmployerFullDetails } from "../adapters/Requests";
-// import useAuth from "../hooks/useAuth";
+import { useGetEmployerProfile } from "../adapters/Requests";
+import useAuth from "../hooks/useAuth";
 
 const EmployerProfile = ({ isOwnProfile = true }) => {
-  // const { user } = useAuth();
-  // const { isLoading, data } = useGetEmployerFullDetails(user.id);
-
+  const { user } = useAuth();
+  const { isLoading, data } = useGetEmployerProfile(user.id);
   const [profileData, setProfileData] = useState({
     email: "johndoe@gmail.com",
     companyName: "John Doe Inc.",
@@ -18,6 +17,7 @@ const EmployerProfile = ({ isOwnProfile = true }) => {
     state: "Lagos",
     city: "Ikeja",
     rating: 4.5,
+    numberOfReviews: 0,
     jobsPosted: [
       {
         _id: "1",
@@ -36,31 +36,39 @@ const EmployerProfile = ({ isOwnProfile = true }) => {
     ],
   });
 
-  // useEffect(() => {
-  //   if (data) {
-  //     const transformedData = {
-  //       email: data.email,
-  //       companyName: data.companyName,
-  //       companyNum: data.companyNum,
-  //       image: data.image,
-  //       dateRegistered: new Date(data.dateRegistered).toLocaleDateString(),
-  //       country: data.country,
-  //       state: data.state,
-  //       city: data.city,
-  //       rating: data.rating,
-  //       jobsPosted: data.jobsPosted.slice(0, 3), // Get the last 3 jobs posted
-  //     };
-  //
-  //     setProfileData(transformedData);
-  //   }
-  // }, [data]);
-  //
-  // if (isLoading)
-  //   return (
-  //     <div>
-  //       <Spinner />
-  //     </div>
-  //   );
+  useEffect(() => {
+    if (data) {
+      const transformedData = {
+        email: data.email || data._doc.email,
+        companyName: data.CompanyName || data._doc.CompanyName,
+        companyNum: data._doc.companyNum,
+        image: data._doc.image || "",
+        dateRegistered: new Date(data._doc.dateRegistered).toLocaleDateString(),
+        country: data._doc.country,
+        state: data._doc.state,
+        city: data._doc.city,
+        rating: data.reviewAvg || 0,
+        numberOfReviews: data.no_of_rating || 0,
+        jobsPosted:
+          data.jobs?.map((job) => ({
+            _id: job._id,
+            jobTitle: job.jobTitle,
+            location: job.location,
+            datePosted: new Date(job.datePosted).toLocaleDateString(),
+            skills: [job.requiredSkill].filter(Boolean),
+          })) || [],
+      };
+
+      setProfileData(transformedData);
+    }
+  }, [data]);
+  console.log(data);
+  if (isLoading)
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
 
   return (
     <div className="max-w-4xl min-h-[80vh] flex justify-center items-center mx-auto p-4">
@@ -95,7 +103,8 @@ const EmployerProfile = ({ isOwnProfile = true }) => {
               <div className="hidden md:flex items-center gap-4 mt-2">
                 <span className="flex items-center gap-2">
                   <FaStar className="text-yellow-400 h-4 w-4 " />
-                  {profileData.rating}/5.0
+                  {profileData.rating}/5.0 ({profileData.numberOfReviews}{" "}
+                  rating)
                 </span>
                 <span className="flex items-center">
                   <FaCheckCircle className="w-4 h-4 text-success-500 mr-1" />
