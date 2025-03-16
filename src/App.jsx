@@ -33,10 +33,6 @@ function App() {
           <Route path="/artisan/*" element={<ArtisanDashboardPage />} />
           <Route path="job/:id" element={<JobDetailsPage />} />
           <Route path="/employer/*" element={<EmployerDashboard />} />
-          <Route
-            path="/employer/job/:id/applicants"
-            element={<EmployerJobApplicantsPage />}
-          />
         </Routes>
       </div>
       <FooterCard />

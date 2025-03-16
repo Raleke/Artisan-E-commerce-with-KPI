@@ -9,10 +9,10 @@ import JobOffersPage from "./JobOffersPage";
 import { Tab, Tabs } from "@heroui/react";
 import GoBack from "../components/GoBack";
 import EmployerCreateJobPage from "./EmployerCreateJobPage";
-import EmployerJobApplicantsPage from "./EmployerJobApplicantsPage";
 import EmployerProfile from "./EmployerProfilePage";
 import EmployerDashboard from "./EmployerDashboardExtraPage";
 import UpdatedArtisanProfile from "./EmployerArtisanEmployPage";
+import EmployerJobApplicantsPage from "./EmployerJobApplicantsPage";
 
 const EmployerDashboardPage = () => {
   const { pathname } = useLocation();
@@ -27,16 +27,16 @@ const EmployerDashboardPage = () => {
 
         <Route path="/create-job" element={<EmployerCreateJobPage />} />
 
+        <Route
+          path="/jobs/:jobId/applications"
+          element={<EmployerJobApplicantsPage />}
+        />
+
         {/* <Route path="/job/:id/applicants" element={<EmployerJobApplicantsPage />} /> */}
         <Route
           path="/job/:jobId/:artisanId"
           element={<UpdatedArtisanProfile />}
         />
-
-        {/* <Route */}
-        {/*   path="/job/:id/applicants" */}
-        {/*   element={<EmployerJobApplicantsPage />} */}
-        {/* /> */}
       </Routes>
     </div>
   );

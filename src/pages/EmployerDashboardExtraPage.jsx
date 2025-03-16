@@ -32,7 +32,7 @@ export default function EmployerDashboard() {
   console.log(data);
   const jobApplications = data?.jobApplications || [];
   const handleShowMore = (jobId) => {
-    navigate(`/job/${jobId}/applications`);
+    navigate(`/employer/jobs/${jobId}/applications`);
   };
 
   const handleEmploy = (jobId, artisanId) => {

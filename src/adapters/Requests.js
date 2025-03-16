@@ -1,10 +1,11 @@
-import { apiClient, queryClient } from "./api";
+import { apiClient, apiClientPrivate, queryClient } from "./api";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useSearchParams, useNavigate, useLocation } from "react-router";
 import { GetUserId, handleError } from "./utils";
 import useAuth from "../hooks/useAuth";
 import { jwtDecode } from "jwt-decode";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { toast } from "sonner";
 
 function useEmployerLogin() {
   const navigate = useNavigate();
@@ -58,7 +59,8 @@ function useEmployerSignup() {
       return response.data;
     },
     onSuccess: (data) => {
-      navigate(`/verify/email/`);
+      toast.success("Signup successful, please login");
+      navigate(`/login/signup/`);
     },
   });
 }
@@ -254,7 +256,9 @@ function UseArtisanSignup() {
       return response.data;
     },
     onSuccess: (data) => {
-      navigate(`/verify/email/`);
+      toast.success("Signup successful, please login");
+
+      navigate("/login/artisan");
     },
   });
 }
@@ -349,6 +353,37 @@ function usePostArtisanApply() {
   });
 }
 
+function useGetJobDetailsApplications(jobId) {
+  const apiClientPrivate = useAxiosPrivate();
+  return useQuery({
+    queryKey: ["job", jobId],
+    queryFn: async () => {
+      try {
+        const res = await apiClientPrivate.get(
+          `/employer/${jobId}/applications`,
+        );
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+  });
+}
+
+function useDeleteJob() {
+  const apiClientPrivate = useAxiosPrivate();
+  return useMutation({
+    mutationFn: async (id) => {
+      try {
+        const res = await apiClientPrivate.delete(`/job/delete/${id}`);
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+  });
+}
+
 export {
   useEmployerLogin,
   useEmployerSignup,
@@ -366,4 +401,6 @@ export {
   useGetArtisanFullDetails,
   useGetArtisanApplications,
   usePostArtisanApply,
+  useDeleteJob,
+  useGetJobDetailsApplications,
 };

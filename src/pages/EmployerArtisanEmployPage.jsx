@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { useParams } from "react-router";
 import { Button, Modal } from "@heroui/react";
 import ArtisanProfile from "./ArtisanProfilePage";
+import { usePatchApplicationStatus } from "../adapters/Requests";
 // import { useEmployArtisan } from "../../hooks/employerHooks";
 
 const UpdatedArtisanProfile = () => {
   const { jobId, artisanId } = useParams();
   const [isModalOpen, setModalOpen] = useState(false);
   const [isRejectModalOpen, setRejectModalOpen] = useState(false);
-  // const employMutation = useEmployArtisan();
+  const patchApplicationStatus = usePatchApplicationStatus(jobId, artisanId);
 
   console.log(jobId, artisanId);
   const handleEmploy = () => {
@@ -20,14 +21,13 @@ const UpdatedArtisanProfile = () => {
   };
 
   const confirmEmploy = async () => {
-    // await employMutation.mutateAsync({ jobId, artisanId });
+    await patchApplicationStatus.mutateAsync({ status: "Employed" });
     setModalOpen(false);
     // Optionally navigate away or show a success message
   };
 
   const confirmReject = async () => {
-    // Add reject logic here
-    // await rejectMutation.mutateAsync({ jobId, artisanId });
+    await patchApplicationStatus.mutateAsync({ status: "Rejected" });
     setRejectModalOpen(false);
     // Optionally navigate away or show a success message
   };
