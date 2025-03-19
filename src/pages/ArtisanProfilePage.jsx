@@ -16,7 +16,7 @@ import {
   FaMailchimp,
   FaStar,
 } from "react-icons/fa";
-import profilePic from "../assets/IMG_6048.jpeg";
+import profilePic from "../assets/benson1.jpeg";
 import resume from "../assets/resume.pdf";
 import { useGetArtisanFullDetails } from "../adapters/Requests";
 import useAuth from "../hooks/useAuth";

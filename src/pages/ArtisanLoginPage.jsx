@@ -48,6 +48,7 @@ const ArtisanLoginPage = () => {
           onSubmit={handleLogin}
           submitButtonText="Login"
           loading={loading}
+          isEmployer={false}
         />
       </div>
       <div className="w-full md:w-1/2 flex items-center justify-center">

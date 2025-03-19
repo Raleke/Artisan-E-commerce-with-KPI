@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardHeader, CardBody, Spinner } from "@heroui/react";
 import { FaCamera, FaCheckCircle, FaStar } from "react-icons/fa";
 import { useGetEmployerProfile } from "../adapters/Requests";
+import profilePic from "../assets/IMG_6048.jpeg";
 import useAuth from "../hooks/useAuth";
 
 const EmployerProfile = ({ isOwnProfile = true }) => {
@@ -78,11 +79,7 @@ const EmployerProfile = ({ isOwnProfile = true }) => {
             <div className="relative">
               <div className="w-32 h-32 rounded-full bg-gray-200 overflow-hidden relative">
                 <img
-                  src={
-                    profileData.image
-                      ? `/api/images/${profileData.image}`
-                      : "/api/placeholder/128/128"
-                  }
+                  src={profilePic}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
