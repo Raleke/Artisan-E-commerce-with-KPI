@@ -4,6 +4,7 @@ import JobOffersPage from "./JobOffersPage";
 import { Tab, Tabs } from "@heroui/react";
 import Notifications from "./ArtisanApplicationStatusPage";
 import ArtisanProfile from "./ArtisanProfilePage";
+import ArtisanEditProfilePage from "./ArtisanEditProfilePage";
 import GoBack from "../components/GoBack";
 import useAuth from "../hooks/useAuth";
 
@@ -18,6 +19,7 @@ const ArtisanDashboardPage = () => {
         <Route path="/dashboard" element={<JobOffersPage mode="special" />} />
         <Route path="/notification" element={<Notifications />} />
         <Route path="/profile" element={<ArtisanProfile />} />
+        <Route path="/edit-profile" element={<ArtisanEditProfilePage />} />
       </Routes>
     </div>
   );

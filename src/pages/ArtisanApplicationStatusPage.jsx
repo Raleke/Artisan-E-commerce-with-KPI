@@ -35,7 +35,7 @@ export default function Notifications() {
 
   const statusColors = {
     Pending: "warning",
-    Accepted: "success",
+    Employed: "success",
     Rejected: "danger",
   };
 

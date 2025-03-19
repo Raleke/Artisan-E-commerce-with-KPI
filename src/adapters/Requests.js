@@ -94,6 +94,7 @@ function usePostEmployerJob() {
     },
     onSuccess: (data) => {
       console.log(data);
+      toast.success("Job posted successfully");
       navigate(`/job/${data.job._id}`);
     },
   });
@@ -168,7 +169,27 @@ function usePatchApplicationStatus(jobId, artisanId) {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["applications", jobId]);
+      toast.success("Application status updated successfully");
+      queryClient.invalidateQueries(["jobs"]);
+    },
+  });
+}
+function usePatchArtisanProfile(id) {
+  return useMutation({
+    mutationFn: async (profileData) => {
+      try {
+        const res = await apiClient.put(
+          `/artisan/update-profile/${id}`,
+          profileData,
+        );
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+    onSuccess: () => {
+      toast.success("Profile updated successfully");
+      queryClient.invalidateQueries(["artisanProfile"]);
     },
   });
 }
@@ -286,6 +307,7 @@ function useArtisanLogin() {
       console.log(auth);
       queryClient.invalidateQueries("userdata"); // Invalidate the user query
       // Redirect to dashboard after successful login
+      toast.success("Login successful");
       navigate(from, { replace: true });
     },
     onError: (error) => {
@@ -350,6 +372,9 @@ function usePostArtisanApply() {
         handleError(error);
       }
     },
+    onSuccess: (data) => {
+      toast.success("Application successful");
+    },
   });
 }
 
@@ -381,6 +406,10 @@ function useDeleteJob() {
         handleError(error);
       }
     },
+    onSuccess: () => {
+      toast.success("Job deleted successfully");
+      queryClient.invalidateQueries("jobs");
+    },
   });
 }
 
@@ -403,4 +432,5 @@ export {
   usePostArtisanApply,
   useDeleteJob,
   useGetJobDetailsApplications,
+  usePatchArtisanProfile,
 };

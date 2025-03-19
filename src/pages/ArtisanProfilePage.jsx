@@ -1,13 +1,34 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardHeader, CardBody, Chip, Spinner } from "@heroui/react";
-import { FaCamera, FaCheckCircle, FaStar } from "react-icons/fa";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Chip,
+  Spinner,
+  Link,
+  Button,
+} from "@heroui/react";
+import {
+  FaCamera,
+  FaCheckCircle,
+  FaDownload,
+  FaEdit,
+  FaMailchimp,
+  FaStar,
+} from "react-icons/fa";
+import profilePic from "../assets/IMG_6048.jpeg";
+import resume from "../assets/resume.pdf";
 import { useGetArtisanFullDetails } from "../adapters/Requests";
 import useAuth from "../hooks/useAuth";
+import { MdOutlineWhatsapp } from "react-icons/md";
+import { FaEnvelope } from "react-icons/fa6";
+import { useNavigate } from "react-router";
 
 const ArtisanProfile = ({ artisanId, isOwnProfile = true }) => {
   console.log(artisanId);
   const { user } = useAuth();
   const { isLoading, data } = useGetArtisanFullDetails(artisanId || user.id);
+  const navigate = useNavigate();
 
   const [profileData, setProfileData] = useState({
     fullName: "",
@@ -21,6 +42,7 @@ const ArtisanProfile = ({ artisanId, isOwnProfile = true }) => {
     city: "",
     bio: "",
     hourlyRate: "",
+    whatsappNumber: "",
     availability: "",
     skills: [],
     completedJobs: 0,
@@ -37,6 +59,7 @@ const ArtisanProfile = ({ artisanId, isOwnProfile = true }) => {
         experience: data.artisan.yearsOfExperience?.toString() || "",
         email: data.artisan.email,
         phone: data.artisan.phoneNumber,
+        whatsappNumber: data.artisan.whatsappNumber,
         companyName: data.artisan.workExperience?.companyName || "",
         country: data.artisan.country,
         state: data.artisan.state,
@@ -89,20 +112,26 @@ const ArtisanProfile = ({ artisanId, isOwnProfile = true }) => {
             <div className="relative">
               <div className="w-32 h-32 rounded-full bg-gray-200 overflow-hidden relative">
                 <img
-                  src="/api/placeholder/128/128"
+                  src={profilePic}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
-                {isOwnProfile && (
-                  <div className="absolute inset-x-0 bottom-0 rounded-b-full bg-black/50 py-2 flex justify-center">
-                    <FaCamera className="w-5 h-5 text-white cursor-pointer" />
-                  </div>
-                )}
               </div>
             </div>
             <div className="flex-1">
               <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold">{profileData.fullName}</h1>
+                <h1 className="text-2xl font-bold mr-4">
+                  {profileData.fullName}
+                </h1>
+                {isOwnProfile && (
+                  <Button
+                    onPress={() => navigate("/artisan/edit-profile")}
+                    variant="ghost"
+                    startContent={<FaEdit />}
+                  >
+                    Edit Profile
+                  </Button>
+                )}
               </div>
               <p className="text-lg text-gray-600">{profileData.profession}</p>
               <div className="hidden md:flex items-center gap-4 mt-2">
@@ -139,8 +168,21 @@ const ArtisanProfile = ({ artisanId, isOwnProfile = true }) => {
               </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Contact</h3>
-                <p className="mt-1">{profileData.email}</p>
-                <p>{profileData.phone}</p>
+                <p className="mt-1 flex flex-row items-center gap-4">
+                  <FaEnvelope className="h-4 w-4 " />
+                  {profileData.email}
+                </p>
+                <Link
+                  href={`https://wa.me/${profileData.whatsappNumber}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <p className="flex flex-row gap-4 items-center">
+                    <MdOutlineWhatsapp className="text-green-400 h-4 w-4" />
+
+                    {profileData.phone}
+                  </p>
+                </Link>
               </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-500">
@@ -149,8 +191,10 @@ const ArtisanProfile = ({ artisanId, isOwnProfile = true }) => {
                 <p className="mt-1">{profileData.experience} years</p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Rate</h3>
-                <p className="mt-1">₦{profileData.hourlyRate}/hour</p>
+                <h3 className="text-sm font-medium text-gray-500">
+                  Availability
+                </h3>
+                <p className="mt-1">{profileData.availability}</p>
               </div>
             </div>
 
@@ -169,6 +213,18 @@ const ArtisanProfile = ({ artisanId, isOwnProfile = true }) => {
                 ))}
               </div>
             </div>
+            <div>
+              <h3 className="text-sm font-medium text-gray-500">CV</h3>
+              <a
+                href={resume}
+                download
+                className="text-primary-500 hover:underline mt-1 flex flex-row items-center gap-2"
+              >
+                <FaDownload />
+                Download CV
+              </a>
+            </div>
+
             <div>
               <h3 className="text-sm font-medium text-gray-500 mb-4">
                 Education
