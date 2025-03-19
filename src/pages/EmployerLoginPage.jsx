@@ -45,6 +45,7 @@ const EmployerLoginPage = () => {
           onSubmit={handleLogin}
           submitButtonText="Login"
           loading={loading}
+          isEmployer
         />
       </div>
       <div className="w-full md:w-1/2 flex items-center justify-center">

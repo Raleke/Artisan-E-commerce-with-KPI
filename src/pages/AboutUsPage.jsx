@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Card, CardHeader, CardBody, Link } from "@heroui/react";
 import { Button } from "@heroui/react";
 import roloimage from "../assets/rolo.jpg";
+import bensonimage from "../assets/benson.jpeg";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import AnimatedSection from "../components/cards/AnimatedSection";
@@ -15,9 +16,9 @@ const AboutUsPage = () => {
       linkedin: "https://www.linkedin.com/in/miracle-raleke-9b2b98343/",
     },
     {
-      name: "Wayword Benson",
+      name: "Benson Emmanuel Abiamanbana",
       role: "Chief Developer",
-      image: "/api/placeholder/300/300",
+      image: bensonimage,
       linkedin: "#",
     },
   ];

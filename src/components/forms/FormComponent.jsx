@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner"; // Import react-toastify
 import { useNavigate } from "react-router"; // Import useNavigate from react-router-dom
 import { FaEye, FaRegEyeSlash } from "react-icons/fa6";
-import { Button, Card, Input } from "@heroui/react";
+import { Button, Card, Input, Link } from "@heroui/react";
 // Reusable Form Component
 const FormComponent = ({
   title,
@@ -10,6 +10,7 @@ const FormComponent = ({
   onSubmit,
   submitButtonText,
   loading,
+  isEmployer,
 }) => {
   const navigate = useNavigate(); // Initialize the navigate function for routing
   const [passwordVisibility, setPasswordVisibility] = useState({});
@@ -60,7 +61,21 @@ const FormComponent = ({
       >
         <div className="mb-1 flex flex-col gap-6">
           {fields.map((field, index) => (
-            <div key={index}>
+            <div key={index} className="flex flex-col">
+              {field.type === "password" && (
+                <div className="flex justify-end">
+                  <Link
+                    href={
+                      isEmployer
+                        ? "/forgot-password/employer"
+                        : "/forgot-password/artisan"
+                    }
+                    className="text-primary hover:underline text-sm"
+                  >
+                    Forgot Password?
+                  </Link>
+                </div>
+              )}
               <Input
                 label={field.label}
                 type={passwordVisibility[field.name] ? "text" : field.type}
