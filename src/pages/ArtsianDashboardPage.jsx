@@ -7,6 +7,7 @@ import ArtisanProfile from "./ArtisanProfilePage";
 import ArtisanEditProfilePage from "./ArtisanEditProfilePage";
 import GoBack from "../components/GoBack";
 import useAuth from "../hooks/useAuth";
+import ArtisanReviewsPage from "./ArtisanReviewPage";
 
 const ArtisanDashboardPage = () => {
   const { pathname } = useLocation();
@@ -20,6 +21,7 @@ const ArtisanDashboardPage = () => {
         <Route path="/notification" element={<Notifications />} />
         <Route path="/profile" element={<ArtisanProfile />} />
         <Route path="/edit-profile" element={<ArtisanEditProfilePage />} />
+        <Route path="/reviews" element={<ArtisanReviewsPage />} />
       </Routes>
     </div>
   );

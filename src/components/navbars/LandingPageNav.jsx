@@ -52,11 +52,13 @@ export default function LandingPageNav() {
       { label: "Dashboard", to: "/employer/dashboard" },
       { label: "Profile", to: "/employer/profile" },
       { label: "Create Job", to: "/employer/create-job" },
+      { label: "Reviews", to: "/employer/reviews" },
     ],
     artisan: [
       { label: "Dashboard", to: "/artisan/dashboard" },
       { label: "Profile", to: "/artisan/profile" },
       { label: "Notification", to: "/artisan/notification" },
+      { label: "Reviews", to: "/artisan/reviews" },
     ],
   };
 

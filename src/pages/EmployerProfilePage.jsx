@@ -100,8 +100,8 @@ const EmployerProfile = ({ isOwnProfile = true }) => {
               <div className="hidden md:flex items-center gap-4 mt-2">
                 <span className="flex items-center gap-2">
                   <FaStar className="text-yellow-400 h-4 w-4 " />
-                  {profileData.rating}/5.0 ({profileData.numberOfReviews}{" "}
-                  rating)
+                  {profileData.rating.toFixed(1)}/5 (
+                  {profileData.numberOfReviews} rating)
                 </span>
                 <span className="flex items-center">
                   <FaCheckCircle className="w-4 h-4 text-success-500 mr-1" />
@@ -112,7 +112,7 @@ const EmployerProfile = ({ isOwnProfile = true }) => {
           </div>
           <div className="flex items-center gap-4 mt-2 md:hidden">
             <span className="flex items-center">
-              ⭐ {profileData.rating}/5.0
+              ⭐ {profileData.rating.toFixed(1)}/5
             </span>
             <span className="flex items-center">
               <FaCheckCircle className="w-4 h-4 text-success-500 mr-1" />

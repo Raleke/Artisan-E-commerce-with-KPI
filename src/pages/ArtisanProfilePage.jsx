@@ -52,42 +52,45 @@ const ArtisanProfile = ({ artisanId, isOwnProfile = true }) => {
   });
 
   useEffect(() => {
+    console.log(data);
     if (data) {
       const transformedData = {
-        fullName: `${data.artisan.firstName} ${data.artisan.lastName}`,
-        profession: data.artisan.jobCategories[0]?.jobCategory || "",
-        experience: data.artisan.yearsOfExperience?.toString() || "",
-        email: data.artisan.email,
-        phone: data.artisan.phoneNumber,
-        whatsappNumber: data.artisan.whatsappNumber,
-        companyName: data.artisan.workExperience?.companyName || "",
-        country: data.artisan.country,
-        state: data.artisan.state,
-        city: data.artisan.city,
-        bio: data.artisan.artisanDescription,
+        fullName: `${data.artisan._doc.firstName} ${data.artisan._doc.lastName}`,
+        profession: data.artisan._doc.jobCategories[0]?.jobCategory || "",
+        experience: data.artisan._doc.yearsOfExperience?.toString() || "",
+        email: data.artisan._doc.email,
+        phone: data.artisan._doc.phoneNumber,
+        whatsappNumber: data.artisan._doc.whatsappNumber,
+        companyName: data.artisan._doc.workExperience?.companyName || "",
+        country: data.artisan._doc.country,
+        state: data.artisan._doc.state,
+        city: data.artisan._doc.city,
+        bio: data.artisan._doc.artisanDescription,
+        rating: data.artisan.reviewAvg || 0,
+        numberOfReviews: data.artisan.no_of_rating || 0,
         hourlyRate: "", // Assuming no hourly rate provided in API
-        availability: data.artisan.jobType, // Assuming no availability provided in API
-        skills: data.artisan.jobCategories[0]?.skills || [],
-        completedJobs: 0, // Assuming no completed jobs provided in API
-        rating: 0, // Assuming no rating provided in API
-        education: data.artisan.education.details
+        availability: data.artisan._doc.jobType, // Assuming no availability provided in API
+        skills: data.artisan._doc.jobCategories[0]?.skills || [],
+        completedJobs: data.artisan.no_of_jobs_completed, // Assuming no completed jobs provided in API
+        education: data.artisan._doc.education.details
           ? [
               {
                 id: 1,
-                institution: data.artisan.education.level,
-                qualification: data.artisan.education.details.certObtained,
-                year: data.artisan.education.details.gradYear,
-                description: data.artisan.education.details.course,
+                institution: data.artisan._doc.education.level,
+                qualification: data.artisan._doc.education.details.certObtained,
+                year: data.artisan._doc.education.details.gradYear,
+                description: data.artisan._doc.education.details.course,
               },
             ]
           : [],
-        workExperience: data.artisan.workExperience.hasExperience
+        workExperience: data.artisan._doc.workExperience.hasExperience
           ? [
               {
-                companyName: data.artisan.workExperience.details.companyName,
-                jobTitle: data.artisan.workExperience.details.role,
-                startDate: data.artisan.workExperience.details.startYear,
-                endDate: data.artisan.workExperience.details.endYear,
+                companyName:
+                  data.artisan._doc.workExperience.details.companyName,
+                jobTitle: data.artisan._doc.workExperience.details.role,
+                startDate: data.artisan._doc.workExperience.details.startYear,
+                endDate: data.artisan._doc.workExperience.details.endYear,
               },
             ]
           : [],
@@ -141,7 +144,8 @@ const ArtisanProfile = ({ artisanId, isOwnProfile = true }) => {
                 </span>
                 <span className="flex items-center gap-2">
                   <FaStar className="text-yellow-400 h-4 w-4 " />
-                  {profileData.rating}/5.0
+                  {profileData.rating.toFixed(1)}/5{" "}
+                  {`(${profileData.numberOfReviews} rating)`}
                 </span>
               </div>
             </div>
@@ -152,7 +156,8 @@ const ArtisanProfile = ({ artisanId, isOwnProfile = true }) => {
               {profileData.completedJobs} Jobs Completed
             </span>
             <span className="flex items-center">
-              ⭐ {profileData.rating}/5.0
+              ⭐ {profileData.rating.toFixed(1)}/5{" "}
+              {`(${profileData.numberOfReviews} rating)`}
             </span>
           </div>
         </CardHeader>

@@ -412,6 +412,105 @@ function useDeleteJob() {
     },
   });
 }
+function useLeaveReview() {
+  const apiClientPrivate = useAxiosPrivate();
+  return useMutation({
+    mutationFn: async (reviewData) => {
+      try {
+        const res = await apiClientPrivate.post(
+          "/review/leave-review",
+          reviewData,
+        );
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+    onSuccess: () => {
+      toast.success("Review submitted successfully");
+      queryClient.invalidateQueries(["reviews"]);
+    },
+  });
+}
+
+function useEditReview() {
+  const apiClientPrivate = useAxiosPrivate();
+  return useMutation({
+    mutationFn: async ({ reviewId, reviewData }) => {
+      try {
+        const res = await apiClientPrivate.put(
+          `/review/edit-review/${reviewId}`,
+          reviewData,
+        );
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+    onSuccess: () => {
+      toast.success("Review updated successfully");
+      queryClient.invalidateQueries(["reviews"]);
+    },
+  });
+}
+
+function useDeleteReview() {
+  const apiClientPrivate = useAxiosPrivate();
+  return useMutation({
+    mutationFn: async (reviewId) => {
+      try {
+        const res = await apiClientPrivate.delete(
+          `/review/delete-review/${reviewId}`,
+        );
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+    onSuccess: () => {
+      toast.success("Review deleted successfully");
+      queryClient.invalidateQueries(["reviews"]);
+    },
+  });
+}
+
+function useGetArtisansToRate(employerId) {
+  const apiClientPrivate = useAxiosPrivate();
+  return useQuery({
+    queryKey: ["reviews", employerId],
+    queryFn: async () => {
+      if (!employerId) return null;
+      try {
+        const res = await apiClientPrivate.get(
+          `/review/artisans-to-rate/${employerId}`,
+        );
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+    staleTime: 60000,
+  });
+}
+
+function useGetEmployersToRate(artisanId) {
+  const apiClientPrivate = useAxiosPrivate();
+  return useQuery({
+    queryKey: ["reviews", artisanId],
+    queryFn: async () => {
+      if (!artisanId) return null;
+      try {
+        const res = await apiClientPrivate.get(
+          `/review/employers-to-rate/${artisanId}`,
+        );
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+    staleTime: 60000,
+  });
+}
 
 export {
   useEmployerLogin,
@@ -433,4 +532,9 @@ export {
   useDeleteJob,
   useGetJobDetailsApplications,
   usePatchArtisanProfile,
+  useLeaveReview,
+  useEditReview,
+  useDeleteReview,
+  useGetArtisansToRate,
+  useGetEmployersToRate,
 };
