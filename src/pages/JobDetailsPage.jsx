@@ -14,7 +14,8 @@ const jobDetailsPage = () => {
   const jobDetails = data?.job || {};
   const { user, user_type } = useAuth();
 
-  const isOwner = user?.email == jobDetails?.emmployerEmail; // or false
+  const isOwner = user?.email ? user.email == jobDetails.emmployerEmail : false; // or false
+  console.log(isOwner);
   const onDelete = () => {
     apiClientPrivate.delete(`/job/delete/${jobDetails.id}`);
   };

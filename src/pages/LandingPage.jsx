@@ -65,11 +65,11 @@ export default function LandingPage() {
 
   const testimonials = [
     {
-      text: "Before I came across ArtisanOga, everybody else I've tried never worked, but with an open mind, I gave them a try, and I must say that the service has been great. My candid score for ArtisanOga is 8.5 out of 10 because I can never rate anyone more than that.",
+      text: "Before I came across Ambacht Casa Artigianale, everybody else I've tried never worked, but with an open mind, I gave them a try, and I must say that the service has been great. My candid score for Ambacht Casa Artigianale is 8.5 out of 10 because I can never rate anyone more than that.",
       author: "DEDE The Brand, Lagos",
     },
     {
-      text: "ArtisanOga more than met my expectations. The candidate I hired is very professional and resumes work on time. Thank you for the top-notch services.",
+      text: "Ambacht Casa Artigianale more than met my expectations. The candidate I hired is very professional and resumes work on time. Thank you for the top-notch services.",
       author: "Tag Fashion Studio, Lagos",
     },
     {
@@ -77,7 +77,7 @@ export default function LandingPage() {
       author: "Enara Patricks",
     },
     {
-      text: "My experience with ArtisanOga has been wonderful. Their customer service is exceptional!",
+      text: "My experience with Ambacht Casa Artigianale has been wonderful. Their customer service is exceptional!",
       author: "Laura Threads",
     },
     {

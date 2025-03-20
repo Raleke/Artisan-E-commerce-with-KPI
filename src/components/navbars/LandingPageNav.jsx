@@ -68,7 +68,7 @@ export default function LandingPageNav() {
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <Link className="flex justify-start items-center gap-1" href="/">
             <AcmeLogo />
-            <p className="font-bold text-inherit">Artisan</p>
+            <p className="font-bold text-inherit">Ambacht Casa Artigianale</p>
           </Link>
         </NavbarBrand>
       </NavbarContent>

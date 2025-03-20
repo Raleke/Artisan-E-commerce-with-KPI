@@ -1,21 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardBody,
   CardHeader,
   Input,
   Button,
-  Select,
-  SelectItem,
+  Autocomplete,
+  AutocompleteItem,
   Checkbox,
   Progress,
 } from "@heroui/react";
 import signupImage from "../assets/signup.jpg";
 import { useEmployerSignup } from "../adapters/Requests";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 const SignupForm = () => {
+  const apiClientPrivate = useAxiosPrivate();
   const [step, setStep] = useState(1);
   const signupMutation = useEmployerSignup();
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedCountryCode, setSelectedCountryCode] = useState("");
+  const [selectedCountryName, setSelectedCountryName] = useState("");
+  const [selectedStateCode, setSelectedStateCode] = useState("");
+  const [selectedStateName, setSelectedStateName] = useState("");
+  const [selectedCityCode, setSelectedCityCode] = useState("");
+  const [selectedCityName, setSelectedCityName] = useState("");
+  const [errors, setErrors] = useState({});
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -28,6 +42,46 @@ const SignupForm = () => {
     termsAndConditions: false,
   });
 
+  useEffect(() => {
+    const fetchCountries = async () => {
+      setIsLoading(true);
+      try {
+        const res = await apiClientPrivate.get("/countries");
+        setCountries(res.data);
+      } catch (err) {
+        console.error("Error fetching countries:", err);
+      }
+      setIsLoading(false);
+    };
+    fetchCountries();
+  }, [apiClientPrivate]);
+
+  const fetchStates = async (countryCode) => {
+    setIsLoading(true);
+    try {
+      const res = await apiClientPrivate.get(
+        `/countries/states?countryCode=${countryCode}`,
+      );
+      setStates(res.data);
+    } catch (err) {
+      console.error("Error fetching states:", err);
+    }
+    setIsLoading(false);
+  };
+
+  const fetchCities = async (stateCode) => {
+    setIsLoading(true);
+    try {
+      const res = await apiClientPrivate.get(
+        `/states/cities?stateCode=${stateCode}`,
+      );
+      setCities(res.data);
+    } catch (err) {
+      console.error("Error fetching cities:", err);
+    }
+    setIsLoading(false);
+  };
+
   const totalSteps = 4;
   const progress = (step / totalSteps) * 100;
 
@@ -39,8 +93,58 @@ const SignupForm = () => {
     }));
   };
 
+  const validateStep = () => {
+    const newErrors = {};
+
+    switch (step) {
+      case 1:
+        if (!formData.email) newErrors.email = "Email is required";
+        else if (!/^\S+@\S+\.\S+$/.test(formData.email))
+          newErrors.email = "Please enter a valid email address";
+
+        if (!formData.password) newErrors.password = "Password is required";
+        else if (formData.password.length < 8)
+          newErrors.password = "Password should be at least 8 characters";
+
+        if (!formData.confirmPassword)
+          newErrors.confirmPassword = "Please confirm your password";
+        else if (formData.password !== formData.confirmPassword)
+          newErrors.confirmPassword = "Passwords do not match";
+        break;
+
+      case 2:
+        if (!formData.companyName)
+          newErrors.companyName = "Company name is required";
+        if (!formData.companyNum)
+          newErrors.companyNum = "Company number is required";
+        else if (!/^\d+$/.test(formData.companyNum))
+          newErrors.companyNum = "Company number should only contain digits";
+        break;
+
+      case 3:
+        if (!selectedCountryName) newErrors.country = "Country is required";
+        if (!selectedStateName) newErrors.state = "State is required";
+        if (!selectedCityName) newErrors.city = "City is required";
+        break;
+
+      case 4:
+        if (!formData.termsAndConditions)
+          newErrors.termsAndConditions =
+            "You must accept the terms and conditions";
+        break;
+
+      default:
+        break;
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleNext = () => {
-    setStep((prev) => Math.min(prev + 1, totalSteps));
+    if (validateStep()) {
+      setStep((prev) => Math.min(prev + 1, totalSteps));
+    }
   };
 
   const handleBack = () => {
@@ -49,6 +153,9 @@ const SignupForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validateStep()) {
+      return;
+    }
     console.log("Form submitted:", formData);
     try {
       const submissionData = new FormData();
@@ -57,13 +164,10 @@ const SignupForm = () => {
           submissionData.append(key, value);
         }
       }
-
       signupMutation.mutate(submissionData);
     } catch (err) {
       console.log(err);
     }
-    console.log("sik");
-    // Handle form submission
   };
 
   const renderStep = () => {
@@ -82,10 +186,13 @@ const SignupForm = () => {
                 placeholder="Enter your email"
                 required
               />
+              {errors.email && (
+                <span className="text-red-500 text-sm">{errors.email}</span>
+              )}
             </div>
             <div>
               <Input
-                label="Passowrd"
+                label="Password"
                 id="password"
                 name="password"
                 type="password"
@@ -94,10 +201,13 @@ const SignupForm = () => {
                 placeholder="Enter your password"
                 required
               />
+              {errors.password && (
+                <span className="text-red-500 text-sm">{errors.password}</span>
+              )}
             </div>
             <div>
               <Input
-                label="Confirm Passowrd"
+                label="Confirm Password"
                 id="confirmPassword"
                 name="confirmPassword"
                 type="password"
@@ -106,6 +216,11 @@ const SignupForm = () => {
                 placeholder="Confirm your password"
                 required
               />
+              {errors.confirmPassword && (
+                <span className="text-red-500 text-sm">
+                  {errors.confirmPassword}
+                </span>
+              )}
             </div>
           </div>
         );
@@ -123,6 +238,11 @@ const SignupForm = () => {
                 placeholder="Enter company name"
                 required
               />
+              {errors.companyName && (
+                <span className="text-red-500 text-sm">
+                  {errors.companyName}
+                </span>
+              )}
             </div>
             <div>
               <Input
@@ -134,6 +254,11 @@ const SignupForm = () => {
                 placeholder="Enter company number"
                 required
               />
+              {errors.companyNum && (
+                <span className="text-red-500 text-sm">
+                  {errors.companyNum}
+                </span>
+              )}
             </div>
           </div>
         );
@@ -142,55 +267,100 @@ const SignupForm = () => {
         return (
           <div className="space-y-4">
             <div>
-              <Select
+              <Autocomplete
+                items={countries}
                 label="Country"
                 placeholder="Select country"
-                name="country"
-                selectedKeys={[formData.country]}
-                onChange={(e) =>
-                  handleInputChange({
-                    target: { name: "country", value: e.target.value },
-                  })
-                }
+                selectedKey={selectedCountryCode}
+                onSelectionChange={(value) => {
+                  const selectedCountry = countries.find(
+                    (country) => country.country_code === value,
+                  );
+                  setSelectedCountryCode(value);
+                  setSelectedCountryName(selectedCountry?.name);
+                  setFormData((prev) => ({
+                    ...prev,
+                    country: selectedCountry?.name || "",
+                    state: "",
+                    city: "",
+                  }));
+                  fetchStates(value);
+                }}
+                isLoading={isLoading}
               >
-                <SelectItem key="nigeria">Nigeria</SelectItem>
-                <SelectItem key="ghana">Ghana</SelectItem>
-                <SelectItem key="kenya">Kenya</SelectItem>
-              </Select>
+                {(item) => (
+                  <AutocompleteItem
+                    key={item.country_code}
+                    value={item.country_code}
+                  >
+                    {item.name}
+                  </AutocompleteItem>
+                )}
+              </Autocomplete>
+              {errors.country && (
+                <span className="text-red-500 text-sm">{errors.country}</span>
+              )}
             </div>
             <div>
-              <Select
+              <Autocomplete
+                items={states}
                 label="State"
                 placeholder="Select state"
-                name="state"
-                selectedKeys={[formData.state]}
-                onChange={(e) =>
-                  handleInputChange({
-                    target: { name: "state", value: e.target.value },
-                  })
-                }
+                selectedKey={selectedStateCode}
+                onSelectionChange={(value) => {
+                  const selectedState = states.find(
+                    (state) => state.state_code === value,
+                  );
+                  setSelectedStateCode(value);
+                  setSelectedStateName(selectedState?.name);
+                  setFormData((prev) => ({
+                    ...prev,
+                    state: selectedState?.name || "",
+                    city: "",
+                  }));
+                  fetchCities(value);
+                }}
+                isLoading={isLoading}
               >
-                <SelectItem key="lagos">Lagos</SelectItem>
-                <SelectItem key="abuja">Abuja</SelectItem>
-                <SelectItem key="kano">Kano</SelectItem>
-              </Select>
+                {(item) => (
+                  <AutocompleteItem
+                    key={item.state_code}
+                    value={item.state_code}
+                  >
+                    {item.name}
+                  </AutocompleteItem>
+                )}
+              </Autocomplete>
+              {errors.state && (
+                <span className="text-red-500 text-sm">{errors.state}</span>
+              )}
             </div>
             <div>
-              <Select
+              <Autocomplete
+                items={cities}
                 label="City"
-                name="city"
-                selectedKeys={[formData.city]}
-                onChange={(e) =>
-                  handleInputChange({
-                    target: { name: "city", value: e.target.value },
-                  })
-                }
                 placeholder="Select city"
+                selectedKey={selectedCityCode}
+                onSelectionChange={(value) => {
+                  const selectedCity = cities.find((city) => city.id === value);
+                  setSelectedCityCode(value);
+                  setSelectedCityName(selectedCity?.name);
+                  setFormData((prev) => ({
+                    ...prev,
+                    city: selectedCity?.name || "",
+                  }));
+                }}
+                isLoading={isLoading}
               >
-                <SelectItem key="ikeja">Ikeja</SelectItem>
-                <SelectItem key="victoria-island">Victoria Island</SelectItem>
-                <SelectItem key="lekki">Lekki</SelectItem>
-              </Select>
+                {(item) => (
+                  <AutocompleteItem key={item.id} value={item.id}>
+                    {item.name}
+                  </AutocompleteItem>
+                )}
+              </Autocomplete>
+              {errors.city && (
+                <span className="text-red-500 text-sm">{errors.city}</span>
+              )}
             </div>
           </div>
         );
@@ -229,6 +399,11 @@ const SignupForm = () => {
                 }
                 label="I accept the terms and conditions"
               />
+              {errors.termsAndConditions && (
+                <span className="text-red-500 text-sm">
+                  {errors.termsAndConditions}
+                </span>
+              )}
             </div>
           </div>
         );
@@ -243,7 +418,7 @@ const SignupForm = () => {
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center px-8 py-6 sm:mt-12">
         <Card className="w-full max-w-md">
           <CardHeader className="flex-col gap-y-2">
-            <h3 className="text-center text-2xl font-semibold leading-none tracking-tight'">
+            <h3 className="text-center text-2xl font-semibold leading-none tracking-tight">
               Create Account
             </h3>
             <Progress value={progress} className="w-full" />
