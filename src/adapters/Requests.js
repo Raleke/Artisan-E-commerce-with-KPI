@@ -45,6 +45,42 @@ function useEmployerLogin() {
   });
 }
 
+function useAdminLogin() {
+  const navigate = useNavigate();
+  const from = "/admin/dashboard";
+  const { setAuth } = useAuth();
+  return useMutation({
+    mutationFn: (formData) => {
+      return apiClient.post("/admin/login", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    },
+    onSuccess: (res) => {
+      const token = res.data.token;
+      const decodedToken = jwtDecode(token);
+      const admin = res.data.admin;
+      // Extract user ID from decoded token
+      setAuth({ type: "admin", admin, token });
+      queryClient.invalidateQueries("userdata"); // Invalidate the user query
+      // Redirect to dashboard after successful login
+      navigate(from, { replace: true });
+    },
+    onError: (error) => {
+      handleError(error);
+      console.log(error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.error === "your email has not been verified"
+      ) {
+        navigate(`/verify/email/${error.response.data.email}`);
+      }
+    },
+  });
+}
+
 function useEmployerSignup() {
   const navigate = useNavigate();
 
@@ -503,12 +539,29 @@ function useGetEmployersToRate(artisanId) {
         const res = await apiClientPrivate.get(
           `/review/employers-to-rate/${artisanId}`,
         );
+        console.log(res);
         return res.data;
       } catch (error) {
         handleError(error);
       }
     },
     staleTime: 60000,
+  });
+}
+function useGetAdminMetrics() {
+  const apiClientPrivate = useAxiosPrivate();
+  return useQuery({
+    queryKey: ["admin", "metics"],
+    queryFn: async () => {
+      try {
+        const res = await apiClient.get("/admin/metrics");
+        console.log(res.data);
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+    staleTime: 5000,
   });
 }
 
@@ -537,4 +590,6 @@ export {
   useDeleteReview,
   useGetArtisansToRate,
   useGetEmployersToRate,
+  useAdminLogin,
+  useGetAdminMetrics,
 };

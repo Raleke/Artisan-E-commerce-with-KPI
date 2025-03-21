@@ -76,10 +76,10 @@ export default function LandingHeroCard() {
               </div>
             </div>
             <div className="flex gap-4 justify-center">
-              <Button href="/" color="primary">
+              <Button href="/signup/employer" as={Link} color="primary">
                 Hire Now
               </Button>
-              <Button href="/artisan/jobs" color="primary">
+              <Button href="/signup/artisian" as={Link} color="primary">
                 Find A Job
               </Button>
             </div>

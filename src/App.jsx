@@ -13,6 +13,9 @@ import JobDetailsPage from "./pages/JobDetailsPage";
 import ArtisanDashboardPage from "./pages/ArtsianDashboardPage";
 import EmployerDashboard from "./pages/EmployerDashboardPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage.jsx";
+import AdminLoginPage from "./pages/AdminLoginPage.jsx";
+import AdminDashboardPage from "./pages/AdminDashboardPage.jsx";
+import RequireAuth from "./pages/RequireAuth.jsx";
 
 function App() {
   useEffect(() => {
@@ -37,9 +40,32 @@ function App() {
           />
           <Route path="/about" element={<AboutUsPage />} />
           <Route path="/jobs" element={<JobOffersPage />} />
-          <Route path="/artisan/*" element={<ArtisanDashboardPage />} />
+          <Route
+            path="/artisan/*"
+            element={
+              <RequireAuth type={"artisan"}>
+                <ArtisanDashboardPage />
+              </RequireAuth>
+            }
+          />
           <Route path="job/:id" element={<JobDetailsPage />} />
-          <Route path="/employer/*" element={<EmployerDashboard />} />
+          <Route
+            path="/employer/*"
+            element={
+              <RequireAuth type={"employer"}>
+                <EmployerDashboard />
+              </RequireAuth>
+            }
+          />
+          <Route path="/admin/login" element={<AdminLoginPage />} />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <RequireAuth type={"admin"}>
+                <AdminDashboardPage />
+              </RequireAuth>
+            }
+          />
         </Routes>
       </div>
       <FooterCard />

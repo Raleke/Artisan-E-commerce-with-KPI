@@ -33,12 +33,10 @@ export default function LandingPageNav() {
   const location = useLocation();
   const currentPath = location.pathname;
   const { isLoggedIn, user_type, setAuth } = useAuth(); // Use the useAuth hook
-  const naviage = useNavigate();
 
   const handleLogout = () => {
     setAuth({}); // Clear the authentication state
     queryClient.invalidateQueries();
-    naviage("/"); // Redirect to the home page
   };
 
   const menuItems = [

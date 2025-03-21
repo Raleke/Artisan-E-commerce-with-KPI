@@ -11,6 +11,7 @@ const FormComponent = ({
   submitButtonText,
   loading,
   isEmployer,
+  isAdmin = false,
 }) => {
   const navigate = useNavigate(); // Initialize the navigate function for routing
   const [passwordVisibility, setPasswordVisibility] = useState({});
@@ -64,16 +65,18 @@ const FormComponent = ({
             <div key={index} className="flex flex-col">
               {field.type === "password" && (
                 <div className="flex justify-end">
-                  <Link
-                    href={
-                      isEmployer
-                        ? "/forgot-password/employer"
-                        : "/forgot-password/artisan"
-                    }
-                    className="text-primary hover:underline text-sm"
-                  >
-                    Forgot Password?
-                  </Link>
+                  {!isAdmin && (
+                    <Link
+                      href={
+                        isEmployer
+                          ? "/forgot-password/employer"
+                          : "/forgot-password/artisan"
+                      }
+                      className="text-primary hover:underline text-sm"
+                    >
+                      Forgot Password?
+                    </Link>
+                  )}
                 </div>
               )}
               <Input
