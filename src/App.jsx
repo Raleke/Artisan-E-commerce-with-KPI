@@ -16,6 +16,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage.jsx";
 import AdminLoginPage from "./pages/AdminLoginPage.jsx";
 import AdminDashboardPage from "./pages/AdminDashboardPage.jsx";
 import RequireAuth from "./pages/RequireAuth.jsx";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
 
 function App() {
   useEffect(() => {
@@ -66,6 +67,7 @@ function App() {
               </RequireAuth>
             }
           />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
       <FooterCard />
