@@ -14,7 +14,6 @@ import { LogIn, UserPlus, LogOut } from "react-feather";
 import { useLocation } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import { queryClient } from "../../adapters/api";
-import { useNavigate } from "react-router";
 
 export const AcmeLogo = () => {
   return (

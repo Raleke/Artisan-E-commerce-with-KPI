@@ -3,6 +3,7 @@ import useAuth from "../hooks/useAuth";
 
 const RequireAuth = ({ type, children }) => {
   const { user, user_type } = useAuth();
+  console.log(user, user_type);
   const location = useLocation();
   const redirect =
     type === "artisan"
@@ -11,7 +12,7 @@ const RequireAuth = ({ type, children }) => {
         ? "/login/employer"
         : "/admin/login";
 
-  return user.id && user_type === type ? (
+  return user?.id && user_type === type ? (
     children
   ) : (
     <Navigate to={redirect} state={{ from: location }} replace />

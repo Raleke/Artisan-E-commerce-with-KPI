@@ -257,10 +257,9 @@ const jobDetailsArray = [
   },
 ];
 
-const JobOffersPage = (mode) => {
+const JobOffersPage = ({ mode }) => {
   const getOpenings = useGetALLJobs(mode);
   const jobDetailsArray = getOpenings.data?.jobs ?? [];
-  console.log(jobDetailsArray);
   const [selectedCategory, setSelectedCategory] = useState(new Set([]));
   const [selectedSkill, setSelectedSkill] = useState(new Set([]));
   const [searchLocation, setSearchLocation] = useState("");

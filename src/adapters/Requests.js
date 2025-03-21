@@ -60,9 +60,9 @@ function useAdminLogin() {
     onSuccess: (res) => {
       const token = res.data.token;
       const decodedToken = jwtDecode(token);
-      const admin = res.data.admin;
+      const employer = res.data.admin;
       // Extract user ID from decoded token
-      setAuth({ type: "admin", admin, token });
+      setAuth({ type: "admin", employer, token });
       queryClient.invalidateQueries("userdata"); // Invalidate the user query
       // Redirect to dashboard after successful login
       navigate(from, { replace: true });
@@ -249,15 +249,15 @@ function useGetEmployerNotifications(id) {
 }
 
 function useGetALLJobs(mode = "all") {
-  const { type } = useAuth();
+  const { user_type, user } = useAuth();
   const apiClientPrivate = useAxiosPrivate();
-  if (type == "artisan" && mode == "special") {
+  if (user_type == "artisan" && mode == "special") {
     return useQuery({
       queryKey: ["jobs", mode],
 
       queryFn: async () => {
         try {
-          const res = await apiClientPrivate.get(`/artisan/jobs`);
+          const res = await apiClientPrivate.get(`/artisan/jobs/${user.id}`);
           return res.data;
         } catch (error) {
           handleError(error);
@@ -554,7 +554,7 @@ function useGetAdminMetrics() {
     queryKey: ["admin", "metics"],
     queryFn: async () => {
       try {
-        const res = await apiClient.get("/admin/metrics");
+        const res = await apiClientPrivate.get("/admin/metrics");
         console.log(res.data);
         return res.data;
       } catch (error) {
