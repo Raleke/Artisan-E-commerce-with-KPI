@@ -1,7 +1,6 @@
 {
   "scripts": {
-    "create-admin": "node createAdmin.js",
-    "start": "node server.js"
+    "create-admin": "node createAdmin.js"
   },
   "dependencies": {
     "app": "^0.1.0",

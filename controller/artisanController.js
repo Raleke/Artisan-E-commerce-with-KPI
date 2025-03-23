@@ -735,12 +735,36 @@ const getAllArtisans = async (req, res) => {
   try {
     const artisans = await Artisan.find().select("-password"); // Fetch all artisans
 
+    const artisanDetails = await Promise.all(
+      artisans.map(async (artisan) => {
+        const reviews = await review.find({ recipientId: artisan._id });
+        const reviewAvg =
+          reviews.reduce((acc, curr) => acc + curr.rating, 0) /
+            reviews.length || 0.0;
+        const no_of_rating = reviews.length;
+
+        const job_completed = await Job.find({
+          "applications.status": "Employed",
+          "applications.artisanId": artisan._id,
+        });
+        const no_of_jobs_completed = job_completed.length;
+
+        return {
+          ...artisan.toObject(),
+          reviewAvg,
+          no_of_rating,
+          no_of_jobs_completed,
+        };
+      }),
+    );
+
     res.status(200).json({
       msg: "All artisans fetched successfully",
-      totalArtisans: artisans.length,
-      artisans,
+      totalArtisans: artisanDetails.length,
+      artisans: artisanDetails,
     });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: "Server error." });
   }
 };

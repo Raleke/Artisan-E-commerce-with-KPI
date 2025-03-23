@@ -1,10 +1,20 @@
 const express = require("express");
-const {  registerCustomer, loginCustomer,sendOTP,resetPassword,jobSearch,getStates,getCustomerProfile, 
-    hireArtisan,leaveReview, addFavoriteArtisan } = require("../controller/customerController");
+const {
+  registerCustomer,
+  loginCustomer,
+  sendOTP,
+  resetPassword,
+  jobSearch,
+  getStates,
+  getCustomerProfile,
+  hireArtisan,
+  leaveReview,
+  addFavoriteArtisan,
+  addContactedArtisan,
+} = require("../controller/customerController");
 const artMiddleware = require("../middleware/artMiddleware");
 
 const router = express.Router();
-
 
 router.post("/register", registerCustomer);
 
@@ -14,9 +24,9 @@ router.post("/hire-artisan/:customerId/:artisanId", hireArtisan);
 
 router.post("/login", loginCustomer);
 
-router.post("/forgot-password", sendOTP);  
+router.post("/forgot-password", sendOTP);
 
-router.post("/reset-password", resetPassword);  
+router.post("/reset-password", resetPassword);
 
 router.post("/search-artisans", jobSearch);
 
@@ -26,12 +36,14 @@ router.post("/favorite-artisan/:customerId/:artisanId", addFavoriteArtisan);
 
 router.post("/review/:customerId/:artisanId", leaveReview);
 
+router.post("/contacted-artisan", addContactedArtisan);
 
 router.get("/profile", artMiddleware, (req, res) => {
-    res.json({
-        msg: "Access granted",
-        customer: req.customer, 
-    });
+  res.json({
+    msg: "Access granted",
+    customer: req.customer,
+  });
 });
 
 module.exports = router;
+

@@ -8,6 +8,8 @@ const Job = require("../models/jobSchema");
 const nodemailer = require("nodemailer");
 const Artisan = require("../models/artisan");
 const Review = require("../models/review");
+const ContactedArtisan = require("../models/contactedArtisan");
+const review = require("../models/review");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -64,17 +66,17 @@ const registerCustomer = async (req, res) => {
       whatsappNumber,
       password,
       confirmPassword,
-      confirmPhone,
       notifications,
       language,
       currency,
-      "address.street": street,
-      "address.city": city,
-      "address.state": state,
-      "address.country": country,
+      street,
+      city,
+      state,
+      country,
     } = req.body;
     let errors = [];
 
+    console.log(req.body);
     if (
       !firstName ||
       !lastName ||
@@ -98,11 +100,6 @@ const registerCustomer = async (req, res) => {
     if (password.length < 8) {
       errors.push({ msg: "Password should be at least 8 characters long" });
     }
-
-    if (phoneNumber !== confirmPhone) {
-      errors.push({ msg: "Phone numbers do not match" });
-    }
-
     if (errors.length > 0) {
       return res.status(400).json({ errors });
     }
@@ -202,14 +199,9 @@ const loginCustomer = async (req, res) => {
       customer: {
         id: customer._id,
         email: customer.email,
-        image: customer.image
-          ? {
-              data: customer.image.data.toString("base64"),
-              contentType: customer.image.contentType,
-            }
-          : null,
         address: customer.address,
         preferences: customer.preferences,
+        full_name: `${customer.firstName} ${customer.lastName}`,
       },
     });
   } catch (err) {
@@ -318,8 +310,14 @@ const getCustomerProfile = async (req, res) => {
     const { customerId } = req.params;
     const customer = await Customer.findById(customerId).select("-password");
     if (!customer) return res.status(404).json({ msg: "Customer not found." });
+    const reviews = await review.find({ reviewerId: customerId });
+    console.log("Reviews:", reviews);
 
-    res.status(200).json({ customer });
+    const data = {
+      ...customer._doc,
+      reviews,
+    };
+    res.status(200).json({ customer: data });
   } catch (err) {
     res.status(500).json({ msg: "Server error." });
   }
@@ -380,6 +378,25 @@ const addFavoriteArtisan = async (req, res) => {
     res.status(500).json({ msg: "Server error." });
   }
 };
+const addContactedArtisan = async (req, res) => {
+  try {
+    const { customerId, artisanId } = req.body;
+
+    const newContact = new ContactedArtisan({
+      customerId,
+      artisanId,
+    });
+
+    await newContact.save();
+
+    res
+      .status(201)
+      .json({ msg: "Artisan added to contacted list successfully" });
+  } catch (err) {
+    console.error("Server Error:", err.message);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
 
 module.exports = {
   loginCustomer,
@@ -392,4 +409,5 @@ module.exports = {
   hireArtisan,
   leaveReview,
   addFavoriteArtisan,
+  addContactedArtisan,
 };

@@ -2,6 +2,8 @@ const Review = require("../models/review");
 const Employer = require("../models/employer");
 const Artisan = require("../models/artisan");
 const jobSchema = require("../models/jobSchema");
+const Customer = require("../models/customer");
+const contactedArtisan = require("../models/contactedArtisan");
 
 const leaveReview = async (req, res) => {
   try {
@@ -27,7 +29,7 @@ const leaveReview = async (req, res) => {
     }
 
     if (
-      !["Employer", "Artisan"].includes(reviewerType) ||
+      !["Employer", "Artisan", "Customer"].includes(reviewerType) ||
       !["Employer", "Artisan"].includes(recipientType)
     ) {
       return res
@@ -253,11 +255,71 @@ const getEmployersToRate = async (req, res) => {
     res.status(500).json({ msg: "Server error." });
   }
 };
+const getArtisansToRateCustomers = async (req, res) => {
+  try {
+    const { customerId } = req.params;
+    const customer = await Customer.findById(customerId);
+    if (!customer) {
+      return res.status(404).json({ msg: "Customer not found" });
+    }
+
+    // Find all contacts made by the customer
+    const contacts = await contactedArtisan
+      .find({ customerId })
+      .populate("artisanId");
+
+    // Build a map where each artisan ID maps to the list of contacts they had with the customer
+    const artisanContactsMap = {};
+    contacts.forEach((contact) => {
+      const artisanId = contact.artisanId._id.toString();
+      if (!artisanContactsMap[artisanId]) artisanContactsMap[artisanId] = [];
+      artisanContactsMap[artisanId].push(contact);
+    });
+
+    // Get unique artisan IDs
+    const artisanIds = Object.keys(artisanContactsMap);
+    const artisans = await Artisan.find({ _id: { $in: artisanIds } });
+
+    // For each artisan, build a review status list for each contact
+    const results = await Promise.all(
+      artisans.map(async (artisan) => {
+        const contactsForArtisan =
+          artisanContactsMap[artisan._id.toString()] || [];
+        const contactsWithReviewStatus = await Promise.all(
+          contactsForArtisan.map(async (contact) => {
+            const review = await Review.findOne({
+              reviewerId: customer._id,
+              reviewerType: "Customer",
+              recipientId: artisan._id,
+              recipientType: "Artisan",
+              contactId: contact._id,
+            });
+            return {
+              contactId: contact._id,
+              contactDate: contact.contactDate,
+              reviewed: review ? true : false,
+              reviewRating: review ? review.rating : null,
+            };
+          }),
+        );
+        return {
+          artisan,
+          contacts: contactsWithReviewStatus,
+        };
+      }),
+    );
+
+    res.status(200).json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Server error." });
+  }
+};
 module.exports = {
   leaveReview,
   editReview,
   deleteReview,
   getArtisansToRate,
   getEmployersToRate,
+  getArtisansToRateCustomers,
 };
-
