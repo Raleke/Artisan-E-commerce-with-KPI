@@ -1,3 +1,2439 @@
+omer Hiring Patterns & Preferences
+ 
+// Sort by most active customers
+ 
+
+// Get Most In-Demand Skills & Job Categories
+ 
+/ Sort by most requested skill
+ 
+eturn top 10 most in-demand skills
+ 
+// Sort by fastest completion time
+ 
+// Average completion time per artisan
+ 
+// Calculate completion time
+ 
+// Only count completed jobs
+ 
+
+// Get Average Job Completion Time per Artisan
+ 
+onst express = require("express");
+const router = express.Router();
+const Job = require("../models/jobSchema");
+const adminMiddleware = require("../middleware/adminMiddleware");
+ 
+const Customer = require("../models/customer");
+
+ 
+dminMiddleware, 
+ 
+dminMiddleware, 
+ 
+getTotalArtisans, getTotalJobs, getUserCounts 
+ 
+/ Register (Only for manual use)
+ 
+// Admin Login
+ 
+module.exports = router;
+ 
+onst router = express.Router();
+
+const express = require("express");
+const { registerAdmin, loginAdmin } = require("../controllers/authController");
+
+const router = express.Router();
+
+// Public authentication routes
+ 
+router.get("/dashboard/total-artisans", adminMiddleware, getTotalArtisans);
+router.get("/dashboard/total-jobs", adminMiddleware, getTotalJobs);
+router.get("/dashboard/user-counts", adminMiddleware, getUserCounts);
+ 
+controllers/adminController
+ 
+middlewares/adminMiddleware
+ 
+// Protected routes (Only accessible to admin users)
+ 
+const express = require("express");
+const { registerAdmin, loginAdmin } = require("../controllers/adminController");
+
+const router = express.Router();
+
+router.post("/register", registerAdmin); // Register (Only for manual use)
+router.post("/login", loginAdmin); // Admin Login
+
+module.exports = router;
+ 
+// Public Routes
+ 
+// ✅ Login Admin
+ 
+      // Create new admin
+ 
+    // Prevent duplicate emails
+ 
+// ✅ Register Admin (Only for manual creation)
+ 
+// Hash password before saving
+ 
+/ Fixed role
+ 
+module.exports = {  };
+ 
+const Employer = require("../models/employer");
+
+// Get All Employers (No Pagination)
+ 
+module.exports = {  };
+
+
+
+
+
+
+ 
+const Artisan = require("../models/artisan");
+
+// Get All Artisans (No Pagination)
+ 
+// Fetch all jobs
+ 
+
+// Get All Jobs (No Pagination)
+ 
+const Job = require("../models/jobSchema");
+
+ 
+markMessageAsRead, getAllMessages, getUnreadMessages
+ 
+// Edit a Review
+ 
+// Delete a Review
+ 
+addJob, applyForJob,updateJob, getRecommendedJobs, cancelJobApplication, updateJobStatus, getAllJobsPaginated ,deleteJob
+ 
+outer.post("/add-job", addJob);
+
+router.post("/apply-job", applyForJob);
+
+router.put("/update/:jobId", updateJob);
+
+router.get("/recommended/:artisanId", getRecommendedJobs);
+
+router.put("/cancel/:jobId/:artisanId", cancelJobApplication);
+
+router.put("/update-status/:jobId", updateJobStatus);
+
+router.get("/jobs", getAllJobsPaginated);
+
+router.delete("/delete/:jobId", deleteJob);
+
+ 
+
+
+
+
+
+ 
+// Employer leaves a review for an Artisan
+ 
+const cancelJobApplication = async (req, res) => {
+    try {
+        const { jobId, artisanId } = req.params;
+
+        const job = await Job.findById(jobId);
+        if (!job) return res.status(404).json({ msg: "Job not found." });
+
+        job.applications = job.applications.filter(app => app.artisanId.toString() !== artisanId);
+        await job.save();
+
+        res.status(200).json({ msg: "Application cancelled successfully." });
+    } catch (err) {
+        res.status(500).json({ msg: "Server error." });
+    }
+};
+ 
+onst messageController = require("./controller/messageController");
+ 
+// Add artisan to customer favorites
+ 
+const Review = require("../models/review");
+
+// Leave a review for an artisan
+ 
+// Who wrote the review
+ 
+// Dynamically references Artisan, Employer, or Customer
+ 
+// Dynamically references Artisan, Employer, or Customer
+ 
+/ Who is being reviewed
+ 
+// Get only unread messages for a user
+ 
+// Get all messages for a user (Artisan, Employer, Customer)
+ 
+// Mark a specific message as read
+ 
+const router = express.Router();
+ 
+// 1️⃣ Mark a Message as Read
+ 
+// 2️⃣ Get All Messages for a User (Sent & Received)
+ 
+// 3️⃣ Get Unread Messages for a User
+ 
+// Get all notifications for an employer
+ 
+// Employer sends message to artisan
+ 
+module.exports = { };
+ 
+const Message = require("../models/message");
+
+// 1️⃣ Artisan sends a message to an Employer
+ 
+// 2️⃣ Get Messages Sent by an Artisan
+ 
+// Dynamically references Artisan, Employer, or Customer
+ 
+// Who sent the message
+ 
+// Who received the message
+ 
+// Dynamically references Artisan, Employer, or Customer
+ 
+// Update Artisan Availability
+ 
+const Notification = require("../models/notification");
+
+// Get all notifications for an artisan
+ 
+const Customer = require("../models/customer");
+const Artisan = require("../models/artisan");
+
+// 1️⃣ Get Customer Profile
+ 
+// 2️⃣ Customer Hires Artisan
+ 
+module.exports = {  };
+ 
+module.exports = {  };
+ 
+// Hashing should be added
+ 
+const Employer = require("../models/employer");
+
+
+ 
+// 1️⃣ Get Employer Profile
+ 
+// Hashing should be added
+ 
+module.exports = { };
+ 
+// Dynamically references Artisan, Employer, or Customer
+ 
+// The user type receiving the notification
+ 
+module.exports = {  };
+ 
+const Job = require("../models/jobSchema");
+const Artisan = require("../models/artisan");
+
+// 1️⃣ Employer Updates a Job Posting
+ 
+// 2️⃣ Get Recommended Jobs for an Artisan
+ 
+// 3️⃣ Artisan Cancels Their Job Application
+ 
+// 4️⃣ Employer Updates Job Status (Open, Closed, Filled)
+ 
+const Job = require("../models/jobSchema");
+ 
+module.exports = {  };
+ 
+router.get("/artisan/applied-jobs", getAppliedJobs);
+ 
+module.exports = { getAllArtisans };
+ 
+module.exports = { getAppliedJobs };
+ 
+// Get artisan from token
+ 
+
+
+
+ 
+module.exports = { getAllJobsPaginated };
+ 
+// View jobs with pagination (20 per page)
+ 
+module.exports = { };
+ 
+// 2️⃣ Search Artisans with Advanced Filters (Add More Filters like Job Type)
+ 
+const Artisan = require("../models/artisan");
+
+ 
+// 1️⃣ Search Artisans by Skill & Location (Country, State, City)
+ 
+const Artisan = require("../models/artisan");
+ 
+const Artisan = require("../models/artisan);
+ 
+module.exports = { filterJobsByLocation, artisanDashboard };
+ 
+        // Count responses from employers
+ 
+        // Count total job applications
+ 
+// 3️⃣ Artisan filters jobs by state & city
+ 
+// Get unique state values
+ 
+    // Ensure searchParam is a string
+ 
+
+        // MongoDB query: Find artisans based on job category, skills, or state
+ 
+ // Match job category
+ 
+// Match skills
+ 
+// Match state
+ 
+// Exclude password for security
+ 
+module.exports = { jobSearch };
+ 
+// Reset password using OTP
+ 
+// Send OTP for password reset
+ 
+// Logout
+ 
+// Deactivate account
+ 
+ // View job history
+ 
+// Update profile
+ 
+const express = require("express");
+const { uploadCV, registerArtisan, loginArtisan, updateArtisanProfile,
+    getJobHistory,
+    deactivateAccount,
+    logoutArtisan,
+    sendOTP,
+    resetPassword, } = require("../controller/artisanController");
+const artMiddleware = require("../middleware/artMiddleware");
+
+const router = express.Router();
+
+
+router.post("/register", registerArtisan);
+
+
+router.post("/login", loginArtisan);
+
+// router.post("/upload",  uploadCV);
+
+router.put("/update-profile", verifyToken, updateArtisanProfile);  // Update profile
+router.get("/job-history", verifyToken, getJobHistory);  // View job history
+router.put("/deactivate", verifyToken, deactivateAccount);  // Deactivate account
+router.post("/logout", logoutArtisan);  // Logout
+router.post("/forgot-password", sendOTP);  // Send OTP for password reset
+router.post("/reset-password", resetPassword);  // Reset password using OTP
+
+
+router.get("/profile", artMiddleware, (req, res) => {
+    res.json({
+        msg: "Access granted",
+        artisan: req.artisan, 
+    });
+});
+
+module.exports = router;
+ 
+artisan
+ 
+ artisan
+ 
+            pass: "akfg isge aqkc pgfg", 
+ 
+EMAIL_USER=  user: "ralekeegan@gmail.com", 
+            pass: "akfg isge aqkc pgfg", 
+ 
+our-app-password
+ 
+our-email@gmail.com
+ 
+onst registerArtisan = async (req, res) => {
+    console.log("Request Body Before Upload:", req.body);
+
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.EMAIL_USER, 
+            pass: process.env.EMAIL_PASSWORD, 
+        },
+    });
+
+    upload(req, res, async (err) => {
+        if (err) {
+            console.error("Multer Error:", err.message);
+            return res.status(400).json({ msg: err.message });
+        }
+
+        console.log("Request Body:", req.body);
+        console.log("Uploaded Files:", req.files); 
+
+        const {
+            firstName, lastName, email, gender, whatsappNumber, password, phoneNumber,
+            streetAddress, city, state, country, dob, jobType, jobCategories, skills,
+            yearsOfExperience, artisanDescription, education, workExperience, confirmPassword, confirmPhone
+        } = req.body;
+
+        let errors = [];
+        if (
+            !firstName || !lastName || !email || !gender || !whatsappNumber || !password || 
+            !phoneNumber || !streetAddress || !city || !state || !country || !dob ||
+            !jobType || !jobCategories || !skills || !yearsOfExperience || !artisanDescription || 
+            !education || !workExperience || !confirmPassword || !confirmPhone
+        ) {
+            errors.push({ msg: "Please fill in all the fields" });
+        }
+
+        if (password !== confirmPassword) {
+            errors.push({ msg: "Passwords do not match" });
+        }
+
+        if (password.length < 8) {
+            errors.push({ msg: "Password should be at least 8 characters" });
+        }
+
+        if (phoneNumber !== confirmPhone) {
+            errors.push({ msg: "Phone number does not match" });
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({ errors });
+        }
+
+        try {
+            const existingArtisan = await Artisan.findOne({ email });
+            if (existingArtisan) {
+                return res.status(400).json({ msg: "Email already registered" });
+            }
+
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+
+            const parsedJobCategories = typeof jobCategories === "string" ? JSON.parse(jobCategories) : jobCategories;
+
+            const newArtisan = new Artisan({
+                firstName, lastName, email, gender, whatsappNumber, password: hashedPassword,
+                phoneNumber, streetAddress, city, state, country, dob, jobType, jobCategories: parsedJobCategories,
+                skills, yearsOfExperience, artisanDescription,
+                education: {
+                    level: education.level,
+                    details: education.details,
+                },
+                workExperience: {
+                    hasExperience: workExperience.hasExperience,
+                    details: workExperience.details,
+                },
+                image: req.files.image ? req.files.image[0].filename : null,
+                cv: req.files.cv ? req.files.cv[0].filename : null,
+            });
+
+            await newArtisan.save();
+            res.status(201).json({ msg: "Registration successful" });
+            const msg =
+            "Dear " +
+            firstName +
+            " " +
+            lastName +
+            ", your registration is successful and details successfully captured";
+
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: "Registration Successful",
+                text: msg,
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log("Email sent: " + info.response);
+                }
+            });
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).
+
+ 
+from: process.env.EMAIL_USER,
+ 
+// 6. Reset Password using OTP
+ 
+/ OTP expires in 10 mins
+ 
+5. Forgot Password - Send OTP
+ 
+// 3. Deactivate Artisan Account (Soft Delete)
+ 
+
+// 2. Get Artisan's Previous Job History
+ 
+// 1. Update Artisan Profile
+ 
+     // Only update fields that are provided
+ 
+  // Update image and CV if provided
+ 
+pdateArtisanProfile,
+ 
+const updateArtisanProfile = async (req, res) => {
+    try {
+        const { skills, services, city, state, country } = req.body;
+        const artisan = await Artisan.findById(req.artisanId);
+
+        if (!artisan) return res.status(404).json({ msg: "Artisan not found" });
+
+        if (skills) artisan.skills = skills;
+        if (services) artisan.services = services;
+        if (city) artisan.city = city;
+        if (state) artisan.state = state;
+        if (country) artisan.country = country;
+
+        await artisan.save();
+        res.status(200).json({ msg: "Profile updated successfully", artisan });
+    } catch (err) {
+        res.status(500).json({ msg: "Server error" });
+    }
+};
+ 
+applicantEmail
+ 
+applicantName
+ 
+// Database connection
+ 
+// Enable CORS
+ 
+// Body parsers
+ 
+// Set static files directory
+ 
+// Load initial data
+ 
+// Set up view engine
+ 
+const dataController = require('./controller/dataController'); 
+ 
+  // Set up session
+ 
+  // Flash messages middleware
+ 
+// Global variables for flash messages
+ 
+/ Define Routes
+ 
+/ Global error handler
+ 
+ // Start the server
+ 
+
+
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const ejs = require("ejs");
+const session = require("express-session");
+const flash = require("connect-flash");
+const cors = require("cors");
+const path = require("path");
+
+
+
+
+const app = express();
+
+
+dataController.loadData(() => {
+
+   
+    app.set("view engine", "ejs");
+
+   
+    app.use(express.static(path.join(__dirname, "public")));
+
+   
+    app.use(express.urlencoded({ extended: true }));
+    app.use(express.json());
+
+   
+    app.use(cors());
+
+   
+    const dbURI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/FinalYearProject";
+    mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+        .then(() => console.log("MongoDB connected successfully"))
+        .catch((err) => console.error("MongoDB connection error:", err));
+
+    
+    app.use(session({
+        secret: process.env.SESSION_SECRET || "mysecretkey",
+        resave: true,
+        saveUninitialized: true,
+    }));
+
+    
+    app.use(flash());
+
+    
+    app.use((req, res, next) => {
+        res.locals.message = req.flash("message");
+        res.locals.error_msg = req.flash("error_msg");
+        next();
+    });
+
+    
+
+
+dataController.loadData(() => {
+
+  // ...
+
+  app.use((err, req, res, next) => {
+    logger.error(err.stack);
+    res.status(500).send("Something went wrong! Please try again later.");
+  });
+
+  // ...
+
+  const PORT = process.env.PORT || 3500;
+  app.listen(PORT, () => {
+    logger.info(`Server started at port ${PORT
+   
+    app.use((err, req, res, next) => {
+        console.error(err.stack);
+        res.status(500).send("Something went wrong! Please try again later.");
+    });
+
+
+    const PORT = process.env.PORT || 3500;
+    app.listen(PORT, () => console.log(`Server started at port ${PORT}`));
+});
+
+ 
+  app.use('/api', dataRoutes); 
+    app.use('/api/employer', employerRoutes); 
+    app.use('/api/artisan', artisanRoutes);
+    app.use('/api/customer', customerRoutes);
+    app.use('/api/job', jobRoutes);
+    app.use('/api/employerDashboard', employerDashboardRoutes);
+ 
+onst dataRoutes = require('./route/dataRoutes'); 
+const employerRoutes = require('./route/employerRoute');
+const artisanRoutes = require('./route/artisanRoute');
+const customerRoutes = require("./route/customerRoute");
+const jobRoutes = require("./route/jobRoute");
+const employerDashboardRoutes = require("./route/employerDashboardRoute"); // Correct import for employer dashboard
+ 
+// Import Controllers
+ 
+// Import Routes
+ 
+const winston = require('winston');
+
+
+
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(new winston.transports.Console({
+    format: winston.format.simple(),
+  }));
+}
+ 
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' }),
+  ],
+});
+ 
+// Reference to the Artisan model
+ 
+app.use('/api/employerDashboard', employerDashboardRoutes);
+ 
+const employerDashboardRoutes = require("./controller/employerController");
+ 
+module.exports = router;
+ 
+const express = require("express");
+const router = express.Router();
+const {
+    getJobApplications,
+    updateApplicationStatus,
+} = require("../controller/employerController");
+ 
+ to: email,
+                subject: "Registration Successful",
+                text: msg,
+ 
+ from: process.env.EMAIL,
+ 
+// sender gmail address
+ 
+// App password from gmail account
+ 
+  auth: {
+                    user: process.env.EMAIL,
+                    pass: process.env.EMAIL_PASSWORD,
+                },
+ 
+// Update Application Status
+ 
+// Get Job Applications
+ 
+// Login Employer
+ 
+// sender gmail address
+ 
+/ App password from gmail account
+ 
+// Multer Configuration
+ 
+// Single image upload
+ 
+// Register Employer
+ 
+// sender gmail address
+ 
+// App password from gmail account
+ 
+user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASSWORD,
+ 
+ if (status === "Employed") {
+            const artisan = await Artisan.findById(artisanId);
+
+            console.log(
+                `Notification: ${artisan.firstName} ${artisan.lastName} has been employed!`
+            );
+ 
+// Update application status (accept/decline an artisan)
+ 
+// Get all job applications for a specific job
+ 
+ auth: {
+                    user: process.env.EMAIL,
+                    pass: process.env.EMAIL_PASSWORD,
+                },
+ 
+    // Send email notification to the artisan
+ 
+  // Send an in-app notification (this depends on your front-end implementation)
+ 
+  // Fetch artisan details
+ 
+  // Update the selected artisan's status
+ 
+  // Set all other applications to Pending
+ 
+// Find the artisan application in the job
+ 
+ // Fetch the job
+ 
+/ Status can be "Employed" or remain "Pending"
+ 
+// Accept or Decline an artisan's application
+ 
+// Populate artisan details
+ 
+// Get job applications for an employer's job
+ 
+const Artisan = require("../models/artisan");
+const nodemailer = require("nodemailer");
+ 
+module.exports = {
+
+};
+ 
+const mongoose = require("mongoose");
+
+const jobSchema = new mongoose.Schema({
+    companyName: {
+        type: String,
+        required: true,
+    },
+    employerEmail: {
+        type: String,
+        required: true,
+    },
+    datePosted: {
+        type: Date,
+        default: Date.now,
+    },
+    applicationDeadline: {
+        type: Date,
+        required: true,
+    },
+    workType: {
+        type: String,
+        enum: ["Full-time", "Part-time", "Contract"],
+        required: true,
+    },
+    commuteType: {
+        type: String,
+        enum: ["Onsite", "Remote"],
+        required: true,
+    },
+    location: {
+        type: String,
+        required: true,
+    },
+    qualification: {
+        type: String,
+        default: "SSCE", 
+    },
+    pay: {
+        amount: {
+            type: Number,
+            required: true,
+        },
+        frequency: {
+            type: String,
+            enum: ["Per Day", "Per Job", "Per Week", "Per Month"],
+            required: true,
+        },
+    },
+    requiredSkill: {
+        type: String,
+        required: true,
+    },
+    slots: {
+        type: Number,
+        required: true,
+    },
+    applications: {
+        type: Number,
+        default: 0, 
+    },
+    accommodation: {
+        type: String,
+        enum: ["Yes", "No"],
+        required: true,
+    },
+});
+
+module.exports = mongoose.model("Job", jobSchema);
+
+ 
+// Route to add a job
+ 
+// Route to apply for a job
+ 
+// sender gmail address
+ 
+/ App password from gmail account
+ 
+ auth: {
+                user: process.env.EMAIL, // Your email address from .env
+                pass: process.env.EMAIL_PASSWORD, // App password from .env
+            },
+ 
+// Notify the employer
+ 
+ // Increment the number of applications
+ 
+// Check if slots are available
+ 
+ // Find the job
+ 
+module.exports = {
+    applyForJob,
+};
+ 
+// sender gmail address
+ 
+// App password from gmail account
+ 
+  auth: {
+                user: process.env.EMAIL, // Your email address from .env
+                pass: process.env.EMAIL_PASSWORD, // App password from .env
+            },
+ 
+  // Send confirmation email to the employer
+ 
+ // Default is SSCE
+ 
+ // Create a new job
+ 
+  // Verify if the employer exists
+ 
+ // Validate required fields
+ 
+// Default qualification is SSCE
+ 
+// Track the number of applicants
+ 
+const addJob = async (req, res) => {
+
+ 
+/ Default to NGN
+ 
+// Default to English
+ 
+// Convert "true"/"false" strings to boolean
+ 
+const registerCustomer = async (req, res) => {
+    console.log("Request Body Before Upload:", req.body);
+
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "ralekeegan@gmail.com", // sender gmail address
+            pass: "akfg isge aqkc pgfg" // App password from gmail account
+        },
+    });
+
+    upload(req, res, async (err) => {
+        if (err) {
+            console.error("Multer Error:", err.message);
+            return res.status(400).json({ msg: err.message });
+        }
+
+        const {
+            firstName,
+            lastName,
+            email,
+            phoneNumber,
+            whatsappNumber,
+            password,
+            confirmPassword,
+            confirmPhone,
+            notifications,
+            language,
+            currency,
+            "address.street": street,
+            "address.city": city,
+            "address.state": state,
+            "address.country": country,
+        } = req.body;
+        let errors = [];
+
+        
+        if (
+            !firstName ||
+            !lastName ||
+            !email ||
+            !phoneNumber ||
+            !whatsappNumber ||
+            !password ||
+            !confirmPassword ||
+            !street ||
+            !city ||
+            !state ||
+            !country
+        ) {
+            errors.push({ msg: "Please fill in all the required fields" });
+        }
+
+     
+        if (password !== confirmPassword) {
+            errors.push({ msg: "Passwords do not match" });
+        }
+
+        if (password.length < 8) {
+            errors.push({ msg: "Password should be at least 8 characters long" });
+        }
+
+       
+        if (phoneNumber !== confirmPhone) {
+            errors.push({ msg: "Phone numbers do not match" });
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({ errors });
+        }
+
+        try {
+         
+            const existingCustomer = await Customer.findOne({ email });
+            if (existingCustomer) {
+                return res.status(400).json({ msg: "Email is already registered" });
+            }    
+
+           
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+
+           
+            const newCustomer = new Customer({   
+                firstName,
+                lastName,
+                email,
+                phoneNumber,
+                whatsappNumber,
+                password: hashedPassword,
+                image: req.files && req.files.image ? {
+                    data: req.files.image[0].buffer,
+                    contentType: req.files.image[0].mimetype,
+                } : null,
+                address: {
+                    street,
+                    city,
+                    state,
+                    country,
+                },
+                preferences: {
+                    notifications: notifications === "true", 
+                    language: language || "en", 
+                    currency: currency || "NGN", 
+                },
+            });
+
+            
+            await newCustomer.save();
+            res.status(201).json({ msg: "Registration successful" });
+        } catch (err) {
+            console.error("Server Error:", err.message);
+            res.status(500).json({ msg: "Server error" });
+        }
+
+        let msg = "Dear " + fn + " " + ln + ", your registration is successful and Details successfully captured"
+
+
+                    const mailOptions = {
+ 
+                      from: "ralekeegan@gmail.com",
+                        to: email,
+                        subject: "Registration Successful",
+                        text: msg,
+        
+                    };
+
+
+                    transporter.sendMail(mailOptions, (error, info) => {
+
+                        if(error) {
+                            console.log(error);
+                        } else {
+                            console.log("Email sent: " + info.response);
+                        }
+                    });
+                })
+            }
+        .catch((err) =>{
+            res.send("There's a problem")
+            console.log(err);
+        })
+ 
+    }
+    });
+};
+ 
+ pass: "akfgisgeaqkcpgfg" // App password from gmail account
+ 
+const {
+            firstName,
+            lastName,
+            email,
+            phoneNumber,
+            whatsappNumber,
+            password,
+            confirmPassword,
+            street,
+            city,
+            state,
+            country,
+            confirmPhone,
+            notifications, 
+            language,
+            currency,
+        } = req.body;
+
+ 
+image: req.files.image ? {
+                    data: req.files.image[0].buffer,
+                    contentType: req.files.image[0].mimetype,
+                } : null,
+ 
+if (
+            !firstName ||
+            !lastName ||
+            !email ||
+            !phoneNumber ||
+            !whatsappNumber ||
+            !password ||
+            !confirmPassword ||
+            !address ||
+            !street ||
+            !city ||
+            !state ||
+            !country
+        ) {
+            errors.push({ msg: "Please fill in all the required fields" });
+        }
+ 
+ // Validate password
+ 
+ // Validate password
+ 
+ // Validate password
+ 
+ // Validate password
+ 
+ // Validate input
+ 
+  // Check if customer exists
+ 
+artisan: req.artisan
+ 
+
+// router.post("/upload",  uploadCV);
+ 
+registerArtisan, loginArtisan
+ 
+/ Generate JWT token
+ 
+  // Return response
+ 
+// Save customer to the database
+ 
+// Default to USD
+ 
+// Default to English
+ 
+ // Create new Customer object
+ 
+ // Hash the password
+ 
+   // Check if the email is already registered
+ 
+ // Validate phone number
+ 
+   // Validate passwor
+ 
+// Validate required fields
+ 
+// Preference fields
+ 
+const registerCustomer = async (req, cb) => {
+    console.log("Request Body Before Upload:", req.body);
+    upload(req, res, async (err) => {
+        if (err) {
+            console.error("Multer Error:", err.message);
+            return res.status(400).json({ msg: err.message });
+        }
+
+ 
+
+
+        console.log("Request Body:", req.body);
+        console.log("Uploaded Files:", req.files); 
+
+        const { 
+            firstName, 
+            lastName, 
+            email, 
+            phoneNumber, 
+            whatsappNumber, 
+            password, 
+            address,
+            street, 
+            city, 
+            state, 
+            country ,
+            confirmPassword,
+            confirmPhone
+          } = req.body;
+
+          let errors = [];
+    
+ 
+      if(
+            !firstName ||!lastName ||!email ||!phoneNumber ||!whatsappNumber ||!password ||!address ||!street ||!city ||!state ||!country
+          ){
+            errors.push({msg: "Please fill in all the Fields"});
+          }
+
+          if (password !== confirmPassword) {
+            errors.push({ msg: "Passwords do not match" });
+        }
+
+        if (password.length < 8) {
+            errors.push({ msg: "Password should be at least 8 characters" });
+        }
+
+        if (phoneNumber !== confirmPhone) {
+            errors.push({ msg: "Phone number does not match" });
+        }
+
+        if (errors.length > 0) {
+            return res.status(400).json({ errors });
+        }
+
+   
+};
+ 
+     try{
+            const existingCustomer = await Customer .findOne({ email });
+            if(existingCustomer){
+                return res.status(400).json({ msg: "Email already registered" });
+            }
+
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+            const newCustomer = new Customer({
+                firstName,
+                lastName,
+                email,
+                phoneNumber,
+                whatsappNumber,
+                password: hashedPassword,
+                image: req.files.image ? {
+                    data: req.files.image[0].buffer,
+                    contentType: req.files.image[0].mimetype,
+                } : null,
+                address: {
+                    street,
+                    city,
+                    state,
+                    country,
+
+ 
+                },
+            });
+
+            
+            await newCustomer.save();
+            res.status(201).json({ msg: "Registration successful" });
+        } catch (err) {
+            console.error("Server Error:", err.message);
+            res.status(500).json({ msg: "Server error" });
+        }
+    });
+ 
+const loginCustomer = async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ msg: "Please fill in all the fields" });
+    }
+
+    try {
+        const customer = await Customer.findOne({ email });
+        if (!customer) {
+            return res.status(400).json({ msg: "Invalid email" });
+        }
+
+        const isMatch = await bcrypt.compare(password, customer.password);
+        if (!isMatch) {
+            return res.status(400).json({ msg: "Invalid password" });
+        }
+
+        const token = jwt.sign(
+            { id: customer._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "1d" }
+        );
+
+        res.status(200).json({
+            msg: "Login successful",
+            token,
+            artisan: {
+                id: customer._id,
+                email: customer.email,
+                image: customer.image,
+                jobCategories: customer.jobCategories 
+            },
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: "Server error" });
+    }
+};
+
+module.exports = {
+    registerArtisan,
+    loginArtisan,
+};
+ 
+// Save customer to the database
+ 
+const newCustomer = new Customer({
+                firstName, lastName, email,  whatsappNumber, password: hashedPassword,
+                phoneNumber,  city, state, country, dob, jobType, 
+                skills, yearsOfExperience, artisanDescription,
+                education: {
+                    level: education.level,
+                    details: education.details,
+                },
+                workExperience: {
+                    hasExperience: workExperience.hasExperience,
+                    details: workExperience.details,
+                },
+                image: req.files.image ? req.files.image[0].filename : null,
+            });
+
+            await newArtisan.save();
+            res.status(201).json({ msg: "Registration successful" });
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).json({ msg: "Server error" });
+        }
+    });
+};
+ 
+jobCategories: parsedJobCategories,
+ 
+cv: req.files.cv ? req.files.cv[0].filename : null,
+ 
+  cv: req.files.cv ? req.files.cv[0].filename : null,
+ 
+const{firstName, lastName ,email, phoneNumber, whatsappNumber, password,image, address, Job} = req.body;
+ 
+require("dotenv").config();
+const path = require("path");
+const multer = require("multer");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const Artisan = require("../models/customer");
+
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, "../uploads"));
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+    },
+});
+
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 1024 * 1024 * 5 }, 
+    fileFilter: (req, file, cb) => {
+        const fileTypes = /jpeg|jpg|png/;
+        const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+        const mimeType = fileTypes.test(file.mimetype);
+
+        if (extname && mimeType) {
+            cb(null, true);
+        } else {
+            cb(new Error("Invalid image type, Only .png, .jpeg, .jpg"));
+        }
+    },
+}).fields([
+    { name: "image", maxCount: 1 },
+]);
+
+const registerCustomer = async (req, cb) => {
+    console.log("Request Body Before Upload:", req.body);
+    upload(req, res, async (err) => {
+        if (err) {
+            console.error("Multer Error:", err.message);
+            return res.status(400).json({ msg: err.message });
+        }
+
+
+        console.log("Request Body:", req.body);
+        console.log("Uploaded Files:", req.files); 
+
+        const{firstName, lastName ,email, phoneNumber, whatsappNumber, password,image, address, Job} = req.body;
+}
+ 
+ console.log("Request ")
+ 
+{ name: "cv", maxCount: 1 },
+ 
+ createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
+ 
+dob: {
+    type: Date,
+  },
+ 
+// Ensures no duplicate customer emails
+ 
+const mongoose = require("mongoose");
+
+const customerSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+  },
+  profileImage: {
+    type: String,
+  },
+
+  jobCategory: {
+    type: String,
+    required: true, 
+  },
+  preferredDate: {
+    type: Date,
+  },
+  budget: {
+    type: Number,
+  },
+  jobRequests: [
+    {
+      artisanId: { type: mongoose.Schema.Types.ObjectId, ref: "Artisan" },
+      jobDescription: { type: String },
+      status: { type: String, default: "pending" }, // "pending", "completed", "cancelled"
+      hiredAt: { type: Date },
+      completedAt: { type: Date },
+    },
+  ],
+  reviews: [
+    {
+      artisanId: { type: mongoose.Schema.Types.ObjectId, ref: "Artisan" },
+      rating: { type: Number, min: 1, max: 5 },
+      comment: { type: String },
+      createdAt: { type: Date, default: Date.now },
+    },
+  ],
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+});
+
+module.exports = mongoose.model("Customer", customerSchema);
+ 
+// e.g., "plumbing", "electrician"
+ 
+ bio: {
+    type: String,
+  },
+ 
+ // Emails should be unique
+ 
+const mongoose = require("mongoose");
+
+const customerSchema = new mongoose.Schema({
+
+name:{
+    type: String,
+    required: true,
+},
+
+email:{
+    type: String,
+    required: true,
+},
+
+password:{
+    type: String,
+    required: true,
+},
+
+
+
+
+})
+ 
+obCategory: artisan.jobCategory,
+ 
+obCategory,
+ 
+// The main job category
+ 
+// Each skill under the category
+ 
+ jobCategories: {
+        type: String,
+        required: true,
+    },
+    skills: [
+        {
+            jobCategory: { type: String, required: true }, 
+            skill: { type: String, required: true },   
+        },
+    ],
+ 
+// Load Data from CSV files
+ 
+// Route to get all countries
+ 
+// Route to get states for a specific country
+ 
+// Route to get cities for a specific state
+ 
+const express = require('express');
+const router = express.Router();
+const dataController = require('../controller/dataController');
+
+router.get('/countries', dataController.getCountries);
+router.get('/country/states', dataController.getStates);
+router.get('/states/cities', dataController.getCities);
+
+module.exports = router;
+
+ 
+// Load Data from CSV files
+ 
+// Get Countries
+ 
+/ Get States
+ 
+// Get Cities
+ 
+const csv = require('csv-parser');
+const fs = require('fs');
+const path = require('path');
+
+const countries = [];
+const states = [];
+const cities = [];
+
+exports.loadData = (callback) => {
+    if (typeof callback !== 'function') {
+        throw new Error('Callback must be a function');
+    }
+
+    let count = 0;
+    const totalCount = 3;
+
+    fs.createReadStream(path.join(__dirname, '../data/countries.csv'))
+        .pipe(csv())
+        .on('data', (row) => countries.push(row))
+        .on('end', () => {
+            count++;
+            console.log(`Loaded ${countries.length} countries`);
+            if (count === totalCount) {
+                callback();
+            }
+        });
+
+    fs.createReadStream(path.join(__dirname, '../data/states.csv'))
+        .pipe(csv())
+        .on('data', (row) => states.push(row))
+        .on('end', () => {
+            count++;
+            console.log(`Loaded ${states.length} states`);
+            if (count === totalCount) {
+                callback();
+            }
+        });
+
+    fs.createReadStream(path.join(__dirname, '../data/cities.csv'))
+        .pipe(csv())
+        .on('data', (row) => cities.push(row))
+        .on('end', () => {
+            count++;
+            console.log(`Loaded ${cities.length} cities`);
+            if (count === totalCount) {
+                callback();
+            }
+        });
+};
+
+exports.getCountries = (req, res) => {
+    res.json(countries);
+};
+
+exports.getStates = (req, res) => {
+    const countryCode = req.query.countryCode;
+    const filteredStates = states.filter(state => state.country_code === countryCode);
+    res.json(filteredStates);
+};
+
+exports.getCities = (req, res) => {
+    const stateCode = req.query.stateCode;
+    const filteredCities = cities.filter(city => city.state_code === stateCode);
+    res.json(filteredCities);
+};
+
+ 
+;
+ 
+// Debugging req.body
+ 
+// Login artisan
+ 
+// Register artisan
+ 
+// File upload configuration
+ 
+require("dotenv").config();
+const path = require("path");
+const multer = require("multer");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const Artisan = require("../models/artisan");
+const { error } = require("console");
+
+const storage = multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null,path.join(__dirname, "../uploads"));        
+    },
+    filename:(req,file,cb)=>{
+        cb(null,`${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`); 
+    },
+    });
+
+    const cvStorage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, path.join(__dirname, "../uploads/cvs/")); 
+        },
+        filename: (req, file, cb) => {
+            cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+        },
+    });
+    
+   
+    const uploadCV = multer({
+        storage: cvStorage,
+        limits: { fileSize: 1024 * 1024 * 5 }, 
+        fileFilter: (req, file, cb) => {
+            const fileTypes = /pdf|doc|docx/; 
+            const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+            const mimeType = fileTypes.test(file.mimetype);
+    
+            if (extname && mimeType) {
+                cb(null, true);
+            } else {
+                cb(new Error("Only .pdf, .doc, and .docx files are allowed for CVs"));
+            }
+        },
+    }).single("cv"); 
+
+    const upload = multer({ 
+        storage: storage,
+        limits: { fileSize: 1024 * 1024 * 5 }, 
+        fileFilter: (req, file, cb) => {
+            const fileTypes = /jpeg|jpg|png/;
+            const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+            const mimeType = fileTypes.test(file.mimetype);
+    
+            if (extname && mimeType) {
+                cb(null, true);
+            } else {
+                cb(new Error("Only .jpg, .jpeg, and .png files are allowed"));
+            }
+        },
+    }).single("images"); 
+
+    const registerArtisan = async(req,res) =>{
+        upload(req,res,async(err)=>{
+            if(err){
+                return res.status(400).json({msg: err.message});
+            }
+
+            const{
+                firstName,
+                lastName,
+                email,gender, whatsappNumber,
+                password,
+                phoneNumber,
+                streetAddress,
+                city, state, country,
+                 dob,
+              jobType, jobCategory, skills, yearsOfExperience,artisanDescription,education, workExperience ,confirmPassword,confirmPhone
+            } = req.body;
+
+            let errors = [];
+
+            if( 
+                !firstName || !lastName || !email || !gender || !whatsappNumber || !password || !phoneNumber || !streetAddress || !city || !state || !country || !dob ||
+                !jobType || jobCategory || !skills || !yearsOfExperience || !artisanDescription || !education || !workExperience || !confirmPassword || !confirmPhone
+            ){
+                errors.push({msg:"please fill in all the fields"});
+            }
+
+            if(password !==confirmPassword){
+                errors.push({msg: "Passwords do not Match"});
+            }
+
+            if (password.length < 8) {
+                errors.push({msg: "Password should be at least 8 characters"});
+        }
+
+        if(phoneNumber !==confirmPhone){
+            errors.push({msg:"Phone number does not match"});
+        }
+
+        if(errors.length > 0){
+            return res.status(400).json({errors});
+        }
+
+        try{
+            const existingArtisan = await Artisan.findOne({email:email});
+            if(existingArtisan){
+                return res.status(400).json({msg:"Email already Registered"})
+            }
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password,salt);
+
+            const newArtisan = new Artisan({
+                firstName,
+                lastName,
+                email,
+                gender,
+                whatsappNumber,
+                password: hashedPassword,
+                phoneNumber,
+                streetAddress,
+                city,
+                state,
+                country,
+                dob,
+                jobType,
+                jobCategory,
+                skills,
+                yearsOfExperience,
+                artisanDescription,
+                image,
+                cv,
+                education: {
+                    level: education.level,
+                    details: education.details,
+                },
+                workExperience: {
+                    hasExperience: workExperience.hasExperience,
+                    details: workExperience.details,
+                },
+                image :req.file ? req.file.filename : null,
+                cv : req.file ? req.file.filename : null
+            })
+
+            await newArtisan.save ();
+            res.status(201).json({msg:"Email Registered Successfully"})
+        } catch (err){
+            console.error(err.message);
+            res.status(500).json({msg:"Server Error"});
+        }
+    });
+};
+
+const loginArtisan = async (req, res) => {
+    const{email, password} = req.body;
+
+    if(!email || !password){
+        res.status(400).json({msg:"Please fill in all the fields"});
+    }
+
+    try{
+        const artisan = await Artisan.findOne({email:email});
+        if(!Artisan){
+            res.status(400).json({msg:"Invalid Email"})
+        }
+
+        const isMatch = await bcrypt.compare(password, employer.password);
+        if (!isMatch) {
+            return res.status(400).json({ msg: "Invalid  password" });
+        }
+
+        const token = jwt.sign(
+            { id: artisan._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "1d" }
+        );
+
+        res.status(200).json({
+            msg:"Login Successful",
+            token,
+            artisan:{
+                id: artisan._id,
+                email : artisan.email,
+                image : artisan.image,
+                jobCategory : artisan.jobCategory,
+            }
+        });
+    }catch(err){
+        console.error(err.message);
+        res.status(500).json({msg:"Server Error"});
+    }
+};
+
+module.exports={
+    uploadCV, registerArtisan, loginArtisan
+}
+
+
+ 
+education, workExperience ,
+ 
+onst newArtisan = new Artisan = ({
+                firstName,lastName,gender, email, whatsappNumber,
+                password,
+                phoneNumber,
+                streetAddress,
+                city, state, country,
+                 dob,
+              jobType, jobCategory, skills, yearsOfExperience,artisanDescription,education, workExperience,
+ 
+authMiddleware,
+ 
+authMiddleware
+ 
+/employerController
+ 
+registerEmployer, loginEmployer
+ 
+require("");
+ 
+ email: artisan.email
+ 
+email or
+ 
+onfirmPassword,confirmPh
+ 
+  experience,
+                skills,
+                jobTitle,
+                jobDescription,
+                jobLocation,
+ 
+// Single file upload with the key name "cv"
+ 
+// Limit file size to 5 MB
+ 
+// Allowed file types
+ 
+ // Multer configuration for CVs
+ 
+// CVs are saved in a subfolder named "cvs"
+ 
+const express = require('express');
+const router = express.Router();
+const dataController = require('../controller/dataController');
+
+
+router.get('/dropdown', dataController.getData);
+
+
+router.get('/', (req, res) => {
+    res.redirect('/dropdown');
+});
+
+module.exports = router;
+ 
+const csv = require('csv-parser');
+const fs = require('fs');
+const path = require('path');
+
+const countries = [];
+const states = [];
+const cities = [];
+
+exports.loadData = (callback) => {
+    if (typeof callback !== 'function') {
+        throw new Error('Callback must be a function');
+    }
+
+    let count = 0;
+    const totalCount = 3;
+
+    fs.createReadStream(path.join(__dirname, '../data/countries.csv'))
+        .pipe(csv())
+        .on('data', (row) => countries.push(row))
+        .on('end', () => {
+            count++;
+            console.log(`Loaded ${countries.length} countries`);
+            if (count === totalCount) {
+                callback();
+            }
+        });
+
+    fs.createReadStream(path.join(__dirname, '../data/states.csv'))
+        .pipe(csv())
+        .on('data', (row) => states.push(row))
+        .on('end', () => {
+            count++;
+            console.log(`Loaded ${states.length} states`);
+            if (count === totalCount) {
+                callback();
+            }
+        });
+
+    fs.createReadStream(path.join(__dirname, '../data/cities.csv'))
+        .pipe(csv())
+        .on('data', (row) => cities.push(row))
+        .on('end', () => {
+            count++;
+            console.log(`Loaded ${cities.length} cities`);
+            if (count === totalCount) {
+                callback();
+            }
+        });
+};
+
+exports.getData = (req, res) => {
+    console.log('Rendering dropdown with:', { 
+        countriesCount: countries.length, 
+        statesCount: states.length, 
+        citiesCount: cities.length 
+    });
+    res.render('dropdown', { countries, states , cities});
+};
+
+
+
+exports.getCities = (req, res) => {
+    const stateCode = req.query.stateCode;
+    const filteredCities = cities.filter(city => city.state_code === stateCode);
+    res.json(filteredCities);
+};
+ 
+// Upload folder
+ 
+// Use backticks
+ 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, "../uploads/")); 
+    },
+    filename: (req, file, cb) => {
+        cb(null, ${file.fieldname}-${Date.now()}${path.extname(file.originalname)});
+    },
+});
+ 
+
+// Middleware for file upload
+ 
+// Multer setup for image upload
+ 
+// Include the employer's image if available
+ 
+        // Check if the employer exists
+ 
+ // Hash the password
+ 
+  // Create a new employer
+ 
+    // Check if the employer already exists
+ 
+        // Return validation errors
+ 
+      // Validate password length
+ 
+     // Validate password confirmation
+ 
+  // Validate required fields
+ 
+// Employer Registration
+ 
+// "image" is the field name for the file
+ 
+// Limit file size to 5MB
+ 
+// Upload folder
+ 
+// Save the uploaded file name
+ 
+  // Save the employer to the database
+ 
+// Employer Login
+ 
+ Validate input
+ 
+// Compare passwords
+ 
+// Generate JWT
+ 
+controller/employerController
+ 
+
+8beafd0da72cfb836305070a19c288e6472df20454fa97d3a6d159baf97e416a75edd981aa94ddeb60165ab69fb01eb43881d935823e575c27c0220bf1d253d8
+
+ 
+// Import Routes
+ 
+ // Employer Routes
+
+ 
+// Import Controllers and Middleware (if needed globally)
+ 
+// Load initial data (if needed)
+ 
+ // Configure EJS as the view engine
+ 
+ // Set the static files directory
+ 
+ // Parse URL-encoded data and JSON
+ 
+ // Enable CORS (optional, depending on your frontend setup)
+ 
+ // MongoDB Connection
+ 
+// Configure Express-Sessio
+ 
+// Flash messages middleware
+ 
+// Set global variables for flash messages
+ 
+// Routes
+ 
+// Existing Data Routes
+ 
+// Employer Routes
+ 
+ // Error Handling Middleware
+ 
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const ejs = require("ejs");
+const session = require("express-session");
+const flash = require("connect-flash");
+const dataRoutes = require('./route/dataRoutes'); 
+const dataController = require('./controller/dataController'); 
+const path = require('path');
+const app = express();
+
+dataController.loadData(() => {
+
+
+app.set("view engine", "ejs");
+app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
+
+mongoose.connect("mongodb://127.0.0.1:27017/Final year Project");
+
+app.use(session({
+    secret: "mysecretkey",
+    resave: true,
+    saveUninitialized: true,
+}));
+
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.message = req.flash("message");
+    res.locals.error_msg = req.flash("error_msg");
+    next();
+});
+
+
+app.use('/', dataRoutes);
+
+
+app.listen(3500, () => console.log("Server started at port 3500"));
+});
+ 
+// Decoded employer data
+ 
+// Example Protected Route
+ 
+// Employer Login
+ 
+// Employer Registration
+ 
+/ Attach employer information to the request object
+ 
+// Move to the next middleware or route handler
+ 
+require("dotenv").config();
+const path = require("path");
+const multer = require("multer");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const Employer = require("../models/employer");
+
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, "../uploads/")); 
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+    },
+});
+
+
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 1024 * 1024 * 5 }, 
+    fileFilter: (req, file, cb) => {
+        const fileTypes = /jpeg|jpg|png/;
+        const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
+        const mimeType = fileTypes.test(file.mimetype);
+
+        if (extname && mimeType) {
+            cb(null, true);
+        } else {
+            cb(new Error("Only .jpg, .jpeg, and .png files are allowed"));
+        }
+    },
+}).single("images"); 
+
+
+const registerEmployer = async (req, res) => {
+    upload(req, res, async (err) => {
+        if (err) {
+            return res.status(400).json({ msg: err.message });
+        }
+
+        const {
+            email,
+            password,
+            companyName,
+            termsAndConditions,
+            companyNum,
+            country,
+            state,
+            city,
+            confirmPassword,
+        } = req.body;
+
+        let errors = [];
+
+       
+        if (
+            !email ||
+            !password ||
+            !companyName ||
+            !termsAndConditions ||
+            !companyNum ||
+            !country ||
+            !state ||
+            !city ||
+            !confirmPassword
+        ) {
+            errors.push({ msg: "Please fill in all fields" });
+        }
+
+       
+        if (password !== confirmPassword) {
+            errors.push({ msg: "Passwords do not match" });
+        }
+
+       
+        if (password.length < 8) {
+            errors.push({ msg: "Password should be at least 8 characters" });
+        }
+
+        
+        if (errors.length > 0) {
+            return res.status(400).json({ errors });
+        }
+
+        try {
+            
+            const existingEmployer = await Employer.findOne({ email });
+            if (existingEmployer) {
+                return res.status(400).json({ msg: "Email already registered" });
+            }
+
+            
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+
+           
+            const newEmployer = new Employer({
+                email,
+                password: hashedPassword,
+                CompanyName: companyName,
+                termsAndConditions,
+                companyNum,
+                country,
+                state,
+                city,
+                image: req.file ? req.file.filename : null, 
+            });
+
+            
+            await newEmployer.save();
+            res.status(201).json({ msg: "Employer registered successfully" });
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).json({ msg: "Server error" });
+        }
+    });
+};
+
+
+const loginEmployer = async (req, res) => {
+    const { email, password } = req.body;
+
+   
+    if (!email || !password) {
+        return res.status(400).json({ msg: "Please fill in all fields" });
+    }
+
+    try {
+       
+        const employer = await Employer.findOne({ email });
+        if (!employer) {
+            return res.status(400).json({ msg: "Invalid email or password" });
+        }
+
+       
+        const isMatch = await bcrypt.compare(password, employer.password);
+        if (!isMatch) {
+            return res.status(400).json({ msg: "Invalid email or password" });
+        }
+
+        
+        const token = jwt.sign(
+            { id: employer._id },
+            process.env.JWT_SECRET,
+            { expiresIn: "1d" }
+        );
+
+        res.status(200).json({
+            msg: "Login successful",
+            token,
+            employer: {
+                id: employer._id,
+                email: employer.email,
+                companyName: employer.CompanyName,
+                image: employer.image, 
+            },
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: "Server error" });
+    }
+};
+
+module.exports = {
+    registerEmployer,
+    loginEmployer,
+};
+
+ 
+d+BrDl97IXpu3HkP4TkTPcs8+/5/7WRoRhZPkMaHolA=
+ 
+// Multer setup for image upload
+ 
+// Upload folder
+ 
+// Middleware for file upload
+ 
+// Limit file size to 5MB
+ 
+/ "image" is the field name for the file
+ 
+gistration
+ 
+ // Validate required fields
+ 
+ // Validate password confirmation
+ 
+ // Validate password length
+ 
+// Return validation errors
+ 
+heck if the employer already exists
+ 
+// Hash the password
+ 
+ // Create a new employer
+ 
+/ Save the uploaded file name
+ 
+// Save the employer to the database
+ 
+// Employer Login
+ 
+ // Validate input
+ 
+ // Check if the employer exists
+ 
+ // Compare passwords
+ 
+/ Generate JWT
+ 
+the employer's image if available
+ 
+require("dotenv").config();
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const Employer = require("../models/employer");
+
+let storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, 'uploads'))
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+
+
+let upload = multer({storage:stora
+
+let st = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './public/images/')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+});
+
+let upl = multer({storage:st});
+
+const EmployerRegistrationPost = async(req,res)=>{
+    const{email, password,companyName, termsAndConditions,companyNum, image, country, state, city , confirmPassword}= req.body;
+
+    let errors = [];
+    if(!email || !password || !companyName || !termsAndConditions || !companyNum
+        || !country || !state || !city || !confirmPassword){
+            errors.push({ msg: "Please fill in all fields" });
+        }
+
+        if (password !== confirmPassword) {
+            errors.push({ msg: "Passwords do not match" });
+          }
+        
+          if (password.length < 8) {
+            errors.push({ msg: "Password should be at least 8 characters" });
+          }
+        
+          if (errors.length > 0) {
+            return res.status(400).json({ errors, companyName, email});
+          }
+
+          try{
+
+          }
+
+}
+
+ 
+mongodb://localhost:27017/UserAPI
+ 
+our_mongodb_connection_strin
+ 
+//IMAGE UPLOAD FOR Skills
+ 
+ // Use path.join to ensure the correct path separator is used
+ 
+mongoose.model("", {})
+ 
+ picture: {
+        type: Buffer,  
+        required: false,
+    },
+ 
+  // Basic Details
+ 
+// Restrict to Male and Female
+ 
+// Store thedata picture as binary
+ 
+/ Job Details
+ 
+// Restrict to Contract and Full-Time
+ 
+// Store category as a string
+ 
+/ Store individual skill as a string
+ 
+// Store uploaded CV
+ 
+ // Education Details
+ 
+ // Work Experience
+ 
+const mongoose = require("mongoose");
+
+const artisanSchema = new mongoose.Schema({
+
+    firstName:{
+        type:String,
+        required:true
+    },
+
+    lastName:{
+        type:String,
+        required:true
+    },
+
+    email:{
+        type:String,
+        required:true,
+    },
+
+    streetAddress:
+
+
+ 
+ termsAndConditions: {
+        type: By using [Your Artisan Page Name], you agree to the following terms: Our platform connects clients with artisans based on location and specified needs. We are not responsible for the quality of work, fulfillment of services, or any agreements made between clients and artisans. Users must provide accurate information when creating profiles or listings. We do not guarantee matches or availability of artisans in specific areas. Personal data provided will be used solely for matching purposes and will not be shared with third parties without consent. We reserve the right to remove any user or listing that violates our guidelines or terms. Use of our platform is at your own risk, and we are not liable for any disputes, damages, or losses arising from connections made through our service. Terms are subject to change without prior notice. For questions or support, contact us at [Your Contact Information].
+        required: true,
+    },
+ 
+String, // Store the full text of terms and conditions
+ 
+    password:{
+        type:String,
+        required:true,
+    },
+ 
+  <label for="stateDropdown">State:</label>
+    <select id="stateDropdown">
+        <option value="">Select State</option
+    </select>
+ 
+ <!-- City Dropdown -->
+ 
+   <!-- State Dropdown -->
+ 
+    <!-- Country Dropdown -->
+ 
+TransactionSchema.pre('save', function(next) {
+    let totalAmount = 0;
+    this.items.forEach(item => {
+        totalAmount += item.price * item.quantity;
+    });
+    this.totalAmount = totalAmount;  
+    next();
+});
+ 
+
+
+
+  
+
+ 
+const filterByUnit(req, res, next) {
+    const { unitLocation } = req.params;
+    if (!unitLocation) {
+        return res.status(400).json({ error: 'Unit location is required' });
+    }
+    req.unitLocation = unitLocation;
+    next();
+}
+
+module.exports = {filterByUnit};
+
+ 
+function 
+ 
+tcontroller
+ 
 entral
  
 entral
