@@ -270,7 +270,7 @@ const updateApplicationStatus = async (req, res) => {
         from: "ralekeegan@gmail.com",
         to: artisan.email,
         subject: "Employment Notification",
-        text: `Congratulations ${artisan.firstName},\n\nYou have been employed by ${job.companyName} for the position of ${job.requiredSkill}.\n\nPlease report to work as instructed.\n\nRegards,\nYour Artisan Page Team`,
+        text: `Congratulations ${artisan.firstName},\n\nYou have been employed by ${job.companyName} for the position of ${job.requiredSkill}.\n\nPlease report to work as instructed.\n\nRegards,\nAmbacht Casa`,
       };
 
       transporter.sendMail(mailOptions, (error, info) => {

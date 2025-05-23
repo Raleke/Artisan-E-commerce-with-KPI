@@ -79,7 +79,7 @@ const addJob = async (req, res) => {
       from: process.env.EMAIL,
       to: employer.email,
       subject: "Job Posted Successfully",
-      text: `Hello ${employer.CompanyName},\n\nYour job posting "${jobTitle}" has been successfully added with ${slots} slots.\n\nRegards,\nYour Artisan Page Team`,
+      text: `Hello ${employer.CompanyName},\n\nYour job posting "${jobTitle}" has been successfully added with ${slots} slots.\n\nRegards,\nAmbacht Casa`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -149,7 +149,7 @@ const applyForJob = async (req, res) => {
       from: process.env.EMAIL,
       to: job.employerEmail,
       subject: `New Applicant for Job: ${job.jobTitle}`,
-      text: `Hello ${job.companyName},\n\nYou have a new applicant:\n\nName: ${artisan.firstName} ${artisan.lastName} \nEmail: ${artisan.email}\n\nRegards,\nYour Artisan Page Team`,
+      text: `Hello ${job.companyName},\n\nYou have a new applicant:\n\nName: ${artisan.firstName} ${artisan.lastName} \nEmail: ${artisan.email}\n\nRegards,\nAmbacht Casa`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {

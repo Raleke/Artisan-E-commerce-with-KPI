@@ -1,3 +1,117 @@
+our Artisan Page Team
+ 
+mongodb://
+ 
+localhost:27017/EMPLOYERAPI
+ 
+localhost:27017/EMPLOYERAPI
+ 
+mongodb://127.0.0.1:27017/FinalYearProject
+ 
+m&w=majority&appName=Cluster0
+ 
+ongodb+srv://nnajioformiracle247:cRKe9clUFF0H5VZx@cluster0.zsblk.mongodb.net/employerapi?retryWrites=true
+ 
+const loginAdmin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    console.log("Received login request for email:", email);
+
+    const admin = await Admin.findOne({ email: email.toLowerCase() });
+    console.log("Admin found in database:", admin);
+
+    if (!admin) return res.status(401).json({ msg: "Invalid credentials" });
+
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) return res.status(401).json({ msg: "Invalid credentials" });
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: admin._id, role: "admin" },
+      process.env.JWT_SECRET,
+      { expiresIn: "2h" }
+    );
+
+    // Send successful response including token
+    res.status(200).json({
+      msg: "Login successful",
+      token,
+      admin: {
+        id: admin._id,
+        email: admin.email,
+        name: admin.name,
+      },
+    });
+
+  } catch (err) {
+    console.error("Error during admin login:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+ 
+   const admin = await Admin.findOne({ email });
+ 
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+ 
+const loginAdmin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    console.log("Received login request for email:", email); 
+
+    const admin = await Admin.findOne({ email });
+    console.log("Admin found in database:", admin); 
+
+    if (!admin) return res.status(401).json({ msg: "Invalid credentials" });
+
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) return res.status(401).json({ msg: "Invalid credentials" });
+
+    // If login is successful
+    res.status(200).json({ msg: "Login successful", admin });
+  } catch (err) {
+    console.error("Error during admin login:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+    const token = jwt.sign(
+      { id: admin._id, role: "admin" },
+      process.env.JWT_SECRET,
+      { expiresIn: "2h" },
+    );
+
+    res.status(200).json({
+      token,
+      admin: {
+        id: admin._id,
+        email: admin.email,
+        name: admin.name,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+ 
+/ Log the email input
+ 
+// Log the result of the query
+ 
+  try {
+    const { email, password } = req.body;
+console.log()
+    const admin = await Admin.findOne({ email });
+    if (!admin) return res.status(401).json({ msg: "Invalid credentials" });
+
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) return res.status(401).json({ msg: "Invalid credentials" });
+ 
+mongodb://localhost:27017/EmployerAPI
+ 
 omer Hiring Patterns & Preferences
  
 // Sort by most active customers
