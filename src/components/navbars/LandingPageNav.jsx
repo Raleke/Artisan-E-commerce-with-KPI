@@ -14,6 +14,7 @@ import { LogIn, UserPlus, LogOut } from "react-feather";
 import { useLocation } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import { queryClient } from "../../adapters/api";
+import DarkMode from "./DarkMode";
 
 export const AcmeLogo = () => {
   return (
@@ -56,6 +57,10 @@ export default function LandingPageNav() {
       { label: "Profile", to: "/artisan/profile" },
       { label: "Notification", to: "/artisan/notification" },
       { label: "Reviews", to: "/artisan/reviews" },
+    ],
+    customer: [
+      { label: "Dashboard", to: "/customer/dashboard" },
+      { label: "Reviews", to: "/customer/reviews" },
     ],
   };
 
@@ -104,6 +109,7 @@ export default function LandingPageNav() {
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
+        <DarkMode />
         {isLoggedIn ? (
           <Button
             color="danger"
@@ -137,27 +143,6 @@ export default function LandingPageNav() {
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        {isLoggedIn ? (
-          <Button
-            color="danger"
-            variant="flat"
-            startContent={<LogOut />}
-            onClick={handleLogout}
-          >
-            Logout
-          </Button>
-        ) : (
-          <>
-            <Button
-              as={Link}
-              color="primary"
-              href="/signup/artisian"
-              startContent={<UserPlus />}
-            >
-              Sign Up
-            </Button>
-          </>
-        )}
         <NavbarMenuToggle />
       </NavbarContent>
       <NavbarMenu>
@@ -187,17 +172,46 @@ export default function LandingPageNav() {
               </Link>
             </NavbarMenuItem>
           ))}
-        {!isLoggedIn && (
+        {isLoggedIn ? (
           <Button
-            as={Link}
-            color="primary"
-            href="/login/artisian"
+            color="danger"
             variant="flat"
-            startContent={<LogIn />}
+            startContent={<LogOut />}
+            onClick={handleLogout}
           >
-            Login
+            Logout
           </Button>
+        ) : (
+          <>
+            <Button
+              as={Link}
+              color="primary"
+              href="/login/artisian"
+              variant="flat"
+              startContent={<LogIn />}
+            >
+              Login
+            </Button>
+            <Button
+              as={Link}
+              color="primary"
+              href="/signup/artisian"
+              startContent={<UserPlus />}
+            >
+              Sign Up
+            </Button>
+            <Button
+              as={Link}
+              color="primary"
+              href="/login/artisian"
+              variant="flat"
+              startContent={<LogIn />}
+            >
+              Login
+            </Button>
+          </>
         )}
+        <DarkMode />
       </NavbarMenu>
     </Navbar>
   );

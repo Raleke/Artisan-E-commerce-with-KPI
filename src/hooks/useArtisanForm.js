@@ -6,14 +6,14 @@ const useArtisanForm = () => {
   const totalSteps = 5;
   const [formData, setFormData] = useState({
     // Personal Information
-    firstName: "john",
-    lastName: "doe",
-    email: "johndoe@con.com",
-    gender: "Male",
-    whatsappNumber: "09040162008",
-    phoneNumber: "09040162008",
-    password: "password",
-    confirmPassword: "password",
+    firstName: "",
+    lastName: "",
+    email: "",
+    gender: "",
+    whatsappNumber: "",
+    phoneNumber: "",
+    password: "",
+    confirmPassword: "",
     dob: "",
 
     // Address Information

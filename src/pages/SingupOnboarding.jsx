@@ -4,6 +4,7 @@ import { Route, Routes, useLocation, useNavigate } from "react-router";
 import { Spinner, Tab, Tabs } from "@heroui/react";
 import EmployerSignupPage from "./EmployerSignupPage.jsx";
 import ArtisanSignup from "./ArtisanSignupPage.jsx";
+import CustomerSignup from "./CustomerSignupPage.jsx";
 const SignupOnbaording = () => {
   const navigate = useNavigate();
   const { loading, setLoading } = useState(false);
@@ -42,10 +43,21 @@ const SignupOnbaording = () => {
             </div>
           }
         />
+        <Tab
+          key="/signup/customer"
+          href="/signup/customer"
+          title={
+            <div className="flex items-center space-x-2">
+              <FaUserTie className="text-2xl" />
+              <span className="font-semibold text-center">Customer</span>
+            </div>
+          }
+        />
       </Tabs>
       <Routes>
         <Route path="/employer" element={<EmployerSignupPage />} />
         <Route path="/artisian" element={<ArtisanSignup />} />
+        <Route path="/customer" element={<CustomerSignup />} />
       </Routes>
     </div>
   );

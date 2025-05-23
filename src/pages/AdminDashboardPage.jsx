@@ -306,13 +306,7 @@ const AdminDashboardPage = () => {
                 {metrics.topArtisans.byPerformance.map((artisan, index) => (
                   <TableRow key={index}>
                     <TableCell>
-                      <User
-                        name={`${artisan.firstName} ${artisan.lastName}`}
-                        avatarProps={{
-                          src: `https://i.pravatar.cc/150?u=${artisan.firstName}${index}`,
-                          radius: "full",
-                        }}
-                      />
+                      <User name={`${artisan.firstName} ${artisan.lastName}`} />
                     </TableCell>
                     <TableCell>{artisan.completedJobs || 0}</TableCell>
                     <TableCell>

@@ -5,8 +5,9 @@ import {
   CardBody,
   CardFooter,
   Button,
-  Badge,
   Avatar,
+  Chip,
+  Link,
 } from "@heroui/react";
 import { FaStar, FaMapMarkerAlt, FaPhone, FaClock } from "react-icons/fa";
 
@@ -42,9 +43,9 @@ const ArtisanSummaryCard = ({ profile, onViewDetails }) => {
       <CardBody className="space-y-4">
         <div className="flex flex-wrap gap-2">
           {profile.skills.slice(0, 3).map((skill, index) => (
-            <Badge key={index} className="text-xs">
+            <Chip key={index} className="text-xs">
               {skill}
-            </Badge>
+            </Chip>
           ))}
         </div>
 
@@ -72,15 +73,15 @@ const ArtisanSummaryCard = ({ profile, onViewDetails }) => {
             <span>Completed Jobs</span>
             <span className="font-medium">{profile.completedJobs}</span>
           </div>
-          <div className="flex justify-between text-sm">
-            <span>Hourly Rate</span>
-            <span className="font-medium">₦{profile.hourlyRate}</span>
-          </div>
         </div>
       </CardBody>
 
       <CardFooter className="pt-4">
-        <Button className="w-full" onClick={() => onViewDetails(profile)}>
+        <Button
+          className="w-full"
+          as={Link}
+          href={`/customer/artisan/${profile.id}`}
+        >
           View Full Profile
         </Button>
       </CardFooter>

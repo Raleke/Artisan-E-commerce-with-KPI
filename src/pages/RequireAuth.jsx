@@ -10,7 +10,9 @@ const RequireAuth = ({ type, children }) => {
       ? "/login/artisan"
       : type === "employer"
         ? "/login/employer"
-        : "/admin/login";
+        : type === "cutomer"
+          ? "/login/customer"
+          : "/admin/login";
 
   return user?.id && user_type === type ? (
     children

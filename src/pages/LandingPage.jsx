@@ -128,7 +128,7 @@ export default function LandingPage() {
 
       <div className="text-center mt-12 py-24">
         <div className="lg:max-w-7xl md:max-w-5xl max-w-3xl w-full px-4 mx-auto">
-          <h1 className="text-4xl mb-8 ">How it works for Employeers</h1>
+          <h1 className="text-4xl mb-8 ">How it works for Employers</h1>
           <StepsCarousel steps={steps2} />
         </div>
       </div>

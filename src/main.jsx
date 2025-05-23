@@ -10,18 +10,21 @@ import { HeroUIProvider } from "@heroui/react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./adapters/api.js";
 import { Toaster } from "sonner";
+import { ThemeProvider } from "./contexts/ThemeProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
-          <HeroUIProvider>
-            <App />
-            <Toaster richColors visibleToasts={3} />
-          </HeroUIProvider>
-        </QueryClientProvider>
-      </AuthProvider>
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+        <AuthProvider>
+          <QueryClientProvider client={queryClient}>
+            <HeroUIProvider>
+              <App />
+              <Toaster richColors visibleToasts={3} />
+            </HeroUIProvider>
+          </QueryClientProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </StrictMode>,
 );

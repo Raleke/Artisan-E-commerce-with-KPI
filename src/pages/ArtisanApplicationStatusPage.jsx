@@ -9,12 +9,12 @@ import {
   SelectItem,
   Input,
   Spinner,
+  Link
 } from "@heroui/react";
 import { AiOutlineMenuFold } from "react-icons/ai";
 import { useMemo } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useGetArtisanApplications } from "../adapters/Requests";
-import { Link } from "react-router";
 import { formatDate } from "../utils/utiils";
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat("en-NG", {

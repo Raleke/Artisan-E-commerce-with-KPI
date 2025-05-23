@@ -36,7 +36,7 @@ export default function FooterCard() {
           </div>
           <div className="w-full md:w-1/3 mb-6 md:mb-0">
             <h2 className="text-2xl font-bold mb-4">Contact Us</h2>
-            <p className="text-gray-400">Email: ralekemiracle23@gmail.com</p>
+            <p className="text-gray-400">Email: ralekemiracle88@gmail.com</p>
             <p className="text-gray-400">Phone: +234 9138662169</p>
             <Button auto flat isIconOnly color="primary" onPress={scrollToTop}>
               <FaArrowUp />

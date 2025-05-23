@@ -12,6 +12,7 @@ import SignupOnbaording from "./pages/SingupOnboarding";
 import JobDetailsPage from "./pages/JobDetailsPage";
 import ArtisanDashboardPage from "./pages/ArtsianDashboardPage";
 import EmployerDashboard from "./pages/EmployerDashboardPage";
+import CustomerDash from "./pages/CustomerDashboardPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage.jsx";
 import AdminLoginPage from "./pages/AdminLoginPage.jsx";
 import AdminDashboardPage from "./pages/AdminDashboardPage.jsx";
@@ -58,6 +59,15 @@ function App() {
               </RequireAuth>
             }
           />
+          <Route
+            path="/customer/*"
+            element={
+              <RequireAuth type={"customer"}>
+                <CustomerDash />
+              </RequireAuth>
+            }
+          />
+
           <Route path="/admin/login" element={<AdminLoginPage />} />
           <Route
             path="/admin/dashboard"

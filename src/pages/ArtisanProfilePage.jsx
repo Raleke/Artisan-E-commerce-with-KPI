@@ -7,6 +7,7 @@ import {
   Spinner,
   Link,
   Button,
+  input,
 } from "@heroui/react";
 import {
   FaCamera,
@@ -23,10 +24,44 @@ import useAuth from "../hooks/useAuth";
 import { MdOutlineWhatsapp } from "react-icons/md";
 import { FaEnvelope } from "react-icons/fa6";
 import { useNavigate } from "react-router";
+import { apiClientPrivate } from "../adapters/api";
 
-const ArtisanProfile = ({ artisanId, isOwnProfile = true }) => {
+const formatPhoneNumber = (number) => {
+  if (number.length === 11 && number.startsWith("0")) {
+    return `+234${number.slice(1)}`;
+  }
+  return number;
+};
+
+const ArtisanProfile = ({
+  artisanId,
+  isOwnProfile = true,
+  isCustomer = false,
+}) => {
   console.log(artisanId);
   const { user } = useAuth();
+  console.log(user);
+  const handleWhatsAppClick = async (e) => {
+    if (isCustomer) {
+      e.preventDefault();
+      try {
+        // Send the special request
+        await apiClientPrivate.post("/customer/contacted-artisan", {
+          artisanId: profileData.id,
+          customerId: user.id,
+        });
+
+        // Open WhatsApp link in a new tab
+        window.open(
+          `https://wa.me/${profileData.whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`,
+          "_blank",
+        );
+      } catch (error) {
+        console.error("Error sending special request:", error);
+      }
+    }
+  };
+
   const { isLoading, data } = useGetArtisanFullDetails(artisanId || user.id);
   const navigate = useNavigate();
 
@@ -55,12 +90,13 @@ const ArtisanProfile = ({ artisanId, isOwnProfile = true }) => {
     console.log(data);
     if (data) {
       const transformedData = {
+        id: data.artisan._doc._id,
         fullName: `${data.artisan._doc.firstName} ${data.artisan._doc.lastName}`,
         profession: data.artisan._doc.jobCategories[0]?.jobCategory || "",
         experience: data.artisan._doc.yearsOfExperience?.toString() || "",
         email: data.artisan._doc.email,
-        phone: data.artisan._doc.phoneNumber,
-        whatsappNumber: data.artisan._doc.whatsappNumber,
+        phone: formatPhoneNumber(data.artisan._doc.phoneNumber),
+        whatsappNumber: formatPhoneNumber(data.artisan._doc.whatsappNumber),
         companyName: data.artisan._doc.workExperience?.companyName || "",
         country: data.artisan._doc.country,
         state: data.artisan._doc.state,
@@ -106,6 +142,10 @@ const ArtisanProfile = ({ artisanId, isOwnProfile = true }) => {
         <Spinner />
       </div>
     );
+
+    
+
+  const whatsappMessage = `Hello, I'm ${user?.name || "an Employer/Customer"} from Ambacht Casa Artiginale. I would like to contact you.`;
 
   return (
     <div className="container min-h-[80vh] flex justify-center items-center mx-auto p-4">
@@ -178,14 +218,14 @@ const ArtisanProfile = ({ artisanId, isOwnProfile = true }) => {
                   {profileData.email}
                 </p>
                 <Link
-                  href={`https://wa.me/${profileData.whatsappNumber}`}
+                  href={`https://wa.me/${profileData.whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={handleWhatsAppClick}
                 >
                   <p className="flex flex-row gap-4 items-center">
                     <MdOutlineWhatsapp className="text-green-400 h-4 w-4" />
-
-                    {profileData.phone}
+                    {isCustomer ? "Contact Me" : profileData.phone}
                   </p>
                 </Link>
               </div>

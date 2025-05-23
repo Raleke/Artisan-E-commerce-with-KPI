@@ -80,7 +80,42 @@ function useAdminLogin() {
     },
   });
 }
-
+function useCustomerLogin() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/customer/dashboard";
+  const { setAuth } = useAuth();
+  return useMutation({
+    mutationFn: (formData) => {
+      return apiClient.post("/customer/login", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    },
+    onSuccess: (res) => {
+      const token = res.data.token;
+      const decodedToken = jwtDecode(token);
+      const employer = res.data.customer;
+      // Extract user ID from decoded token
+      setAuth({ type: "customer", employer, token });
+      queryClient.invalidateQueries("userdata"); // Invalidate the user query
+      // Redirect to dashboard after successful login
+      navigate(from, { replace: true });
+    },
+    onError: (error) => {
+      handleError(error);
+      console.log(error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.error === "your email has not been verified"
+      ) {
+        navigate(`/verify/email/${error.response.data.email}`);
+      }
+    },
+  });
+}
 function useEmployerSignup() {
   const navigate = useNavigate();
 
@@ -96,7 +131,26 @@ function useEmployerSignup() {
     },
     onSuccess: (data) => {
       toast.success("Signup successful, please login");
-      navigate(`/login/signup/`);
+      navigate(`/login/employer/`);
+    },
+  });
+}
+function useCustomerSignup() {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: async (formData) => {
+      const response = await apiClient.post(`customer/register`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      return response.data;
+    },
+    onSuccess: (data) => {
+      toast.success("Signup successful, please login");
+      navigate(`/login/customer/`);
     },
   });
 }
@@ -144,6 +198,24 @@ function useGetEmployerProfile(id) {
       }
       try {
         const res = await apiClient.get(`/employer/profile/${id}`);
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+    staleTime: 120000,
+  });
+}
+
+function useGetCustomerProfile(id) {
+  return useQuery({
+    queryKey: ["employer", id],
+    queryFn: async () => {
+      if (!id) {
+        return null;
+      }
+      try {
+        const res = await apiClient.get(`/customer/profile/${id}`);
         return res.data;
       } catch (error) {
         handleError(error);
@@ -490,6 +562,17 @@ function useEditReview() {
   });
 }
 
+function useGetAllArtisans() {
+  const apiClientPrivate = useAxiosPrivate();
+  return useQuery({
+    queryKey: ["artisans", "all"],
+    queryFn: async () => {
+      const res = await apiClientPrivate.get(`/artisan/all`);
+      return res.data;
+    },
+  });
+}
+
 function useDeleteReview() {
   const apiClientPrivate = useAxiosPrivate();
   return useMutation({
@@ -519,6 +602,24 @@ function useGetArtisansToRate(employerId) {
       try {
         const res = await apiClientPrivate.get(
           `/review/artisans-to-rate/${employerId}`,
+        );
+        return res.data;
+      } catch (error) {
+        handleError(error);
+      }
+    },
+    staleTime: 60000,
+  });
+}
+function useGetArtisansToRateCustomer(employerId) {
+  const apiClientPrivate = useAxiosPrivate();
+  return useQuery({
+    queryKey: ["reviews", employerId],
+    queryFn: async () => {
+      if (!employerId) return null;
+      try {
+        const res = await apiClientPrivate.get(
+          `/review/artisans-to-rate-customer/${employerId}`,
         );
         return res.data;
       } catch (error) {
@@ -592,4 +693,9 @@ export {
   useGetEmployersToRate,
   useAdminLogin,
   useGetAdminMetrics,
+  useCustomerSignup,
+  useCustomerLogin,
+  useGetAllArtisans,
+  useGetCustomerProfile,
+  useGetArtisansToRateCustomer,
 };

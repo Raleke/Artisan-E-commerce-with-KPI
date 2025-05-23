@@ -4,18 +4,11 @@ import { Route, Routes, useLocation, useNavigate } from "react-router";
 import { Spinner, Tab, Tabs } from "@heroui/react";
 import EmployeeLogin from "./EmployerLoginPage.jsx";
 import ArtisanLoginPage from "./ArtisanLoginPage.jsx";
+import CustomerLoginPage from "./CustomerLoginPage.jsx";
 
 const Onboarding = () => {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false); // Add loading state
   const { pathname } = useLocation();
-
-  const EmployerRedirect = () => {
-    navigate("/employer");
-  };
-  const ArtitisanRedirect = () => {
-    navigate("/artisan");
-  };
 
   if (loading) {
     return <Spinner />; // Show loader while loading
@@ -49,10 +42,21 @@ const Onboarding = () => {
             </div>
           }
         />
+        <Tab
+          key="/login/customer"
+          href="/login/customer"
+          title={
+            <div className="flex items-center space-x-2">
+              <FaUserTie className="text-2xl" />
+              <span className="font-semibold text-center">Customer</span>
+            </div>
+          }
+        />
       </Tabs>
       <Routes>
         <Route path="/employer" element={<EmployeeLogin />} />
         <Route path="/artisian" element={<ArtisanLoginPage />} />
+        <Route path="/customer" element={<CustomerLoginPage />} />
       </Routes>
     </div>
   );
